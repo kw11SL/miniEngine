@@ -8,6 +8,13 @@
 #include "PhysicsBall.h"
 #include "Seesaw.h"
 #include "effect/effect.h"
+#include "DirectionLight.h"
+#include "Game.h"
+#include "Player_new.h"
+#include "SkinModelRender.h"
+
+
+
 
 ///////////////////////////////////////////////////////////////////
 // ウィンドウプログラムのメイン関数。
@@ -20,6 +27,23 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//////////////////////////////////////
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
+	////ディレクションライトを定義
+	//DirectionLight directionLight;
+
+	////ディレクションライトの初期化
+	//directionLight.Init({ 1.0f,0.0f,0.0f }, { 0.5f, 0.5f, 0.5f }, { 0.5f,0.5f,0.5f });
+	////カメラ位置を取得し
+	//Vector3 cameraPos = g_camera3D->GetPosition();
+	////メンバに反映
+	//directionLight.SetEyePos(cameraPos);
+
+	//float cameraPosH = 0.0f;
+	//float cameraPosV = 0.0f;
+
+
+	//カメラの設定
+	g_camera3D->SetPosition({ 0.0f,50.0f,150.0f });
+	g_camera3D->SetTarget({ 0.0f,50.0f,0.0f });
 
 	//ゲームオブジェクトマネージャーのインスタンスを作成する。
 	GameObjectManager::CreateInstance();
@@ -27,8 +51,36 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//step-1 エフェクトエンジンのインスタンスを作成する。
 	EffectEngine::CreateInstance();
-
 	
+	
+
+	////モデルの初期化情報を作成
+	//ModelInitData initData;
+	////ファイルパスの指定
+	//initData.m_tkmFilePath = "Assets/modelData/unityChan.tkm";
+	////シェーダーのファイルパスを指定
+	//initData.m_fxFilePath = "Assets/shader/model.fx";
+	////ディレクションライトの情報を定数バッファとして
+	////ディスクリプタヒープに登録するため、初期化情報として渡す
+	//initData.m_expandConstantBuffer = directionLight.GetDirLightAddress();
+	//initData.m_expandConstantBufferSize = sizeof(directionLight.GetDirLight());
+	
+	////キャラクターのモデルを↑の初期化情報で初期化
+	//Model charaModel;
+	//charaModel.Init(initData);
+	
+	/*Player_new* player = nullptr;
+	player = NewGO<Player_new>(0, "pl");*/
+	//player->InitDirectionLight(directionLight);
+	//player->SetPostion({ 0.0f,0.0f,0.0f });
+
+	/*SkinModelRender* m_skinModelRender = nullptr;
+	m_skinModelRender = NewGO<SkinModelRender>(0, "player");
+	
+	m_skinModelRender->Init("Assets/modelData/unityChan.tkm", enModelUpAxisZ);
+	m_skinModelRender->InitShader("Assets/shader/model.fx", "VSMain");
+	m_skinModelRender->InitDirectionLight(&directionLight);*/
+
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
 	//////////////////////////////////////
@@ -36,14 +88,50 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//step-2 レーザーエフェクトの初期化。
 	Effect laserEffect;
-	laserEffect.Init(u"Assets/effect/laser.efk");
+	laserEffect.Init(u"Assets/effect/kick.efk");
 
 	Effect laserEffect2;
 	laserEffect2.Init(u"Assets/effect/laser2.efk");
 
+	//ゲームシーンを作成
+	NewGO<Game>(0, "game");
+
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{
+		/*float stickLX = g_pad[0]->GetLStickXF();
+		float stickLY = g_pad[0]->GetLStickYF();
+
+		cameraPosH += stickLX;
+		cameraPosV += stickLY;
+		
+		Vector3 cameraPos = Vector3::Zero;
+		cameraPos.Set(cameraPosH, 0.0f, cameraPosV);
+
+		g_camera3D->SetPosition({cameraPosH,0.0f,cameraPosV});*/
+
+
+		////ディレクションライトの操作
+		////右スティックの水平方向、垂直方向の入力値を受け取る
+		//float angleH = g_pad[0]->GetRStickXF();
+		//float angleV = g_pad[0]->GetRStickYF();
+
+
+
+		//Vector3 dirLigDirection = directionLight.GetDirection();
+		//Quaternion rotH;
+		//Quaternion rotV;
+
+		//
+		//rotH.SetRotationDeg(Vector3::AxisY, angleH);
+		//rotH.Apply(dirLigDirection);
+		//rotV.SetRotationDeg(Vector3::AxisX, angleV);
+		//rotV.Apply(dirLigDirection);
+
+		//////↑で変更したベクトルと回転を反映
+		//directionLight.SetDirection(dirLigDirection);
+
+		//エフェクトの発生
 		if (g_pad[0]->IsTrigger(enButtonA)) {
 			//再生開始。
 			laserEffect.Play();
@@ -52,8 +140,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 			//再生開始。
 			laserEffect2.Play();
 		}
-		//step-3 エフェクトを動かす。
 		
+		//step-3 エフェクトを動かす。	
 		auto pos = laserEffect.GetPosition();
 		pos.x += g_pad[0]->GetLStickXF();
 		pos.z += g_pad[0]->GetLStickYF();
@@ -91,10 +179,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 		//step-6 エフェクトのドロー。
 		EffectEngine::GetInstance()->Draw();
-		
+
+		////キャラモデルのドローコールを実行
+		//charaModel.Draw(renderContext);
 
 		g_engine->EndFrame();
 	}
+
 	//ゲームオブジェクトマネージャーを削除。
 	GameObjectManager::DeleteInstance();
 	return 0;

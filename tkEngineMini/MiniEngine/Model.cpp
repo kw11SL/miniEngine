@@ -37,6 +37,10 @@ void Model::Init(const ModelInitData& initData)
 		initData.m_psEntryPointFunc,
 		initData.m_expandConstantBuffer,
 		initData.m_expandConstantBufferSize,
+		initData.m_expandConstantBuffer_1,		//追加の定数バッファ1
+		initData.m_expandConstantBufferSize_1,	//追加の定数バッファ1のサイズ
+		initData.m_expandConstantBuffer_2,		//追加の定数バッファ2
+		initData.m_expandConstantBufferSize_2,	//追加の定数バッファ2のサイズ
 		initData.m_expandShaderResoruceView
 	);
 

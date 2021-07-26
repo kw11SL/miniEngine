@@ -26,6 +26,10 @@ void MeshParts::InitFromTkmFile(
 	const char* psEntryPointFunc,
 	void* expandData,
 	int expandDataSize,
+	void* expandData_1,					//追加の定数バッファ1
+	int expandDataSize_1,				//追加の定数バッファ1のサイズ
+	void* expandData_2,					//追加の定数バッファ2
+	int expandDataSize_2,				//追加の定数バッファ2のサイズ
 	IShaderResource* expandShaderResourceView
 )
 {
@@ -42,6 +46,16 @@ void MeshParts::InitFromTkmFile(
 	if (expandData) {
 		m_expandConstantBuffer.Init(expandDataSize, nullptr);
 		m_expandData = expandData;
+	}
+	//追加の定数バッファを作成
+	if (expandData_1) {
+		m_expandConstantBuffer_1.Init(expandDataSize_1, nullptr);
+		m_expandData_1 = expandData_1;
+	}
+	//追加の定数バッファを作成
+	if (expandData_2) {
+		m_expandConstantBuffer_2.Init(expandDataSize_2, nullptr);
+		m_expandData_2 = expandData_2;
 	}
 	m_expandShaderResourceView = expandShaderResourceView;
 	//ディスクリプタヒープを作成。
@@ -75,6 +89,14 @@ void MeshParts::CreateDescriptorHeaps()
 			descriptorHeap.RegistConstantBuffer(0, m_commonConstantBuffer);
 			if (m_expandConstantBuffer.IsValid()) {
 				descriptorHeap.RegistConstantBuffer(1, m_expandConstantBuffer);
+			}
+			//追加の定数バッファをディスクリプタヒープに登録する
+			if (m_expandConstantBuffer_1.IsValid()) {
+				descriptorHeap.RegistConstantBuffer(2, m_expandConstantBuffer_1);
+			}
+			//追加の定数バッファをディスクリプタヒープに登録する
+			if (m_expandConstantBuffer_2.IsValid()) {
+				descriptorHeap.RegistConstantBuffer(3, m_expandConstantBuffer_1);
 			}
 			//ディスクリプタヒープへの登録を確定させる。
 			descriptorHeap.Commit();
@@ -181,6 +203,15 @@ void MeshParts::Draw(
 	if (m_expandData) {
 		m_expandConstantBuffer.CopyToVRAM(m_expandData);
 	}
+	//追加の定数バッファをGPUにコピー
+	if (m_expandData_1) {
+		m_expandConstantBuffer_1.CopyToVRAM(m_expandData_1);
+	}
+	//追加の定数バッファをGPUにコピー
+	if (m_expandData_2) {
+		m_expandConstantBuffer_2.CopyToVRAM(m_expandData_2);
+	}
+
 	if (m_boneMatricesStructureBuffer.IsInited()) {
 		//ボーン行列を更新する。
 		m_boneMatricesStructureBuffer.Update(m_skeleton->GetBoneMatricesTopAddress());

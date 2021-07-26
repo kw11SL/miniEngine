@@ -293,13 +293,17 @@
     <ClCompile Include="..\..\MiniEngine\tkFile\TksFile.cpp" />
     <ClCompile Include="..\..\MiniEngine\VertexBuffer.cpp" />
     <ClCompile Include="Background.cpp" />
+    <ClCompile Include="DirectionLight.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Hello2D.cpp" />
     <ClCompile Include="HelloFont.cpp" />
     <ClCompile Include="HelloLevel2D.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PhysicsBall.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Player_new.cpp" />
     <ClCompile Include="Seesaw.cpp" />
+    <ClCompile Include="SkinModelRender.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -377,12 +381,16 @@
     <ClInclude Include="..\..\MiniEngine\tkFile\TksFile.h" />
     <ClInclude Include="..\..\MiniEngine\VertexBuffer.h" />
     <ClInclude Include="Background.h" />
+    <ClInclude Include="DirectionLight.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Hello2D.h" />
     <ClInclude Include="HelloFont.h" />
     <ClInclude Include="HelloLevel2D.h" />
     <ClInclude Include="PhysicsBall.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Player_new.h" />
     <ClInclude Include="Seesaw.h" />
+    <ClInclude Include="SkinModelRender.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
   </ItemGroup>
