@@ -47,10 +47,12 @@ void DirectionLight::Rotation()
 	float angleH = g_pad[0]->GetRStickXF();
 	float angleV = g_pad[0]->GetRStickYF();
 
-	m_rotationH.SetRotationDeg(Vector3::AxisY, angleH * 6.0f);
-	m_rotationH.Apply(direction);
-	m_rotationV.SetRotationDeg(Vector3::AxisX, angleV * 6.0f);
-	m_rotationV.Apply(direction);
+	if (g_pad[0]->IsPress(enButtonRB1)) {
+		m_rotationH.SetRotationDeg(Vector3::AxisY, angleH * 6.0f);
+		m_rotationH.Apply(direction);
+		m_rotationV.SetRotationDeg(Vector3::AxisX, angleV * 6.0f);
+		m_rotationV.Apply(direction);
+	}
 
 	SetDirection(direction);
 

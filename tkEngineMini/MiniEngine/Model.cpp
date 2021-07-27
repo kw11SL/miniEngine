@@ -35,8 +35,8 @@ void Model::Init(const ModelInitData& initData)
 		initData.m_vsEntryPointFunc,
 		initData.m_vsSkinEntryPointFunc,
 		initData.m_psEntryPointFunc,
-		initData.m_expandConstantBuffer,
-		initData.m_expandConstantBufferSize,
+		initData.m_expandConstantBuffer,		//定数バッファ
+		initData.m_expandConstantBufferSize,	//定数バッファのサイズ
 		initData.m_expandConstantBuffer_1,		//追加の定数バッファ1
 		initData.m_expandConstantBufferSize_1,	//追加の定数バッファ1のサイズ
 		initData.m_expandConstantBuffer_2,		//追加の定数バッファ2

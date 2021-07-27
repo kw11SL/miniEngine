@@ -1,9 +1,11 @@
 #pragma once
-#include "DirectionLight.h"
+//#include "DirectionLight.h"
+//#include "PointLight.h"
 
 class Model;
 class AnimationClip;
 class DirectionLight;
+class PointLight;
 
 class SkinModelRender : public IGameObject
 {
@@ -17,6 +19,7 @@ public:
 	void Init(const char* modelFilePath, EnModelUpAxis upAxis );
 	void InitShader(const char* fxFilePath, const char* entryPoint);
 	void InitDirectionLight(DirectionLight* dirLight);
+	void InitPointLight(PointLight* ptLight);
 	/*void InitAnimation(AnimationClip* animation, int animationNum);
 	void PlayAnimation(int animNo, float interpolateTime = 0.0f);*/
 
@@ -40,7 +43,5 @@ private:
 	Vector3 m_position = Vector3::Zero;
 	Vector3 m_scale = Vector3::One;
 	Quaternion m_rot = Quaternion::Identity;
-
-	DirectionLight m_light;
 
 };

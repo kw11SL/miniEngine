@@ -1,12 +1,13 @@
 #pragma once
-#include "DirectionLight.h"
+//#include "DirectionLight.h"
 class SkinModelRender;
 class DirectionLight;
+class PointLight;
 
 class Player_new : public IGameObject
 {
 public:
-	Player_new() {}
+	Player_new();
 	~Player_new();
 	bool Start() override;
 	void Update() override;
@@ -31,12 +32,12 @@ public:
 	void Init();
 	//ÉâÉCÉgÇìnÇ∑ÇΩÇﬂÇÃä÷êî
 	void InitDirectionLight(DirectionLight* dirLight);
+	void InitPointLight(PointLight* ptLight);
 	SkinModelRender* GetSkinModelRender();
 
 private:
 	SkinModelRender* m_skinModelRender = nullptr;
 	CharacterController m_charaCon;
-	DirectionLight m_dirLight;
 
 	Vector3 m_position = Vector3::Zero;
 	Vector3 m_moveSpeed = Vector3::Zero;

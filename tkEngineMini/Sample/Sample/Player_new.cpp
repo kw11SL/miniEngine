@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "Player_new.h"
 #include "SkinModelRender.h"
-//#include "DirectionLight.h"
+#include "DirectionLight.h"
+#include "PointLight.h"
 
 namespace{
 	const char* MODELPATH_UTC = "Assets/modelData/unityChan.tkm";
@@ -11,6 +12,17 @@ namespace{
 	const char* VS_ENTRYPOINT_NAME = "VSMain";
 	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
 	const Vector3 INIT_POINT = {0.0f,0.0f,0.0f};
+}
+
+Player_new::Player_new()
+{
+	m_skinModelRender = NewGO<SkinModelRender>(0);
+	m_skinModelRender->Init(MODELPATH_UTC, enModelUpAxisZ);
+	m_skinModelRender->InitShader(MODEL_SHADER_PATH, VS_ENTRYPOINT_NAME);
+
+	m_skinModelRender->SetPosition(INIT_POINT);
+	m_skinModelRender->SetScale(m_scale);
+
 }
 
 Player_new::~Player_new()
@@ -25,18 +37,6 @@ void Player_new::Init()
 
 bool Player_new::Start()
 {
-	m_skinModelRender = NewGO<SkinModelRender>(0);
-	m_skinModelRender->Init(MODELPATH_UTC, enModelUpAxisZ);
-	m_skinModelRender->InitShader(MODEL_SHADER_PATH, VS_ENTRYPOINT_NAME);
-	//m_skinModelRender->InitDirectionLight(m_dirLight);
-	
-	m_skinModelRender->SetPosition(INIT_POINT);
-	m_skinModelRender->SetScale(m_scale);
-
-	//m_charaCon.Init(UTC_RADIUS, UTC_HEIHGT, INIT_POINT);
-
-	//m_skinModelRender->SetPosition(INIT_POINT);
-
 	return true;
 }
 
@@ -82,6 +82,11 @@ void Player_new::Rotation()
 void Player_new::InitDirectionLight(DirectionLight* dirLight)
 {
 	m_skinModelRender->InitDirectionLight(dirLight);
+}
+
+void Player_new::InitPointLight(PointLight* ptLight)
+{
+	m_skinModelRender->InitPointLight(ptLight);
 }
 
 SkinModelRender* Player_new::GetSkinModelRender()

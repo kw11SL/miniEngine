@@ -302,6 +302,7 @@
     <ClCompile Include="PhysicsBall.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Player_new.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Seesaw.cpp" />
     <ClCompile Include="SkinModelRender.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -389,6 +390,7 @@
     <ClInclude Include="PhysicsBall.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Player_new.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="Seesaw.h" />
     <ClInclude Include="SkinModelRender.h" />
     <ClInclude Include="stdafx.h" />
