@@ -293,6 +293,7 @@
     <ClCompile Include="..\..\MiniEngine\tkFile\TksFile.cpp" />
     <ClCompile Include="..\..\MiniEngine\VertexBuffer.cpp" />
     <ClCompile Include="Background.cpp" />
+    <ClCompile Include="BG.cpp" />
     <ClCompile Include="DirectionLight.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Hello2D.cpp" />
@@ -382,6 +383,7 @@
     <ClInclude Include="..\..\MiniEngine\tkFile\TksFile.h" />
     <ClInclude Include="..\..\MiniEngine\VertexBuffer.h" />
     <ClInclude Include="Background.h" />
+    <ClInclude Include="BG.h" />
     <ClInclude Include="DirectionLight.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Hello2D.h" />
