@@ -17,6 +17,16 @@ struct PointLight
 	float range;
 };
 
+//スポットライト用構造体
+struct SpotLight
+{
+	float3 position;
+	float3 color;
+	float range;
+	float3 direction;
+	float angle;
+};
+
 ////////////////////////////////////////////////
 // 定数バッファ。
 ////////////////////////////////////////////////
@@ -37,6 +47,11 @@ cbuffer DirectionLightCb :register(b1) {
 //ポイントライト用の定数バッファ
 cbuffer PointLightCb : register(b2) {
 	PointLight pointLight;
+};
+
+//スポットライト用の定数バッファ
+cbuffer SpotLightCb : register(b3) {
+	SpotLight spotLight;
 };
 
 //関数宣言
@@ -173,6 +188,17 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		psIn.normal
 	);
 
+	//スポットライトの拡散反射光を求める
+	//サーフェスに入射するスポットライトの光の向きを計算
+	float3 spLigDir = psIn.worldPos - spotLight.position;
+	//正規化
+	spLigDir = normalize(spLigDir);
+	//拡散反射光を計算
+	float3 diffSpot = CalcLambertDiffuse(
+		spLigDir,
+		spotLight.color,
+		psIn.normal
+	);
 
 	////サーフェスの反射
 	////ライトの方向と頂点の法線情報から反射ベクトルを求める
@@ -209,9 +235,9 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	);
 
 	//ポイントライトの影響率を計算
-	float distance = length(psIn.worldPos - pointLight.position);
+	float distancePt = length(psIn.worldPos - pointLight.position);
 	//距離に応じた影響度になるよう計算
-	float affect = 1.0f - 1.0f / pointLight.range * distance;
+	float affect = 1.0f - 1.0f / pointLight.range * distancePt;
 
 	//影響度が負の数にならないように補正
 	if (affect < 0.0f) {
@@ -225,13 +251,30 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	diffPoint *= affect;
 	specPoint *= affect;
 
+	//スポットライトの鏡面反射光を求める
+	float3 specSpot = CalcPhongSpecular(
+		spLigDir,
+		spotLight.color,
+		psIn.worldPos,
+		psIn.normal
+	);
+
+	//距離による影響率を計算
+	float3 distanceSp = length(psIn.worldPos - spotLight.position);
+	float affectSp = 1.0f - 1.0f / spotLight.range * distanceSp;
+	//影響率が0を下回ったら0に補正する
+	if (affectSp < 0.0f) {
+		affectSp = 0.0f;
+	}
+	//影響のしかたを指数関数的にする
+	affectSp = pow(affectSp, 3.0f);
 	
 	//最終カラーの決定
 	
 	//それぞれの拡散反射光を足す
-	float3 diffuseLig = diffDirection + diffPoint;
+	float3 diffuseLig = diffDirection + diffPoint + diffSpot;
 	//それぞれの鏡面反射光を足す
-	float3 specularLig = specDirection + specPoint;
+	float3 specularLig = specDirection + specPoint + specSpot;
 	//拡散反射光と鏡面反射光、環境光を足す
 	float3 lig = diffuseLig + specularLig + ambientLig;
 

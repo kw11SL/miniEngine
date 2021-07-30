@@ -28,30 +28,26 @@ public:
 	void Init(const Vector3& direction,const Vector3& color,const Vector3& ambLig);
 	void Rotation();
 
-
+	//セッター
 	void SetDirection(const Vector3& direction);
-	Vector3 GetDirection() { return m_light.directionLight.direction; }
-	
 	void SetRotationH(const Quaternion& rotH);
-	Quaternion GetRotationH() { return m_rotationH; }
-	
 	void SetRotationV(const Quaternion& rotV);
-	Quaternion GetRotationV() { return m_rotationV; }
-	
-	void SetAngleH(const float& angleH) { m_angleH = angleH; }
-	float GetAngleH() { return m_angleH; }
-	
-	void SetAngleV(const float& angleV) { m_angleV = angleV; }
-	float GetAngleV() { return m_angleV; }
-
+	void SetAngleH(float angleH) { m_angleH = angleH; }
+	void SetAngleV(float angleV) { m_angleV = angleV; }
 	void SetColor(const Vector3& color);
-	Vector3 GetColor() { return m_light.directionLight.color; }
-	
 	void SetEyePos(const Vector3& pos);
+
+	//ゲッター
+	const Vector3& GetDirection() { return m_light.directionLight.direction; }
+	const Quaternion& GetRotationH() { return m_rotationH; }
+	const Quaternion& GetRotationV() { return m_rotationV; }
+	const float& GetAngleH() { return m_angleH; }
+	const float& GetAngleV() { return m_angleV; }
+	const Vector3& GetColor() { return m_light.directionLight.color; }
 	
 	/// @brief ライト構造体を返す関数
 	/// @return m_light
-	DirLight GetDirLight() { return m_light; }
+	const DirLight& GetDirLight() { return m_light; }
 	
 	/// @brief ライトの構造体のアドレスを返す関数
 	/// @return m_lightのアドレス値

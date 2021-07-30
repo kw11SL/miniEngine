@@ -32,3 +32,8 @@ void BG::RecievePointLight(PointLight* ptLight)
 {
 	m_skinModelRender->InitPointLight(ptLight);
 }
+
+void BG::RecieveSpotLight(SpotLight* spLight)
+{
+	m_skinModelRender->InitSpotLight(spLight);
+}

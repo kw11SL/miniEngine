@@ -6,6 +6,7 @@ class Model;
 class AnimationClip;
 class DirectionLight;
 class PointLight;
+class SpotLight;
 
 class SkinModelRender : public IGameObject
 {
@@ -20,6 +21,7 @@ public:
 	void InitShader(const char* fxFilePath, const char* entryPoint);
 	void InitDirectionLight(DirectionLight* dirLight);
 	void InitPointLight(PointLight* ptLight);
+	void InitSpotLight(SpotLight* spLight);
 	/*void InitAnimation(AnimationClip* animation, int animationNum);
 	void PlayAnimation(int animNo, float interpolateTime = 0.0f);*/
 

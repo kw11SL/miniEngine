@@ -3,6 +3,7 @@
 class SkinModelRender;
 class DirectionLight;
 class PointLight;
+class SpotLight;
 
 class Player_new : public IGameObject
 {
@@ -28,11 +29,11 @@ public:
 	void SetAngle(const float& angle);
 	void SetIsInitDirLig(const bool& isInit) { m_isInitDirLig = isInit; }
 
-
 	void Init();
 	//ÉâÉCÉgÇìnÇ∑ÇΩÇﬂÇÃä÷êî
-	void InitDirectionLight(DirectionLight* dirLight);
-	void InitPointLight(PointLight* ptLight);
+	void RecieveDirectionLight(DirectionLight* dirLight);
+	void RecievePointLight(PointLight* ptLight);
+	void RecieveSpotLight(SpotLight* spLight);
 	SkinModelRender* GetSkinModelRender();
 
 private:

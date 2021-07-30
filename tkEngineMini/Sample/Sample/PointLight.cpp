@@ -12,7 +12,7 @@ void PointLight::Update()
 	Move();
 }
 
-void PointLight::Init(const Vector3& position,const Vector3& color, const float& range)
+void PointLight::Init(const Vector3& position,const Vector3& color, float range)
 {
 	//À•W‚ğŒˆ’è
 	m_ptLight.pointLight.position.x = position.x;
@@ -55,7 +55,7 @@ void PointLight::SetColor(const Vector3& color)
 	m_ptLight.pointLight.color.z = color.z;
 }
 
-void PointLight::SetRange(const float& range)
+void PointLight::SetRange(float range)
 {
 	//‰e‹¿”ÍˆÍ‚ğŒˆ’è
 	m_ptLight.pointLight.ptRange = range;

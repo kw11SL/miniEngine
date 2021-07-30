@@ -3,6 +3,7 @@
 #include "SkinModelRender.h"
 #include "DirectionLight.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 
 namespace{
 	const char* MODELPATH_UTC = "Assets/modelData/unityChan.tkm";
@@ -79,14 +80,19 @@ void Player_new::Rotation()
 	m_rot.SetRotationDeg(Vector3::AxisY, m_angle);
 }
 
-void Player_new::InitDirectionLight(DirectionLight* dirLight)
+void Player_new::RecieveDirectionLight(DirectionLight* dirLight)
 {
 	m_skinModelRender->InitDirectionLight(dirLight);
 }
 
-void Player_new::InitPointLight(PointLight* ptLight)
+void Player_new::RecievePointLight(PointLight* ptLight)
 {
 	m_skinModelRender->InitPointLight(ptLight);
+}
+
+void Player_new::RecieveSpotLight(SpotLight* spLight)
+{
+	m_skinModelRender->InitSpotLight(spLight);
 }
 
 SkinModelRender* Player_new::GetSkinModelRender()

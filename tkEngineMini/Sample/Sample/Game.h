@@ -4,6 +4,7 @@ class SkinModelRender;
 class BG;
 class DirectionLight;
 class PointLight;
+class SpotLight;
 
 class Game : public IGameObject
 {
@@ -18,6 +19,7 @@ private:
 	BG* m_bg = nullptr;
 	DirectionLight* m_directionLight = nullptr;
 	PointLight* m_pointLight = nullptr;
+	SpotLight* m_spotLight = nullptr;
 	//SkinModelRender* m_skinModelRender = nullptr;
 };
 

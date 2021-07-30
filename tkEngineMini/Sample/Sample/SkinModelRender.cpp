@@ -2,6 +2,7 @@
 #include "SkinModelRender.h"
 #include "DirectionLight.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 
 namespace
 {
@@ -55,6 +56,14 @@ void SkinModelRender::InitPointLight(PointLight* ptLight)
 {
 	m_modelInitData.m_expandConstantBuffer_1 = ptLight->GetPointLightAddress();
 	m_modelInitData.m_expandConstantBufferSize_1 = sizeof(ptLight->GetPointLight());
+
+	m_model.Init(m_modelInitData);
+}
+
+void SkinModelRender::InitSpotLight(SpotLight* spLight)
+{
+	m_modelInitData.m_expandConstantBuffer_2 = spLight->GetSpotLightAddress();
+	m_modelInitData.m_expandConstantBufferSize_2 = sizeof(spLight->GetSpotLight());
 
 	m_model.Init(m_modelInitData);
 }

@@ -3,6 +3,7 @@
 class SkinModelRender;
 class DirectionLight;
 class PointLight;
+class SpotLight;
 
 class BG : public IGameObject
 {
@@ -14,6 +15,7 @@ public:
 
 	void RecieveDirectionLight(DirectionLight* dirLight);
 	void RecievePointLight(PointLight* ptLight);
+	void RecieveSpotLight(SpotLight* spLight);
 
 	SkinModelRender* GetSkinModelRender() { return m_skinModelRender; }
 
