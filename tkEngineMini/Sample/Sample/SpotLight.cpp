@@ -6,21 +6,6 @@ bool SpotLight::Start()
 	return true;
 }
 
-void SpotLight::Update()
-{
-
-}
-
-void SpotLight::Move()
-{
-
-}
-
-void SpotLight::Rotation()
-{
-
-}
-
 void SpotLight::Init(const Vector3& position, const Vector3& color, const float& range, const Vector3& direction, const float& angle)
 {
 	//À•W‚ðŒˆ’è
@@ -74,4 +59,47 @@ void SpotLight::SetDirection(const Vector3& direction)
 void SpotLight::SetAngle(float angle)
 {
 	m_spLight.spotLight.spAngle = angle;
+}
+
+void SpotLight::Move()
+{
+	float x = g_pad[0]->GetRStickXF();
+	float y = g_pad[0]->GetRStickYF();
+
+	if (!g_pad[0]->IsPress(enButtonRB1) && !g_pad[0]->IsPress(enButtonLB1)) {
+		m_position.x -= x * 2.0f;
+		m_position.y += y * 2.0f;
+	}
+
+	SetPosition(m_position);
+}
+
+void SpotLight::Rotation()
+{
+
+}
+
+void SpotLight::Update()
+{
+	Move();
+
+	//ƒeƒXƒg
+	//ŽËoŠp“xi‚è
+	if (g_pad[0]->IsPress(enButtonLeft)) {
+		m_angle += 1.0f;
+	}
+	else if (g_pad[0]->IsPress(enButtonRight)) {
+		m_angle -= 1.0f;
+	}
+	SetAngle(m_angle);
+
+	//‰e‹¿”ÍˆÍ•Ï‰»
+	if (g_pad[0]->IsPress(enButtonUp)) {
+		m_range += 1.0f;
+	}
+	else if (g_pad[0]->IsPress(enButtonDown)) {
+		m_range -= 1.0f;
+	}
+	SetRange(m_range);
+
 }

@@ -1,9 +1,6 @@
 #include "stdafx.h"
 #include "Player_new.h"
 #include "SkinModelRender.h"
-#include "DirectionLight.h"
-#include "PointLight.h"
-#include "SpotLight.h"
 
 namespace{
 	const char* MODELPATH_UTC = "Assets/modelData/unityChan.tkm";
@@ -46,6 +43,8 @@ void Player_new::SetPostion(const Vector3& pos)
 	m_position.x = pos.x;
 	m_position.y = pos.y;
 	m_position.z = pos.z;
+
+	m_skinModelRender->SetPosition(m_position);
 }
 
 void Player_new::SetScale(const Vector3& scale)
@@ -53,6 +52,8 @@ void Player_new::SetScale(const Vector3& scale)
 	m_scale.x = scale.x;
 	m_scale.y = scale.y;
 	m_scale.z = scale.z;
+
+	m_skinModelRender->SetScale(m_scale);
 }
 
 void Player_new::SetRotation(const Quaternion rot)

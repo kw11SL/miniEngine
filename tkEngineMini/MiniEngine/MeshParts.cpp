@@ -96,7 +96,7 @@ void MeshParts::CreateDescriptorHeaps()
 			}
 			//追加の定数バッファをディスクリプタヒープに登録する
 			if (m_expandConstantBuffer_2.IsValid()) {
-				descriptorHeap.RegistConstantBuffer(3, m_expandConstantBuffer_1);
+				descriptorHeap.RegistConstantBuffer(3, m_expandConstantBuffer_2);
 			}
 			//ディスクリプタヒープへの登録を確定させる。
 			descriptorHeap.Commit();

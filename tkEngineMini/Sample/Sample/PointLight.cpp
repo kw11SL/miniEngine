@@ -28,12 +28,24 @@ void PointLight::Init(const Vector3& position,const Vector3& color, float range)
 
 void PointLight::Move()
 {
+
+	//todo ƒ‚ƒfƒ‹ƒNƒ‰ƒX‚Æ“¯‚¶‚æ‚¤‚É“®‚©‚¹‚é‚æ‚¤‚É‚·‚é
+
 	float x = g_pad[0]->GetRStickXF();
 	float y = g_pad[0]->GetRStickYF();
 
+	//…•½ˆÚ“®
 	if (g_pad[0]->IsPress(enButtonLB1)) {
-		m_position.x += x * 2.0f;
-		m_position.z += y * 2.0f;
+		m_position.x -= x * 2.0f;
+		m_position.y += y * 2.0f;
+	}
+
+	//ã‰ºˆÚ“®
+	if (g_pad[0]->IsPress(enButtonRB2)) {
+		m_position.z += 2.0f;
+	}
+	else if (g_pad[0]->IsPress(enButtonLB2)) {
+		m_position.z -= 2.0f;
 	}
 
 	SetPosition(m_position);

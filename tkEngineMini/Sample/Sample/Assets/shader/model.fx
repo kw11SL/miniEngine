@@ -259,7 +259,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		psIn.normal
 	);
 
-	//距離による影響率を計算
+	//スポットライトの距離による影響率を計算
 	float3 distanceSp = length(psIn.worldPos - spotLight.position);
 	float affectSp = 1.0f - 1.0f / spotLight.range * distanceSp;
 	//影響率が0を下回ったら0に補正する
@@ -269,6 +269,27 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	//影響のしかたを指数関数的にする
 	affectSp = pow(affectSp, 3.0f);
 	
+	//スポットライトに影響率を乗算し、影響を弱める(1回目)
+	diffSpot *= affectSp;
+	specSpot *= affectSp;
+
+	//スポットライトの入射光と射出方向の角度を求める
+	float angleSp = dot(spLigDir, spotLight.direction);
+	angleSp = acos(angleSp);
+	//角度による影響率を求める
+	affectSp = 1.0f - 1.0f/(spotLight.angle * angleSp);
+	//0を下回る場合0に補正
+	if (affectSp < 0.0f) {
+		affectSp = 0.0f;
+	}
+	//影響の仕方を指数関数的にする
+	affectSp = pow(affectSp, 3.0f);
+	//スポットライトに影響率を乗算し、影響を弱める(2回目)
+	diffSpot *= affectSp;
+	specSpot *= affectSp;
+
+	
+
 	//最終カラーの決定
 	
 	//それぞれの拡散反射光を足す
@@ -325,7 +346,7 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
 	t = max(0.0f, t);
 
 	// 鏡面反射の強さを絞る
-	t = pow(t, 5.0f);
+	t = pow(t, 2.0f);
 
 	// 鏡面反射光を求める
 	return lightColor * t;
