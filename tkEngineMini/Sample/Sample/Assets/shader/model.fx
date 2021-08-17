@@ -166,8 +166,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	//	t = 0.0f;
 	//}
 
-	////拡散反射光を求める
-	//float3 diffuseLig = directionLight.color * t;
+	//拡散反射光を求める///////////////////////////////
 
 	//ディレクションライトの拡散反射光を求める
 	float3 diffDirection = CalcLambertDiffuse(
@@ -218,6 +217,8 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	////鏡面反射光を求める
 	//float3 specularLig = directionLight.color * t;
 	
+	//鏡面反射光を求める///////////////////////////////
+	
 	//ディレクションライトの鏡面反射光を求める
 	float3 specDirection = CalcPhongSpecular(
 		directionLight.direction,
@@ -237,19 +238,17 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	//ポイントライトの影響率を計算
 	float distancePt = length(psIn.worldPos - pointLight.position);
 	//距離に応じた影響度になるよう計算
-	float affect = 1.0f - 1.0f / pointLight.range * distancePt;
-
+	float affectPt = 1.0f - 1.0f / pointLight.range * distancePt;
 	//影響度が負の数にならないように補正
-	if (affect < 0.0f) {
-		affect = 0.0f;
+	if (affectPt < 0.0f) {
+		affectPt = 0.0f;
 	}
-	
 	//指数関数的な補正
-	affect = pow(affect, 3.0f);
+	affectPt = pow(affectPt, 3.0f);
 
 	//ポイントライトの拡散反射光、鏡面反射光に影響率を乗算して弱める
-	diffPoint *= affect;
-	specPoint *= affect;
+	diffPoint *= affectPt;
+	specPoint *= affectPt;
 
 	//スポットライトの鏡面反射光を求める
 	float3 specSpot = CalcPhongSpecular(
@@ -277,18 +276,16 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	float angleSp = dot(spLigDir, spotLight.direction);
 	angleSp = acos(angleSp);
 	//角度による影響率を求める
-	affectSp = 1.0f - 1.0f/(spotLight.angle * angleSp);
+	affectSp = 1.0f - 1.0f / spotLight.angle * angleSp;
 	//0を下回る場合0に補正
 	if (affectSp < 0.0f) {
 		affectSp = 0.0f;
 	}
 	//影響の仕方を指数関数的にする
-	affectSp = pow(affectSp, 3.0f);
+	affectSp = pow(affectSp, 0.5f);
 	//スポットライトに影響率を乗算し、影響を弱める(2回目)
 	diffSpot *= affectSp;
 	specSpot *= affectSp;
-
-	
 
 	//最終カラーの決定
 	
@@ -299,16 +296,12 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	//拡散反射光と鏡面反射光、環境光を足す
 	float3 lig = diffuseLig + specularLig + ambientLig;
 
-	////アンビエントライト(明るさを底上げ)
-	//lig.x += ambientLig.x;
-	//lig.y += ambientLig.y;
-	//lig.z += ambientLig.z;
-
+	//アルベドカラーをサンプルして最終出力カラーのベースを作成
 	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
 	
-	//最終出力カラーに光を乗算して出力カラーを決める
+	//最終出力カラーにライトを乗算して出力カラーを決める
 	albedoColor.xyz *= lig;
-
+	
 	return albedoColor;
 }
 
@@ -346,7 +339,7 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
 	t = max(0.0f, t);
 
 	// 鏡面反射の強さを絞る
-	t = pow(t, 2.0f);
+	t = pow(t, 5.0f);
 
 	// 鏡面反射光を求める
 	return lightColor * t;

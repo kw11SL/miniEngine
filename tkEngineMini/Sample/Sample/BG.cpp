@@ -12,7 +12,7 @@ namespace
 BG::BG()
 {
 	m_skinModelRender = NewGO<SkinModelRender>(0);
-	m_skinModelRender->Init("Assets/modelData/bg/stage_3.tkm",enModelUpAxisZ);
+	m_skinModelRender->Init("Assets/modelData/bg/bg.tkm",enModelUpAxisZ);
 	m_skinModelRender->InitShader(MODEL_SHADER_PATH, VS_ENTRYPOINT_NAME);
 }
 

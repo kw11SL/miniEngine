@@ -25,46 +25,51 @@ void DirectionLight::Update()
 
 void DirectionLight::Init(const Vector3& direction, const Vector3& color,const Vector3& ambLig)
 {
-	m_light.directionLight.direction.x = direction.x;
-	m_light.directionLight.direction.y = direction.y;
-	m_light.directionLight.direction.z = direction.z;
-	//方向を正規化
-	m_light.directionLight.direction.Normalize();
+	//メンバ変数に記録
+	m_direction = direction;
+	m_direction.Normalize();
+	m_color = color;
+	m_ambientLig = ambLig;
 
-	m_light.directionLight.color.x = color.x;
-	m_light.directionLight.color.y = color.y;
-	m_light.directionLight.color.z = color.z;
-
-	m_light.ambientLight.x = ambLig.x;
-	m_light.ambientLight.y = ambLig.y;
-	m_light.ambientLight.z = ambLig.z;
+	//方向を決定
+	m_light.directionLight.direction = m_direction;
+	//カラーを決定
+	m_light.directionLight.color = m_color;
+	//アンビエントライトを決定
+	m_light.ambientLight = m_ambientLig;
 }
 
 void DirectionLight::Rotation()
 {
+	//現在向いている方向を取得
 	Vector3 direction = GetDirection();
-
+	//スティック入力を取得
 	float angleH = g_pad[0]->GetRStickXF();
 	float angleV = g_pad[0]->GetRStickYF();
 
 	if (g_pad[0]->IsPress(enButtonRB1)) {
+		//水平方向の回転
 		m_rotationH.SetRotationDeg(Vector3::AxisY, angleH * 6.0f);
+		//水平方向のクォータニオンとベクトルを合成
 		m_rotationH.Apply(direction);
+		//垂直方向の回転
 		m_rotationV.SetRotationDeg(Vector3::AxisX, angleV * 6.0f);
+		//垂直方向のクォータニオンとベクトルを合成
 		m_rotationV.Apply(direction);
 	}
 
+	//合成されたベクトルを反映(=向きが変わる)
 	SetDirection(direction);
 
 }
 
 void DirectionLight::SetDirection(const Vector3& direction)
 {
-	m_light.directionLight.direction.x = direction.x;
-	m_light.directionLight.direction.y = direction.y;
-	m_light.directionLight.direction.z = direction.z;
-	//正規化
-	m_light.directionLight.direction.Normalize();
+	m_direction = direction;
+	//方向を正規化
+	m_direction.Normalize();
+
+	m_light.directionLight.direction = m_direction;
 }
 
 void DirectionLight::SetRotationH(const Quaternion& rotH)
@@ -79,14 +84,14 @@ void DirectionLight::SetRotationV(const Quaternion& rotV)
 
 void DirectionLight::SetColor(const Vector3& color)
 {
-	m_light.directionLight.color.x = color.x;
-	m_light.directionLight.color.y = color.y;
-	m_light.directionLight.color.z = color.z;
+	m_color = color;
+
+	m_light.directionLight.color = m_color;
 }
 
 void DirectionLight::SetEyePos(const Vector3& pos)
 {
-	m_light.eyePos.x = pos.x;
-	m_light.eyePos.y = pos.y;
-	m_light.eyePos.z = pos.z;
+	m_eyePos = pos;
+
+	m_light.eyePos = m_eyePos;
 }

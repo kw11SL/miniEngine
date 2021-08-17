@@ -104,7 +104,7 @@ SkinModelRender* Player_new::GetSkinModelRender()
 
 void Player_new::Update()
 {
-	Rotation();
+	//Rotation();
 
 	m_skinModelRender->SetRotation(m_rot);
 }

@@ -27,14 +27,14 @@ bool Game::Start()
 
 	//ポイントライトの初期化
 	m_pointLight = NewGO<PointLight>(0, "pointlight");
-	m_pointLight->Init({ 0.0f,0.0f,0.0f }, { 0.0f,0.5f,0.0f }, 1000.0f);
+	m_pointLight->Init({ 0.0f,0.0f,50.0f }, { 1.0f,0.0f,0.0f }, 300.0f);
 
 	//スポットライトの初期化
-	m_spotLight = NewGO<SpotLight>(0, "spotLight");
-	Vector3 spDir = { 1.0f,-1.0f,1.0f };
+	m_spotLight = NewGO<SpotLight>(0, "spotlight");
+	Vector3 spDir = { 0.0f,0.0f,-1.0f };
 	spDir.Normalize();
 	float spEmitAngle = Math::DegToRad(25.0f);
-	m_spotLight->Init({ 0.0f,50.0f,0.0f }, { 0.0f,0.0f,1.0f }, 300.0f, spDir, spEmitAngle);
+	m_spotLight->Init({ 0.0f,0.0f,200.0f }, { 2.0f,2.0f,2.0f },100.0f, spDir, spEmitAngle);
 
 
 	//プレイヤーの初期化
@@ -50,14 +50,14 @@ bool Game::Start()
 	//プレイヤーにライトを渡す処理
 	if (m_player->GetSkinModelRender() != nullptr) {
 		m_player->RecieveDirectionLight(m_directionLight);
-		//m_player->RecievePointLight(m_pointLight);
+		m_player->RecievePointLight(m_pointLight);
 		m_player->RecieveSpotLight(m_spotLight);
 	}
 
 	//背景にライトを渡す処理
 	if (m_bg->GetSkinModelRender() != nullptr) {
 		m_bg->RecieveDirectionLight(m_directionLight);
-		//m_bg->RecievePointLight(m_pointLight);
+		m_bg->RecievePointLight(m_pointLight);
 		m_bg->RecieveSpotLight(m_spotLight);
 	}
 

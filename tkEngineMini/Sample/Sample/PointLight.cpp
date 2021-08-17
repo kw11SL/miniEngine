@@ -14,16 +14,17 @@ void PointLight::Update()
 
 void PointLight::Init(const Vector3& position,const Vector3& color, float range)
 {
+	//メンバ変数に記録
+	m_position = position;
+	m_color = color;
+	m_range = range;
+
 	//座標を決定
-	m_ptLight.pointLight.position.x = position.x;
-	m_ptLight.pointLight.position.y = position.y;
-	m_ptLight.pointLight.position.z = position.z;
+	m_ptLight.pointLight.position = m_position;
 	//色を決定
-	m_ptLight.pointLight.color.x = color.x;
-	m_ptLight.pointLight.color.y = color.y;
-	m_ptLight.pointLight.color.z = color.z;
+	m_ptLight.pointLight.color = m_color;
 	//影響範囲を決定
-	m_ptLight.pointLight.ptRange = range;
+	m_ptLight.pointLight.ptRange = m_range;
 }
 
 void PointLight::Move()
@@ -53,22 +54,24 @@ void PointLight::Move()
 
 void PointLight::SetPosition(const Vector3& position)
 {
+	m_position = position;
+
 	//座標を決定
-	m_ptLight.pointLight.position.x = position.x;
-	m_ptLight.pointLight.position.y = position.y;
-	m_ptLight.pointLight.position.z = position.z;
+	m_ptLight.pointLight.position = m_position;
 }
 
 void PointLight::SetColor(const Vector3& color)
 {
+	m_color = color;
+
 	//色を決定
-	m_ptLight.pointLight.color.x = color.x;
-	m_ptLight.pointLight.color.y = color.y;
-	m_ptLight.pointLight.color.z = color.z;
+	m_ptLight.pointLight.color = m_color;
 }
 
 void PointLight::SetRange(float range)
 {
+	m_range = range;
+
 	//影響範囲を決定
-	m_ptLight.pointLight.ptRange = range;
+	m_ptLight.pointLight.ptRange = m_range;
 }

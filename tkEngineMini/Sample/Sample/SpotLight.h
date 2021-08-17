@@ -1,4 +1,7 @@
 #pragma once
+
+class SkinModelRender;
+
 struct SSpotLight
 {
 	Vector3 position = Vector3::Zero;			//座標
@@ -17,8 +20,8 @@ struct SpLight
 class SpotLight : public IGameObject
 {
 public:
-	SpotLight() {};
-	~SpotLight() {};
+	SpotLight();
+	~SpotLight();
 	bool Start() override;
 	void Update() override;
 
@@ -33,6 +36,7 @@ public:
 	
 	//セッター
 	void SetPosition(const Vector3& position);
+	void SetRotation(const Quaternion& qRot);
 	void SetColor(const Vector3& color);
 	void SetRange(float range);
 	void SetDirection(const Vector3& direction);
@@ -40,6 +44,7 @@ public:
 
 	//ゲッター
 	const Vector3& GetPosition() { return m_position; }
+	const Quaternion GetRotation() { return m_qRot; }
 	const Vector3& GetColor() { return m_color; }
 	const float& GetRange() { return m_range; }
 	const Vector3& GetDirection() { return m_direction; }
@@ -50,9 +55,17 @@ public:
 private:
 	SpLight m_spLight;
 	Vector3 m_position = Vector3::Zero;
+	Quaternion m_qRot = Quaternion::Identity;
 	Vector3 m_color = Vector3::One;
 	float m_range = 0.0f;
 	Vector3 m_direction = Vector3::Zero;
 	float m_angle = 0.0f;
+
+	Quaternion m_rotationH = Quaternion::Identity;
+	Quaternion m_rotationV = Quaternion::Identity;
+
+	//ライトの実体確認用モデル
+	SkinModelRender* m_skinModelRender = nullptr;
 };
+
 
