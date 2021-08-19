@@ -80,6 +80,7 @@ struct SPSIn{
 	float3 normal		: NORMAL;		//頂点の法線
 	float2 uv 			: TEXCOORD0;	//uv座標。
 	float3 worldPos		: TEXCOORD1;	//ワールド座標
+	float3 normalInView : TEXCOORD2;	//カメラ空間の法線
 };
 
 ////////////////////////////////////////////////
@@ -134,6 +135,9 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 	psIn.normal = mul(mWorld, vsIn.normal);		//法線を回転させる
 	psIn.uv = vsIn.uv;
 
+	//カメラ空間の法線を求める
+	psIn.normalInView = mul(mView, psIn.normal);
+
 	return psIn;
 }
 
@@ -156,16 +160,6 @@ SPSIn VSSkinMain( SVSIn vsIn )
 /// </summary>
 float4 PSMain(SPSIn psIn) : SV_Target0
 {
-	////ライトの影響度の計算
-	////ピクセルの法線とライトの方向の内積を計算する
-	//float t = dot(psIn.normal,directionLight.direction);
-	////内積の結果に-1を掛ける
-	//t *= -1.0f;
-	////内積の結果が0より小さい場合、0にする
-	//if (t < 0.0f) {
-	//	t = 0.0f;
-	//}
-
 	//拡散反射光を求める///////////////////////////////
 
 	//ディレクションライトの拡散反射光を求める
@@ -198,24 +192,6 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		spotLight.color,
 		psIn.normal
 	);
-
-	////サーフェスの反射
-	////ライトの方向と頂点の法線情報から反射ベクトルを求める
-	//float3 refVec = reflect(directionLight.direction, psIn.normal);
-	////光の当たったサーフェスから視点に伸びるベクトルを求める
-	//float3 toEye = eyePos - psIn.worldPos;
-	////方向を正規化
-	//toEye = normalize(toEye);
-	////反射ベクトルと実際の反射ベクトルの内積により鏡面反射の強さを求める
-	//t = dot(refVec, toEye);
-	////内積が負の値なら0にする
-	//if (t < 0.0f) {
-	//	t = 0.0f;
-	//}
-	////指数関数的変化にして反射の強さを絞る
-	//t = pow(t, 5.0f);
-	////鏡面反射光を求める
-	//float3 specularLig = directionLight.color * t;
 	
 	//鏡面反射光を求める///////////////////////////////
 	
@@ -287,14 +263,30 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	diffSpot *= affectSp;
 	specSpot *= affectSp;
 
+	//リムの強さを求める///////////////////////////////
+	
+	//ディレクションライトによるリムライト
+	//サーフェスの法線とディレクションライトの入射方向に依存するリムの強さを求める
+	//max関数:受け取った引数のうち、値が大きい方を返す(if分より速いことがある)
+	float power1 = 1.0f - max(0.0f, dot(directionLight.direction, psIn.normal));
+	//サーフェスの法線と視線の方向に依存するリムの強さを求める
+	float power2 = 1.0f - max(0.0f, psIn.normalInView.z * -1.0f);
+	//最終的なリムの強さを求める
+	float limPower = power1 * power2;
+	limPower = pow(limPower, 1.3f);
+
+	//ディレクションライトにリムライトの反射光を合算
+	float3 limColorDir = limPower * directionLight.color;
+
+
 	//最終カラーの決定
 	
 	//それぞれの拡散反射光を足す
 	float3 diffuseLig = diffDirection + diffPoint + diffSpot;
 	//それぞれの鏡面反射光を足す
 	float3 specularLig = specDirection + specPoint + specSpot;
-	//拡散反射光と鏡面反射光、環境光を足す
-	float3 lig = diffuseLig + specularLig + ambientLig;
+	//拡散反射光と鏡面反射光、環境光、リムライトを足す
+	float3 lig = diffuseLig + specularLig + ambientLig + limColorDir;
 
 	//アルベドカラーをサンプルして最終出力カラーのベースを作成
 	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);

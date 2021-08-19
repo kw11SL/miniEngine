@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Game.h"
 #include "Player_new.h"
-#include "SkinModelRender.h"
 #include "BG.h"
 #include "Direction.h"
 #include "DirectionLight.h"
