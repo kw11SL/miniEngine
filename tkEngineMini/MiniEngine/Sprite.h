@@ -63,6 +63,9 @@ public:
 	/// UnityのuGUIに準拠。
 	/// </param>
 	void Update(const Vector3& pos, const Quaternion& rot, const Vector3& scale, const Vector2& pivot = DEFAULT_PIVOT);
+	/// @brief カラー変更
+	/// @param color カラー
+	void SetColor(const Vector4& color);
 	/// <summary>
 	/// 描画。
 	/// </summary>
@@ -132,4 +135,6 @@ private:
 	Shader				m_vs;					//頂点シェーダー。
 	Shader				m_ps;					//ピクセルシェーダー。
 	bool				m_isInited = false;		//初期化済み？
+
+	Vector4				m_color = {1.0f,1.0f,1.0f,1.0f};	//カラー変更用ベクトル
 };

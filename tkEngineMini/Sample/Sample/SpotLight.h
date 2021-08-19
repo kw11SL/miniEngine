@@ -44,7 +44,7 @@ public:
 
 	//ÉQÉbÉ^Å[
 	const Vector3& GetPosition() { return m_position; }
-	const Quaternion GetRotation() { return m_qRot; }
+	const Quaternion& GetRotation() { return m_qRot; }
 	const Vector3& GetColor() { return m_color; }
 	const float& GetRange() { return m_range; }
 	const Vector3& GetDirection() { return m_direction; }

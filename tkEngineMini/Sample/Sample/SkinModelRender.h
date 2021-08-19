@@ -1,6 +1,4 @@
 #pragma once
-//#include "DirectionLight.h"
-//#include "PointLight.h"
 
 class Model;
 class AnimationClip;
@@ -33,8 +31,6 @@ public:
 	Vector3 GetPosition() { return m_position; }
 	Vector3 GetScale() { return m_scale; }
 	Quaternion GetRotation() { return m_rot; }
-
-	
 
 private:
 	Model m_model;

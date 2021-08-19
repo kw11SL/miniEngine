@@ -1,5 +1,4 @@
 #pragma once
-//#include "DirectionLight.h"
 class SkinModelRender;
 class DirectionLight;
 class PointLight;

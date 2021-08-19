@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Player_new.h"
-#include "SkinModelRender.h"
 
 namespace{
 	const char* MODELPATH_UTC = "Assets/modelData/unityChan.tkm";

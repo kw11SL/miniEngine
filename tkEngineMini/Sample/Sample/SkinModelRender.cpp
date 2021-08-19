@@ -70,16 +70,12 @@ void SkinModelRender::InitSpotLight(SpotLight* spLight)
 
 void SkinModelRender::SetPosition(const Vector3& pos)
 {
-	m_position.x = pos.x;
-	m_position.y = pos.y;
-	m_position.z = pos.z;
+	m_position = pos;
 }
 
 void SkinModelRender::SetScale(const Vector3& scale)
 {
-	m_scale.x = scale.x;
-	m_scale.y = scale.y;
-	m_scale.z = scale.z;
+	m_scale = scale;
 }
 
 void SkinModelRender::SetRotation(const Quaternion& rot)

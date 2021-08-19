@@ -15,6 +15,9 @@ Game::~Game()
 	DeleteGO(m_directionLight);
 	DeleteGO(m_pointLight);
 	DeleteGO(m_spotLight);
+
+	//テスト
+	DeleteGO(m_sprite);
 }
 
 bool Game::Start()
@@ -67,6 +70,11 @@ bool Game::Start()
 	//	m_direction->RecieveSpotLight(m_spotLight);
 	//}
 	
+	//テスト
+	m_sprite = NewGO<SpriteRender>(0, "sprite");
+	m_sprite->Init("Assets/sprite/finish.dds",256,256,AlphaBlendMode_Trans);
+	m_sprite->SetColor({ 1.0f,0.0f,0.0f,0.5f });
+
 	return true;
 }
 

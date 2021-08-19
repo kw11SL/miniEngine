@@ -1,6 +1,7 @@
 #pragma once
 class Player_new;
 class SkinModelRender;
+class SpriteRender;
 class BG;
 class Direction;
 class DirectionLight;
@@ -21,5 +22,8 @@ private:
 	DirectionLight* m_directionLight = nullptr;
 	PointLight* m_pointLight = nullptr;
 	SpotLight* m_spotLight = nullptr;
+
+	//ƒeƒXƒg
+	SpriteRender* m_sprite = nullptr;
 };
 
