@@ -272,6 +272,12 @@
     <ClCompile Include="SpriteRender.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="GaussianBlur.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\MiniEngine\RenderTarget.cpp">
+      <Filter>MiniEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -519,6 +525,12 @@
     </ClInclude>
     <ClInclude Include="SpriteRender.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussianBlur.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MiniEngine\RenderTarget.h">
+      <Filter>MiniEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
