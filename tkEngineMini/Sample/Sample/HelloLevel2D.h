@@ -12,7 +12,7 @@ class HelloLevel2D : public IGameObject
 private:
 	Level2D m_level2D;		//レベル2D。
 	Sprite m_sprite;			//スプライト。
-	Vector3 m_position;		//座標。
-	Vector3 m_scale;		//大きさ。
+	Vector3 m_position = Vector3::Zero;		//座標。
+	Vector3 m_scale = Vector3::One;		//大きさ。
 };
 

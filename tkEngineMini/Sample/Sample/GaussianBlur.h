@@ -2,6 +2,9 @@
 class GaussianBlur
 {
 public:
+	GaussianBlur() {}
+	~GaussianBlur() {}
+
 	/// @brief テクスチャの初期化
 	/// @param baseTexture ブラーを掛ける元となるテクスチャ
 	void Init(Texture* baseTexture);
@@ -33,7 +36,7 @@ private:
 
 private:
 	enum {NUM_WEIGHTS = 8};						//重みの数
-	float m_weights[NUM_WEIGHTS];				//重みテーブル
+	float m_weights[NUM_WEIGHTS] = {0.0f};		//重みテーブル
 	Texture* m_baseTexture = nullptr;			//ブラーを適用するベースのテクスチャ
 	RenderTarget m_xBlurRenderTarget;			//横ブラー画像を描画するレンダリングターゲット
 	RenderTarget m_yBlurRenderTarget;			//縦ブラー画像を描画するレンダリングターゲット

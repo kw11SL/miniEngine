@@ -123,20 +123,20 @@ private:
 	/// <param name="initData"></param>
 	void InitConstantBuffer(const SpriteInitData& initData);
 private:
-	IndexBuffer m_indexBuffer;			//インデックスバッファ。
-	VertexBuffer m_vertexBuffer;		//頂点バッファ。
-	int m_numTexture = 0;				//テクスチャの枚数。
-	Texture m_textures[MAX_TEXTURE];	//テクスチャ。
+	IndexBuffer m_indexBuffer;								//インデックスバッファ。
+	VertexBuffer m_vertexBuffer;							//頂点バッファ。
+	int m_numTexture = 0;									//テクスチャの枚数。
+	Texture m_textures[MAX_TEXTURE];						//テクスチャ。
 	Texture* m_textureExternal[MAX_TEXTURE] = {nullptr};	//外部から指定されたテクスチャ
-	Vector3 m_position ;				//座標。
-	Vector2 m_size;						//サイズ。
-	Quaternion m_rotation ;			//回転。
-	Matrix m_world;					//ワールド行列。
+	Vector3 m_position = Vector3::Zero ;					//座標。
+	Vector2 m_size = {0.0f,0.0f};							//サイズ。
+	Quaternion m_rotation = Quaternion::Identity ;			//回転。
+	Matrix m_world;											//ワールド行列。
 
 	struct LocalConstantBuffer {
 		Matrix mvp;
-		Vector4 mulColor;
-		Vector4 screenParam;
+		Vector4 mulColor = {1.0f,1.0f,1.0f,1.0f};
+		Vector4 screenParam = {1.0f,1.0f,1.0f,1.0f};
 	};
 	LocalConstantBuffer m_constantBufferCPU;	//CPU側の定数バッファ。
 	ConstantBuffer		m_constantBufferGPU;	//GPU側の定数バッファ。

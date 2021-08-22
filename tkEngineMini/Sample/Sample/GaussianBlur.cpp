@@ -4,7 +4,7 @@
 namespace
 {
 	//ガウシアンブラー用シェーダのファイルパス
-	const char* GAUSSIANBLUR_SHADER_FILEPATH = "Assets/shader/gaussianBlur.fx";
+	const char* GAUSSIANBLUR_SHADER_FILEPATH = "Assets/shader/GaussianBlur.fx";
 	//横ブラー用シェーダの頂点シェーダエントリーポイント名
 	const char* XBLUR_VS_ENTRY_POINT_NAME = "VSXBlur";
 	//縦ブラー用シェーダの頂点シェーダエントリーポイント名
@@ -89,48 +89,52 @@ void GaussianBlur::InitRenderTargets()
 void GaussianBlur::InitSprites()
 {
 	//横ブラー用のスプライトを初期化
-	//横ブラー用初期化データを作成
-	SpriteInitData xBlurSpriteInitData;
-	xBlurSpriteInitData.m_fxFilePath = GAUSSIANBLUR_SHADER_FILEPATH;
-	xBlurSpriteInitData.m_vsEntryPointFunc = XBLUR_VS_ENTRY_POINT_NAME;
-	xBlurSpriteInitData.m_psEntryPoinFunc = GAUSSIANBLUR_PS_ENTRY_POINT_NAME;
-	//スプライトの解像度は横ブラー用レンダリングターゲットと同じ
-	xBlurSpriteInitData.m_width = m_xBlurRenderTarget.GetWidth();
-	//高さも同様
-	xBlurSpriteInitData.m_height = m_xBlurRenderTarget.GetHeight();
-	//テクスチャはベースのテクスチャ
-	xBlurSpriteInitData.m_textures[0] = m_baseTexture;
-	//書き込むレンダリングターゲットのフォーマットを指定する
-	xBlurSpriteInitData.m_colorBufferFormat[0] = m_xBlurRenderTarget.GetColorBufferFormat();
-	//定数バッファにブラー用パラメータを設定
-	//ブラーの重みテーブルを設定
-	xBlurSpriteInitData.m_expandConstantBuffer = &m_weights;
-	xBlurSpriteInitData.m_expandConstantBufferSize = sizeof(m_weights);
+	{
+		//横ブラー用初期化データを作成
+		SpriteInitData xBlurSpriteInitData;
+		xBlurSpriteInitData.m_fxFilePath = GAUSSIANBLUR_SHADER_FILEPATH;
+		xBlurSpriteInitData.m_vsEntryPointFunc = XBLUR_VS_ENTRY_POINT_NAME;
+		xBlurSpriteInitData.m_psEntryPoinFunc = GAUSSIANBLUR_PS_ENTRY_POINT_NAME;
+		//スプライトの解像度は横ブラー用レンダリングターゲットと同じ
+		xBlurSpriteInitData.m_width = m_xBlurRenderTarget.GetWidth();
+		//高さも同様
+		xBlurSpriteInitData.m_height = m_xBlurRenderTarget.GetHeight();
+		//テクスチャはベースのテクスチャ
+		xBlurSpriteInitData.m_textures[0] = m_baseTexture;
+		//書き込むレンダリングターゲットのフォーマットを指定する
+		xBlurSpriteInitData.m_colorBufferFormat[0] = m_xBlurRenderTarget.GetColorBufferFormat();
+		//定数バッファにブラー用パラメータを設定
+		//ブラーの重みテーブルを設定
+		xBlurSpriteInitData.m_expandConstantBuffer = &m_weights;
+		xBlurSpriteInitData.m_expandConstantBufferSize = sizeof(m_weights);
 
-	//初期化データを基に横ブラー用スプライトを初期化
-	m_xBlurSprite.Init(xBlurSpriteInitData);
+		//初期化データを基に横ブラー用スプライトを初期化
+		m_xBlurSprite.Init(xBlurSpriteInitData);
+	}
 
 	//縦ブラー用のスプライトを初期化
-	//縦ブラー用初期化データを作成
-	SpriteInitData yBlurSpriteInitData;
-	yBlurSpriteInitData.m_fxFilePath = GAUSSIANBLUR_SHADER_FILEPATH;
-	yBlurSpriteInitData.m_vsEntryPointFunc = YBLUR_VS_ENTRY_POINT_NAME;
-	yBlurSpriteInitData.m_psEntryPoinFunc = GAUSSIANBLUR_PS_ENTRY_POINT_NAME;
-	//スプライトの解像度は縦ブラー用レンダリングターゲットと同じ
-	yBlurSpriteInitData.m_width = m_yBlurRenderTarget.GetWidth();
-	//高さも同様
-	yBlurSpriteInitData.m_height = m_yBlurRenderTarget.GetHeight();
-	//テクスチャは横ブラーを掛けたもの
-	yBlurSpriteInitData.m_textures[0] = &m_xBlurRenderTarget.GetRenderTargetTexture();
-	//書き込むレンダリングターゲットのフォーマットを指定する
-	yBlurSpriteInitData.m_colorBufferFormat[0] = m_yBlurRenderTarget.GetColorBufferFormat();
-	//定数バッファにブラー用パラメータを設定
-	//ブラーの重みテーブルを設定
-	yBlurSpriteInitData.m_expandConstantBuffer = &m_weights;
-	yBlurSpriteInitData.m_expandConstantBufferSize = sizeof(m_weights);
+	{
+		//縦ブラー用初期化データを作成
+		SpriteInitData yBlurSpriteInitData;
+		yBlurSpriteInitData.m_fxFilePath = GAUSSIANBLUR_SHADER_FILEPATH;
+		yBlurSpriteInitData.m_vsEntryPointFunc = YBLUR_VS_ENTRY_POINT_NAME;
+		yBlurSpriteInitData.m_psEntryPoinFunc = GAUSSIANBLUR_PS_ENTRY_POINT_NAME;
+		//スプライトの解像度は縦ブラー用レンダリングターゲットと同じ
+		yBlurSpriteInitData.m_width = m_yBlurRenderTarget.GetWidth();
+		//高さも同様
+		yBlurSpriteInitData.m_height = m_yBlurRenderTarget.GetHeight();
+		//テクスチャは横ブラーを掛けたもの
+		yBlurSpriteInitData.m_textures[0] = &m_xBlurRenderTarget.GetRenderTargetTexture();
+		//書き込むレンダリングターゲットのフォーマットを指定する
+		yBlurSpriteInitData.m_colorBufferFormat[0] = m_yBlurRenderTarget.GetColorBufferFormat();
+		//定数バッファにブラー用パラメータを設定
+		//ブラーの重みテーブルを設定
+		yBlurSpriteInitData.m_expandConstantBuffer = &m_weights;
+		yBlurSpriteInitData.m_expandConstantBufferSize = sizeof(m_weights);
 
-	//初期化データを基に横ブラー用スプライトを初期化
-	m_yBlurSprite.Init(yBlurSpriteInitData);
+		//初期化データを基に横ブラー用スプライトを初期化
+		m_yBlurSprite.Init(yBlurSpriteInitData);
+	}
 }
 
 void GaussianBlur::UpdateWeightsTable(float blurPower)
