@@ -27,11 +27,10 @@
 #include "DirectXTK/Inc/CommonStates.h"
 #include "DirectXTK/Inc/SpriteBatch.h"
 #include "DirectXTK/Inc/SpriteFont.h"
-
 #include "d3dx12.h"
 
-//レンダリングターゲットの最大数
-const int MAX_RENDERING_TARGET = D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT;
+const int MAX_RENDERING_TARGET = D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT;	//レンダリングターゲットの最大数。
+
 using namespace Microsoft::WRL;
 
 #include "dbg/MyAssert.h"

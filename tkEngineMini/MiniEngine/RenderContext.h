@@ -30,7 +30,6 @@ public:
 	{
 		m_commandList->IASetVertexBuffers(0, 1, &vb.GetView());
 	}
-	
 	/// <summary>
 	/// インデックスバッファを設定。
 	/// </summary>
@@ -39,7 +38,6 @@ public:
 	{
 		m_commandList->IASetIndexBuffer(&ib.GetView());
 	}
-	
 	/// <summary>
 	/// プリミティブのトポロジーを設定。
 	/// </summary>
@@ -51,7 +49,6 @@ public:
 	{
 		m_commandList->IASetPrimitiveTopology(topology);
 	}
-	
 	/// <summary>
 	/// コマンドリストを設定。
 	/// </summary>
@@ -60,7 +57,15 @@ public:
 	{
 		m_commandList = commandList;
 	}
-	
+	/// <summary>
+	/// ビューポートを設定
+	/// </summary>
+	/// <param name="viewport">ビューポート</param>
+	void SetViewport(D3D12_VIEWPORT& viewport)
+	{
+		m_commandList->RSSetViewports(1, &viewport);
+	}
+
 	/// <summary>
 	/// ビューポートとシザリング矩形をセットで設定
 	/// </summary>
@@ -78,14 +83,14 @@ public:
 		m_commandList->RSSetViewports(1, &viewport);
 		m_currentViewport = viewport;
 	}
-	
+
 	/// <summary>
-	/// ビューポートを設定
+	/// シザリング矩形を設定
 	/// </summary>
-	/// <param name="viewport">ビューポート</param>
-	void SetViewport(D3D12_VIEWPORT& viewport)
+	/// <param name="rect"></param>
+	void SetScissorRect(D3D12_RECT& rect)
 	{
-		m_commandList->RSSetViewports(1, &viewport);
+		m_commandList->RSSetScissorRects(1, &rect);
 	}
 
 	/// <summary>
@@ -95,15 +100,6 @@ public:
 	D3D12_VIEWPORT GetViewport() const
 	{
 		return m_currentViewport;
-	}
-
-	/// <summary>
-	/// シザリング矩形を設定
-	/// </summary>
-	/// <param name="rect"></param>
-	void SetScissorRect(D3D12_RECT& rect)
-	{
-		m_commandList->RSSetScissorRects(1, &rect);
 	}
 
 	/// <summary>
@@ -125,7 +121,6 @@ public:
 	{
 		m_commandList->SetComputeRootSignature(rootSignature.Get());
 	}
-	
 	/// <summary>
 	/// パイプラインステートを設定。
 	/// </summary>
@@ -137,7 +132,6 @@ public:
 	{
 		m_commandList->SetPipelineState(pipelineState.Get());
 	}
-	
 	/// <summary>
 	/// レイトレ用のパイプラインステートオブジェクトを設定。
 	/// </summary>
@@ -155,7 +149,6 @@ public:
 	
 	void SetDescriptorHeap(DescriptorHeap& descHeap);
 	void SetComputeDescriptorHeap(DescriptorHeap& descHeap);
-	
 	/// <summary>
 	/// 複数のディスクリプタヒープを登録。
 	/// </summary>
@@ -168,7 +161,6 @@ public:
 		}
 		m_commandList->SetDescriptorHeaps(numDescriptorHeap, m_descriptorHeaps);
 	}
-	
 	/// <summary>
 	/// 定数バッファを設定。
 	/// </summary>
@@ -184,7 +176,6 @@ public:
 			std::abort();
 		}
 	}
-	
 	/// <summary>
 	/// シェーダーリソースを設定。
 	/// </summary>
@@ -202,13 +193,15 @@ public:
 	}
 	
 	/// <summary>
-	/// レンダリングターゲットとビューポートを同時に設定する。
+	/// レンダリングターゲットを設定する。
 	/// </summary>
 	/// <param name="renderTarget"></param>
 	void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle)
 	{
 		m_commandList->OMSetRenderTargets(1, &rtvHandle, FALSE, &dsvHandle);
 	}
+	
+	////SetRenderTarget関連////
 
 	/// <summary>
 	/// レンダリングターゲットをスロット0に設定する。
@@ -223,7 +216,7 @@ public:
 		RenderTarget* rtArray[] = { &renderTarget };
 		SetRenderTargets(1, rtArray);
 	}
-	
+
 	/// <summary>
 	/// 複数枚のレンダリングターゲットを設定する。
 	/// </summary>
@@ -233,7 +226,11 @@ public:
 	/// <param name="numRT">レンダリングターゲットの数</param>
 	/// <param name="renderTarget">レンダリングターゲットの配列。</param>
 	void SetRenderTargets(UINT numRT, RenderTarget* renderTargets[]);
+
+	///////////////////////////////////
 	
+	////RenderTargetAndViewPort関連////
+
 	/// <summary>
 	/// レンダリングターゲットとビューポートを同時に設定する。
 	/// </summary>
@@ -242,7 +239,7 @@ public:
 	/// </remarks>
 	/// <param name="renderTarget">レンダリングターゲット</param>
 	void SetRenderTargetAndViewport(RenderTarget& renderTarget);
-	
+
 	/// <summary>
 	/// 複数枚のレンダリングターゲットとビューポートを同時に設定する。
 	/// </summary>
@@ -252,7 +249,31 @@ public:
 	/// <param name="numRT">設定するレンダリングターゲットの枚数</param>
 	/// <param name="renderTargets">レンダリングターゲットの配列。</param>
 	void SetRenderTargetsAndViewport(UINT numRT, RenderTarget* renderTargets[]);
-	
+
+	//////////////////////////////////////////
+
+	////レンダリングターゲットのクリア関連////
+
+	/// <summary>
+	/// レンダリングターゲットのクリア。
+	/// </summary>
+	/// <param name="renderTarget"></param>
+	void ClearRenderTargetView(RenderTarget& renderTarget)
+	{
+		RenderTarget* rtArray[] = { &renderTarget };
+		ClearRenderTargetViews(1, rtArray);
+	}
+
+	/// <summary>
+	/// レンダリングターゲットのクリア。
+	/// </summary>
+	/// <param name="renderTarget">レンダリングターゲット</param>
+	/// <param name="clearColor">クリアカラー</param>
+	void ClearRenderTargetView(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const float* clearColor)
+	{
+		m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+	}
+
 	/// <summary>
 	/// 複数枚のレンダリングターゲットをクリア。
 	/// </summary>
@@ -266,25 +287,8 @@ public:
 		RenderTarget* renderTargets[]
 	);
 
-	/// <summary>
-	/// レンダリングターゲットのクリア。
-	/// </summary>
-	/// <param name="renderTarget"></param>
-	void ClearRenderTargetView(RenderTarget& renderTarget)
-	{
-		RenderTarget* rtArray[] = { &renderTarget };
-		ClearRenderTargetViews(1, rtArray);
-	}
-	
-	/// <summary>
-	/// レンダリングターゲットのクリア。
-	/// </summary>
-	/// <param name="rtvHandle">CPUのレンダリングターゲットビューのディスクリプタハンドル</param>
-	/// <param name="clearColor">クリアカラー</param>
-	void ClearRenderTargetView(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const float* clearColor)
-	{
-		m_commandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-	}
+	//////////////////////////////////////////
+
 	
 	/// <summary>
 	/// デプスステンシルビューをクリア
@@ -367,8 +371,6 @@ public:
 	void Reset( ID3D12CommandAllocator* commandAllocator, ID3D12PipelineState* pipelineState)
 	{
 		m_commandList->Reset(commandAllocator, pipelineState);
-		//スクラッチリソースをクリア
-		m_scratchResourceList.clear();
 	}
 	/// <summary>
 	/// インデックスつきプリミティブを描画。
@@ -450,12 +452,10 @@ private:
 	enum { MAX_CONSTANT_BUFFER = 8 };	//定数バッファの最大数。足りなくなったら増やしてね。
 	enum { MAX_SHADER_RESOURCE = 16 };	//シェーダーリソースの最大数。足りなくなったら増やしてね。
 
-
-	D3D12_VIEWPORT m_currentViewport;			//現在のビューポート
+	D3D12_VIEWPORT m_currentViewport;				//現在のビューポート。
 	ID3D12GraphicsCommandList4* m_commandList;	//コマンドリスト。
 	ID3D12DescriptorHeap* m_descriptorHeaps[MAX_DESCRIPTOR_HEAP];			//ディスクリプタヒープの配列。
 	ConstantBuffer* m_constantBuffers[MAX_CONSTANT_BUFFER] = { nullptr };	//定数バッファの配列。
 	Texture* m_shaderResources[MAX_SHADER_RESOURCE] = { nullptr };			//シェーダーリソースの配列。
-	std::vector<ComPtr<ID3D12Resource> > m_scratchResourceList;				//スクラッチリソースのリスト
 };
 

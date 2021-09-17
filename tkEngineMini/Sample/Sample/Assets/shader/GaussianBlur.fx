@@ -167,7 +167,7 @@ PS_BlurInput VSYBlur(VSInput In)
 
 //ブラーピクセルシェーダ
 
-float4 PSBlur(PSBlurInput In) : SV_Target0
+float4 PSBlur(PS_BlurInput In) : SV_Target0
 {
 	float4 color;
 
@@ -191,5 +191,5 @@ float4 PSBlur(PSBlurInput In) : SV_Target0
 	color += weight[1].z * sceneTexture.Sample(Sampler, In.tex6.zw);
 	color += weight[1].w * sceneTexture.Sample(Sampler, In.tex7.zw);
 
-	return float4(Color.xyz, 1.0f);
+	return float4(color.xyz, 1.0f);
 }

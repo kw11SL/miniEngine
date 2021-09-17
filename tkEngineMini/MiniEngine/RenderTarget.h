@@ -14,6 +14,7 @@ public:
 	/// デストラクタ。
 	/// </summary>
 	~RenderTarget();
+
 	/// <summary>
 	/// レンダリングターゲットの作成。
 	/// </summary>
@@ -81,8 +82,11 @@ public:
 	{
 		return m_height;
 	}
-	/// @brief カラーバッファのフォーマットを取得
-	/// @return カラーバッファのフォーマット
+
+	/// <summary>
+	/// カラーバッファのフォーマットを取得。
+	/// </summary>
+	/// <returns></returns>
 	DXGI_FORMAT GetColorBufferFormat() const
 	{
 		return m_renderTargetTexture.GetFormat();

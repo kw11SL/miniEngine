@@ -188,6 +188,7 @@ void MeshParts::Draw(
 	const Matrix& mProj
 )
 {
+
 	//メッシュごとにドロー
 	//プリミティブのトポロジーはトライアングルリストのみ。
 	rc.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -211,11 +212,11 @@ void MeshParts::Draw(
 	if (m_expandData_2) {
 		m_expandConstantBuffer_2.CopyToVRAM(m_expandData_2);
 	}
-
 	if (m_boneMatricesStructureBuffer.IsInited()) {
 		//ボーン行列を更新する。
 		m_boneMatricesStructureBuffer.Update(m_skeleton->GetBoneMatricesTopAddress());
 	}
+
 	int descriptorHeapNo = 0;
 	for (auto& mesh : m_meshs) {
 		//1. 頂点バッファを設定。

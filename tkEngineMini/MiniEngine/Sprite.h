@@ -76,9 +76,11 @@ public:
 	/// UnityのuGUIに準拠。
 	/// </param>
 	void Update(const Vector3& pos, const Quaternion& rot, const Vector3& scale, const Vector2& pivot = DEFAULT_PIVOT);
+	
 	/// @brief カラー変更
 	/// @param color カラー
 	void SetColor(const Vector4& color);
+	
 	/// <summary>
 	/// 描画。
 	/// </summary>
@@ -123,20 +125,20 @@ private:
 	/// <param name="initData"></param>
 	void InitConstantBuffer(const SpriteInitData& initData);
 private:
-	IndexBuffer m_indexBuffer;								//インデックスバッファ。
-	VertexBuffer m_vertexBuffer;							//頂点バッファ。
-	int m_numTexture = 0;									//テクスチャの枚数。
-	Texture m_textures[MAX_TEXTURE];						//テクスチャ。
+	IndexBuffer m_indexBuffer;			//インデックスバッファ。
+	VertexBuffer m_vertexBuffer;		//頂点バッファ。
+	int m_numTexture = 0;				//テクスチャの枚数。
+	Texture m_textures[MAX_TEXTURE];	//テクスチャ。
 	Texture* m_textureExternal[MAX_TEXTURE] = {nullptr};	//外部から指定されたテクスチャ
-	Vector3 m_position = Vector3::Zero ;					//座標。
-	Vector2 m_size = {0.0f,0.0f};							//サイズ。
-	Quaternion m_rotation = Quaternion::Identity ;			//回転。
-	Matrix m_world;											//ワールド行列。
+	Vector3 m_position ;				//座標。
+	Vector2 m_size;						//サイズ。
+	Quaternion m_rotation ;			//回転。
+	Matrix m_world;					//ワールド行列。
 
 	struct LocalConstantBuffer {
 		Matrix mvp;
-		Vector4 mulColor = {1.0f,1.0f,1.0f,1.0f};
-		Vector4 screenParam = {1.0f,1.0f,1.0f,1.0f};
+		Vector4 mulColor;
+		Vector4 screenParam;
 	};
 	LocalConstantBuffer m_constantBufferCPU;	//CPU側の定数バッファ。
 	ConstantBuffer		m_constantBufferGPU;	//GPU側の定数バッファ。
@@ -149,5 +151,6 @@ private:
 	Shader				m_ps;					//ピクセルシェーダー。
 	bool				m_isInited = false;		//初期化済み？
 
-	Vector4				m_color = {1.0f,1.0f,1.0f,1.0f};	//カラー変更用ベクトル
+	Vector4				m_color = { 1.0f,1.0f,1.0f,1.0f };	//カラー変更用ベクトル
+
 };

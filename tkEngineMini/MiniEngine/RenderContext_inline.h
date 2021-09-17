@@ -60,15 +60,9 @@ inline void RenderContext::SetRenderTargets(UINT numRT, RenderTarget* renderTarg
 	for( UINT rtNo = 0; rtNo < numRT; rtNo++){
 		rtDSHandleTbl[rtNo] = renderTargets[rtNo]->GetRTVCpuDescriptorHandle();
 	}
-	if (renderTargets[0]->IsExsitDepthStencilBuffer()) {
-		//深度バッファがあるとき
-		D3D12_CPU_DESCRIPTOR_HANDLE dsDS = renderTargets[0]->GetDSVCpuDescriptorHandle();
-		m_commandList->OMSetRenderTargets(numRT, rtDSHandleTbl, FALSE, &dsDS);
-	}
-	else {
-		//深度バッファがないとき
-		m_commandList->OMSetRenderTargets(numRT, rtDSHandleTbl, FALSE, nullptr);
-	}
+	D3D12_CPU_DESCRIPTOR_HANDLE dsDS = renderTargets[0]->GetDSVCpuDescriptorHandle();
+	m_commandList->OMSetRenderTargets(numRT, rtDSHandleTbl, FALSE, &dsDS);
+
 }
 
 inline void RenderContext::SetRenderTargetAndViewport(RenderTarget& renderTarget)
@@ -100,10 +94,7 @@ inline void RenderContext::SetRenderTargetsAndViewport(UINT numRT, RenderTarget*
 
 inline void RenderContext::ClearRenderTargetViews(int numRt, RenderTarget* renderTargets[])
 {
-	if (renderTargets[0]->IsExsitDepthStencilBuffer()) {
-		//深度バッファがある場合
-		ClearDepthStencilView(renderTargets[0]->GetDSVCpuDescriptorHandle(), renderTargets[0]->GetDSVClearValue());
-	}
+	ClearDepthStencilView(renderTargets[0]->GetDSVCpuDescriptorHandle(), renderTargets[0]->GetDSVClearValue());
 	for (int i = 0; i < numRt; i++) {
 		ClearRenderTargetView(renderTargets[i]->GetRTVCpuDescriptorHandle(), renderTargets[i]->GetRTVClearColor());
 	}

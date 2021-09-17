@@ -425,8 +425,6 @@ bool GraphicsEngine::CreateSynchronizationWithGPUObject()
 }
 void GraphicsEngine::BeginRender()
 {
-	m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
-
 	//カメラを更新する。
 	m_camera2D.Update();
 	m_camera3D.Update();
@@ -484,4 +482,6 @@ void GraphicsEngine::EndRender()
 	m_directXTKGfxMemroy->GarbageCollect();
 	//描画完了待ち。
 	WaitDraw();
+
+	m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 }
