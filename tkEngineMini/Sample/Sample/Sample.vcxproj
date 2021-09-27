@@ -295,6 +295,7 @@
     <ClCompile Include="..\..\MiniEngine\VertexBuffer.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="BG.cpp" />
+    <ClCompile Include="Bloom.cpp" />
     <ClCompile Include="Direction.cpp" />
     <ClCompile Include="DirectionLight.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -389,6 +390,7 @@
     <ClInclude Include="..\..\MiniEngine\VertexBuffer.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="BG.h" />
+    <ClInclude Include="Bloom.h" />
     <ClInclude Include="Direction.h" />
     <ClInclude Include="DirectionLight.h" />
     <ClInclude Include="Game.h" />

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "system/system.h"
+#include "Bloom.h"
 
 namespace
 {
@@ -48,10 +49,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//step-1 エフェクトエンジンのインスタンスを作成する。
 	EffectEngine::CreateInstance();
 
-	//川瀬式ブルーム実装テスト
-
-	//メインレンダリングターゲットの設定
-	//カラーバッファのフォーマットは32bit浮動小数点
+	//レンダリングターゲットの作成
 	RenderTarget mainRenderTarget;
 	mainRenderTarget.Create(
 		WINDOW_WIDTH,
@@ -62,65 +60,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		DXGI_FORMAT_D32_FLOAT
 	);
 
-	//輝度抽出用レンダリングターゲットの設定
-	RenderTarget luminanceRenderTarget;
-	luminanceRenderTarget.Create(
-		WINDOW_WIDTH,
-		WINDOW_HEIGHT,
-		1,
-		1,
-		DXGI_FORMAT_R32G32B32A32_FLOAT,
-		DXGI_FORMAT_D32_FLOAT
-	);
-
-	//輝度抽出用スプライトを初期化
-	SpriteInitData luminanceSpriteInitData;
-	luminanceSpriteInitData.m_fxFilePath = POSTEFFECT_FILEPATH;
-	luminanceSpriteInitData.m_vsEntryPointFunc = "VSMain";
-	luminanceSpriteInitData.m_psEntryPoinFunc = "PSSamplingLuminance";
-	luminanceSpriteInitData.m_width = WINDOW_WIDTH;
-	luminanceSpriteInitData.m_height = WINDOW_HEIGHT;
-	//テクスチャはメインレンダリングターゲット
-	luminanceSpriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
-	//書き込むレンダリングターゲットのフォーマットを指定
-	luminanceSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	//スプライトを初期化
-	Sprite luminanceSprite;
-	luminanceSprite.Init(luminanceSpriteInitData);
-
-	//ガウシアンブラーの初期化
-	GaussianBlur gaussBlur[4];
-	//輝度抽出用レンダリングターゲットのテクスチャで初期化(スプライトの方ではない)
-	gaussBlur[0].Init(&luminanceRenderTarget.GetRenderTargetTexture());
-	//ブラーを掛けたテクスチャにブラーを掛けていく
-	gaussBlur[1].Init(&gaussBlur[0].GetExecutedTexture());
-	gaussBlur[2].Init(&gaussBlur[1].GetExecutedTexture());
-	gaussBlur[3].Init(&gaussBlur[2].GetExecutedTexture());
-	
-	//ブラー画像を加算合成するためのスプライトを初期化
-	SpriteInitData addBrendSpriteInitData;
-	//テクスチャはブラー処理をした輝度抽出テクスチャ
-	addBrendSpriteInitData.m_textures[0] = &gaussBlur[0].GetExecutedTexture();
-	addBrendSpriteInitData.m_textures[1] = &gaussBlur[1].GetExecutedTexture();
-	addBrendSpriteInitData.m_textures[2] = &gaussBlur[2].GetExecutedTexture();
-	addBrendSpriteInitData.m_textures[3] = &gaussBlur[3].GetExecutedTexture();
-
-
-	addBrendSpriteInitData.m_width = WINDOW_WIDTH;
-	addBrendSpriteInitData.m_height = WINDOW_HEIGHT;
-
-	//ブラー画像を合成するためにシェーダを専用のものに変更
-	addBrendSpriteInitData.m_fxFilePath = "Assets/shader/PostEffect.fx";
-	addBrendSpriteInitData.m_vsEntryPointFunc = "VSMain";
-	//ブルーム用のエントリーポイントを指定
-	addBrendSpriteInitData.m_psEntryPoinFunc = "PSBloomFinal";
-	//アルファブレンドモードを加算合成にする
-	addBrendSpriteInitData.m_alphaBlendMode = AlphaBlendMode_Add;
-	addBrendSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
-
-	//加算合成スプライトの初期化
-	Sprite addBrendSprite;
-	addBrendSprite.Init(addBrendSpriteInitData);
+	//テスト：ブルームの初期化処理
+	Bloom bloom;
+	bloom.Init(mainRenderTarget);
 
 	//テクスチャを貼りつけるためのスプライトを初期化
 	SpriteInitData spriteInitData;
@@ -151,13 +93,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//レンダリング開始。
 		g_engine->BeginFrame();
 
-		/*int size = sizeof(dh);
-		std::string hoge = std::to_string(size);
-		const char* hoge_c = hoge.c_str();
-
-		OutputDebugStringA(hoge_c);*/
-
-
 		//テスト：カメラ上下
 		if (g_pad[0]->IsPress(enButtonSelect)) {
 			cameraH -= 2.0f;
@@ -177,6 +112,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//step-5 エフェクトエンジンの更新。
 		EffectEngine::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
 
+
 		//ブルームの処理テスト
 		
 		//レンダリングターゲットをメインレンダリングターゲットに変更(=オフスクリーンレンダリングにする)
@@ -194,33 +130,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//メインレンダリングターゲットへの書き込み終了待ち
 		renderContext.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 
-		//輝度抽出処理
-		//輝度抽出用レンダリングターゲットに変更
-		renderContext.WaitUntilToPossibleSetRenderTarget(luminanceRenderTarget);
-		//レンダリングターゲットを設定
-		renderContext.SetRenderTargetAndViewport(luminanceRenderTarget);
-		//レンダリングターゲットをクリア
-		renderContext.ClearRenderTargetView(luminanceRenderTarget);
-		//輝度抽出を行う
-		luminanceSprite.Draw(renderContext);
-		//レンダリングターゲットへの書き込み終了待ち
-		renderContext.WaitUntilFinishDrawingToRenderTarget(luminanceRenderTarget);
-
-		//ガウシアンブラーを複数回実行する
-		gaussBlur[0].ExecuteOnGPU(renderContext, 20.0f);
-		gaussBlur[1].ExecuteOnGPU(renderContext, 20.0f);
-		gaussBlur[2].ExecuteOnGPU(renderContext, 20.0f);
-		gaussBlur[3].ExecuteOnGPU(renderContext, 20.0f);
-
-		//ブラー画像をメインレンダリングターゲットに加算合成
-		//レンダリングターゲットとして利用できるまで待つ
-		renderContext.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
-		//レンダリングターゲットを設定
-		renderContext.SetRenderTargetAndViewport(mainRenderTarget);
-		//合成(=スプライトの描画)
-		addBrendSprite.Draw(renderContext);
-		//レンダリングターゲットへの書き込み終了待ち
-		renderContext.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
+		bloom.Render(renderContext, mainRenderTarget);
 
 		//メインレンダリングターゲットに描画したものをフレームバッファにコピー
 		//レンダリングターゲットをオンスクリーンに戻す
