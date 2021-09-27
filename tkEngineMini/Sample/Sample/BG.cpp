@@ -5,14 +5,14 @@ namespace
 {
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
 	const char* VS_ENTRYPOINT_NAME = "VSMain";
-	const char* MODEL_FILEPATH = "Assets/modelData/bg/bg.tkm";
+	const char* MODEL_FILEPATH = "Assets/modelData/bg/bg2.tkm";
 	const Vector3 INIT_POINT = { 0.0f,50.0f,50.0f };
 }
 
 BG::BG()
 {
 	m_skinModelRender = NewGO<SkinModelRender>(0);
-	m_skinModelRender->Init(MODEL_FILEPATH,enModelUpAxisZ);
+	m_skinModelRender->Init(MODEL_FILEPATH, enCommonShading, enModelUpAxisZ);
 	m_skinModelRender->InitShader(MODEL_SHADER_PATH, VS_ENTRYPOINT_NAME);
 }
 

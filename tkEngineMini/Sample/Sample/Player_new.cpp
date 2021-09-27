@@ -14,7 +14,7 @@ namespace{
 Player_new::Player_new()
 {
 	m_skinModelRender = NewGO<SkinModelRender>(0);
-	m_skinModelRender->Init(MODELPATH_UTC, enModelUpAxisZ);
+	m_skinModelRender->Init(MODELPATH_UTC, enCommonShading, enModelUpAxisZ);
 	m_skinModelRender->InitShader(MODEL_SHADER_PATH, VS_ENTRYPOINT_NAME);
 
 	m_skinModelRender->SetPosition(INIT_POINT);

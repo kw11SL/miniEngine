@@ -6,7 +6,19 @@
 
 namespace
 {
+	//シェーダのファイルパス
+	//通常描画用のシェーダーファイルパス
 	const char* MODEL_FX_FILEPATH = "Assets/shader/model.fx";
+	//シャドウマップ描画用のシェーダーファイルパス
+	const char* MODEL_FX_FILEPATH_SHADOWMAP = "Assets/shader/ShadowMap.fx";
+	//シャドウレシーバー用のシェーダーファイルパス
+	const char* MODEL_FX_FILEPATH_SHADOWRECIEVER = "Assets/shader/ShadowReciever.fx";
+
+	//シェーダのエントリーポイント名
+	//通常のエントリーポイント
+	const char* VS_ENTRYPOINT_NAME = "VSMain";
+	//スキンモデルのエントリーポイント
+	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
 }
 
 SkinModelRender::SkinModelRender()
@@ -25,10 +37,25 @@ bool SkinModelRender::Start()
 	return true;
 }
 
-void SkinModelRender::Init(const char* modelFilePath, EnModelUpAxis upAxis)
+void SkinModelRender::Init(const char* modelFilePath, EnShadingMode shadingMode, EnModelUpAxis upAxis)
 {
 	m_modelInitData.m_tkmFilePath = modelFilePath;
-	m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH;
+	
+	//指定したシェーディングモード毎にシェーダのファイルパスを振り分け
+	switch (shadingMode) {
+		case enCommonShading:
+			m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH;
+			break;
+		case enShadowMap:
+			m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH_SHADOWMAP;
+			break;
+		case enShadowReciever:
+			m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH_SHADOWRECIEVER;
+			break;
+		default:
+			break;
+	}
+
 	/*m_modelInitData.m_vsEntryPointFunc = "VSMain";
 	m_modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";*/
 	m_modelInitData.m_modelUpAxis = upAxis;
@@ -85,7 +112,9 @@ void SkinModelRender::SetRotation(const Quaternion& rot)
 
 void SkinModelRender::Render(RenderContext& rc)
 {
-	m_model.Draw(rc);
+	if (m_shadingMode == enCommonShading) {
+		m_model.Draw(rc);
+	}
 }
 
 void SkinModelRender::Update()

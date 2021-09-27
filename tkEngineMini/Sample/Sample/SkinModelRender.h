@@ -6,6 +6,13 @@ class DirectionLight;
 class PointLight;
 class SpotLight;
 
+//どのシェーダーを使用するか
+enum EnShadingMode {
+	enCommonShading,	//通常描画
+	enShadowMap,		//シャドウマップ
+	enShadowReciever	//シャドウレシーバー
+};
+
 class SkinModelRender : public IGameObject
 {
 public:
@@ -15,7 +22,7 @@ public:
 	void Update() override;
 	void Render(RenderContext& rc) override;
 
-	void Init(const char* modelFilePath, EnModelUpAxis upAxis );
+	void Init(const char* modelFilePath, EnShadingMode shadingMode, EnModelUpAxis upAxis );
 	void InitShader(const char* fxFilePath, const char* entryPoint);
 	void InitDirectionLight(DirectionLight* dirLight);
 	void InitPointLight(PointLight* ptLight);
@@ -37,6 +44,7 @@ private:
 	ModelInitData m_modelInitData;
 	Skeleton m_skeleton;
 	CharacterController m_charaCon;
+	EnShadingMode m_shadingMode = enCommonShading;		//使用するシェーダの種類
 
 	Vector3 m_position = Vector3::Zero;
 	Vector3 m_scale = Vector3::One;

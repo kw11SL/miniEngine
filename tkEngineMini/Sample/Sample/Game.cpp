@@ -22,6 +22,17 @@ Game::~Game()
 
 bool Game::Start()
 {
+	//ライトカメラの初期化
+	//視点の設定
+	m_lightCamera.SetPosition(0.0f, 500.0f, 0.0f);
+	//注視点の設定
+	m_lightCamera.SetTarget(0.0f, 0.0f, 0.0f);
+	//上方向の設定
+	m_lightCamera.SetUp({ 1.0f, 0.0f, 0.0f });
+	//ライトビュープロジェクション行列の更新
+	m_lightCamera.Update();
+
+
 	//ディレクションライトの初期化
 	m_directionLight = NewGO<DirectionLight>(0, "directionlight");
 	m_directionLight->Init({ 1.0f,0.0f,1.0f }, { 1.0f,1.0f,1.0f }, { 0.3f,0.3f,0.3f });
@@ -70,7 +81,7 @@ bool Game::Start()
 	//	m_direction->RecieveSpotLight(m_spotLight);
 	//}
 	
-	////テスト
+	////スプライト表示テスト
 	//m_sprite = NewGO<SpriteRender>(0, "sprite");
 	//m_sprite->Init("Assets/sprite/finish.dds",256,256,AlphaBlendMode_Trans);
 	//m_sprite->SetColor({ 1.0f,0.0f,0.0f,0.5f });

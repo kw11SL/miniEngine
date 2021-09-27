@@ -22,6 +22,9 @@ private:
 	DirectionLight* m_directionLight = nullptr;
 	PointLight* m_pointLight = nullptr;
 	SpotLight* m_spotLight = nullptr;
+	
+	//影生成用のライトカメラ
+	Camera m_lightCamera;
 
 	//テスト
 	SpriteRender* m_sprite = nullptr;

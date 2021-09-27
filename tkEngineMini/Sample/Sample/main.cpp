@@ -32,9 +32,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
 
-	DescriptorHeap dh;
-
-
 	RootSignature rs;
 	InitRootSignature(rs);
 
@@ -51,8 +48,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//step-1 エフェクトエンジンのインスタンスを作成する。
 	EffectEngine::CreateInstance();
 
-
-	//ブルーム実装テスト
+	//川瀬式ブルーム実装テスト
 
 	//メインレンダリングターゲットの設定
 	//カラーバッファのフォーマットは32bit浮動小数点
@@ -93,23 +89,31 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	luminanceSprite.Init(luminanceSpriteInitData);
 
 	//ガウシアンブラーの初期化
-	GaussianBlur gaussBlur;
+	GaussianBlur gaussBlur[4];
 	//輝度抽出用レンダリングターゲットのテクスチャで初期化(スプライトの方ではない)
-	gaussBlur.Init(&luminanceRenderTarget.GetRenderTargetTexture());
+	gaussBlur[0].Init(&luminanceRenderTarget.GetRenderTargetTexture());
+	//ブラーを掛けたテクスチャにブラーを掛けていく
+	gaussBlur[1].Init(&gaussBlur[0].GetExecutedTexture());
+	gaussBlur[2].Init(&gaussBlur[1].GetExecutedTexture());
+	gaussBlur[3].Init(&gaussBlur[2].GetExecutedTexture());
 	
-	////ガウシアンブラーの初期化
-	//GaussianBlur* gaussBlur = new GaussianBlur;
-	////輝度抽出用レンダリングターゲットのテクスチャで初期化(スプライトの方ではない)
-	//gaussBlur->Init(&luminanceRenderTarget.GetRenderTargetTexture());
-
 	//ブラー画像を加算合成するためのスプライトを初期化
 	SpriteInitData addBrendSpriteInitData;
 	//テクスチャはブラー処理をした輝度抽出テクスチャ
-	addBrendSpriteInitData.m_textures[0] = &gaussBlur.GetExecutedTexture();
+	addBrendSpriteInitData.m_textures[0] = &gaussBlur[0].GetExecutedTexture();
+	addBrendSpriteInitData.m_textures[1] = &gaussBlur[1].GetExecutedTexture();
+	addBrendSpriteInitData.m_textures[2] = &gaussBlur[2].GetExecutedTexture();
+	addBrendSpriteInitData.m_textures[3] = &gaussBlur[3].GetExecutedTexture();
+
+
 	addBrendSpriteInitData.m_width = WINDOW_WIDTH;
 	addBrendSpriteInitData.m_height = WINDOW_HEIGHT;
-	//通常のシェーダを指定
-	addBrendSpriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
+
+	//ブラー画像を合成するためにシェーダを専用のものに変更
+	addBrendSpriteInitData.m_fxFilePath = "Assets/shader/PostEffect.fx";
+	addBrendSpriteInitData.m_vsEntryPointFunc = "VSMain";
+	//ブルーム用のエントリーポイントを指定
+	addBrendSpriteInitData.m_psEntryPoinFunc = "PSBloomFinal";
 	//アルファブレンドモードを加算合成にする
 	addBrendSpriteInitData.m_alphaBlendMode = AlphaBlendMode_Add;
 	addBrendSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -137,7 +141,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
 
 	//ゲームシーンを作成
-	NewGO<Game>(0, "game");
+	Game* game = nullptr;
+	game = NewGO<Game>(0, "game");
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
@@ -146,11 +151,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//レンダリング開始。
 		g_engine->BeginFrame();
 
-		int size = sizeof(dh);
+		/*int size = sizeof(dh);
 		std::string hoge = std::to_string(size);
 		const char* hoge_c = hoge.c_str();
 
-		OutputDebugStringA(hoge_c);
+		OutputDebugStringA(hoge_c);*/
 
 
 		//テスト：カメラ上下
@@ -201,8 +206,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//レンダリングターゲットへの書き込み終了待ち
 		renderContext.WaitUntilFinishDrawingToRenderTarget(luminanceRenderTarget);
 
-		//ガウシアンブラーの実行
-		gaussBlur.ExecuteOnGPU(renderContext, 20.0f);
+		//ガウシアンブラーを複数回実行する
+		gaussBlur[0].ExecuteOnGPU(renderContext, 20.0f);
+		gaussBlur[1].ExecuteOnGPU(renderContext, 20.0f);
+		gaussBlur[2].ExecuteOnGPU(renderContext, 20.0f);
+		gaussBlur[3].ExecuteOnGPU(renderContext, 20.0f);
 
 		//ブラー画像をメインレンダリングターゲットに加算合成
 		//レンダリングターゲットとして利用できるまで待つ
@@ -230,8 +238,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//ゲームオブジェクトマネージャーを削除。
 	GameObjectManager::DeleteInstance();
-
-	//delete gaussBlur;
+	//ゲームを削除
+	DeleteGO(game);
 
 	return 0;
 }
