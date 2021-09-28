@@ -45,12 +45,15 @@ void SkinModelRender::Init(const char* modelFilePath, EnShadingMode shadingMode,
 	switch (shadingMode) {
 		case enCommonShading:
 			m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH;
+			m_modelInitData.m_vsEntryPointFunc = VS_ENTRYPOINT_NAME;
 			break;
 		case enShadowMap:
 			m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH_SHADOWMAP;
+			m_modelInitData.m_vsEntryPointFunc = VS_ENTRYPOINT_NAME;
 			break;
 		case enShadowReciever:
 			m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH_SHADOWRECIEVER;
+			m_modelInitData. m_vsEntryPointFunc = VS_ENTRYPOINT_NAME;
 			break;
 		default:
 			break;

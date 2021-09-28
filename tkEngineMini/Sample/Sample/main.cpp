@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "system/system.h"
 #include "Bloom.h"
+#include "RenderingEngine.h"
 
 namespace
 {
@@ -36,7 +37,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	RootSignature rs;
 	InitRootSignature(rs);
 
-
 	//カメラの設定
 	g_camera3D->SetPosition({ 0.0f,50.0f,200.0f });
 	g_camera3D->SetTarget({ 0.0f,50.0f,0.0f });
@@ -49,25 +49,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//step-1 エフェクトエンジンのインスタンスを作成する。
 	EffectEngine::CreateInstance();
 
-	//レンダリングターゲットの作成
-	RenderTarget mainRenderTarget;
-	mainRenderTarget.Create(
-		WINDOW_WIDTH,
-		WINDOW_HEIGHT,
-		1,
-		1,
-		DXGI_FORMAT_R32G32B32A32_FLOAT,
-		DXGI_FORMAT_D32_FLOAT
-	);
-
-	//テスト：ブルームの初期化処理
-	Bloom bloom;
-	bloom.Init(mainRenderTarget);
+	//テスト：レンダリングエンジン
+	RenderingEngine renderingEngine;
+	//レンダリングエンジンの初期化
+	renderingEngine.Init();
 
 	//テクスチャを貼りつけるためのスプライトを初期化
 	SpriteInitData spriteInitData;
 	//テクスチャはメインレンダリングターゲットのカラーバッファ
-	spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
+	spriteInitData.m_textures[0] = &renderingEngine.GetRenderTarget().GetRenderTargetTexture();
 	spriteInitData.m_width = WINDOW_WIDTH;
 	spriteInitData.m_height = WINDOW_HEIGHT;
 	//通常のシェーダを指定
@@ -117,20 +107,22 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		
 		//レンダリングターゲットをメインレンダリングターゲットに変更(=オフスクリーンレンダリングにする)
 		//レンダリングターゲットとして利用できるまで待つ
-		renderContext.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
+		renderContext.WaitUntilToPossibleSetRenderTarget(renderingEngine.GetRenderTarget());
 		//レンダリングターゲットを設定
-		renderContext.SetRenderTargetAndViewport(mainRenderTarget);
+		renderContext.SetRenderTargetAndViewport(renderingEngine.GetRenderTarget());
 		//レンダリングターゲットのクリア
-		renderContext.ClearRenderTargetView(mainRenderTarget);
+		renderContext.ClearRenderTargetView(renderingEngine.GetRenderTarget());
 		
-		////////モデルのドロー
+		////////モデルのドロー////////
 		//登録されているゲームオブジェクトの描画関数を呼び出す。
 		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
+		//////////////////////////////
 		
 		//メインレンダリングターゲットへの書き込み終了待ち
-		renderContext.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
+		renderContext.WaitUntilFinishDrawingToRenderTarget(renderingEngine.GetRenderTarget());
 
-		bloom.Render(renderContext, mainRenderTarget);
+		//テスト：レンダリングエンジンの処理
+		renderingEngine.Execute(renderContext);
 
 		//メインレンダリングターゲットに描画したものをフレームバッファにコピー
 		//レンダリングターゲットをオンスクリーンに戻す

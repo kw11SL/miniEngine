@@ -40,14 +40,14 @@ bool Game::Start()
 
 	//ポイントライトの初期化
 	m_pointLight = NewGO<PointLight>(0, "pointlight");
-	m_pointLight->Init({ 0.0f,0.0f,50.0f }, { 1.0f,0.0f,0.0f }, 300.0f);
+	m_pointLight->Init({ 0.0f,0.0f,50.0f }, { 1.0f,0.0f,0.0f }, 500.0f);
 
 	//スポットライトの初期化
 	m_spotLight = NewGO<SpotLight>(0, "spotlight");
 	Vector3 spDir = { 0.0f,0.0f,-1.0f };
 	spDir.Normalize();
 	float spEmitAngle = Math::DegToRad(25.0f);
-	m_spotLight->Init({ 0.0f,0.0f,200.0f }, { 2.0f,2.0f,2.0f },100.0f, spDir, spEmitAngle);
+	m_spotLight->Init({ 0.0f,0.0f,200.0f }, { 2.0f,2.0f,2.0f },1000.0f, spDir, spEmitAngle);
 
 
 	//プレイヤーの初期化

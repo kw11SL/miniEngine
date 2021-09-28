@@ -145,6 +145,10 @@ void SpotLight::Update()
 	else if (g_pad[0]->IsPress(enButtonRight)) {
 		m_angle += Math::DegToRad(1.0f);
 	}
+
+	if (m_angle < 0.0f) {
+		m_angle = 0.0f;
+	}
 	
 	/*if (m_angle <= Math::DegToRad(0.0f)) {
 		m_angle = Math::DegToRad(0.0f);
@@ -163,9 +167,9 @@ void SpotLight::Update()
 		m_range -= 1.0f;
 	}
 	
-	/*if (m_range < 0.0f) {
+	if (m_range < 0.0f) {
 		m_range = 0.0f;
-	}*/
+	}
 
 	SetRange(m_range);
 

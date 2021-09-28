@@ -307,7 +307,9 @@
     <ClCompile Include="PhysicsBall.cpp" />
     <ClCompile Include="Player_new.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="Seesaw.cpp" />
+    <ClCompile Include="ShadowMapRender.cpp" />
     <ClCompile Include="SkinModelRender.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="SpriteRender.cpp" />
@@ -401,7 +403,9 @@
     <ClInclude Include="PhysicsBall.h" />
     <ClInclude Include="Player_new.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="Seesaw.h" />
+    <ClInclude Include="ShadowMapRender.h" />
     <ClInclude Include="SkinModelRender.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="SpriteRender.h" />
