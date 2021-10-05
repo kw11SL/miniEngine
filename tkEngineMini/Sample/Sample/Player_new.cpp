@@ -13,13 +13,7 @@ namespace{
 
 Player_new::Player_new()
 {
-	m_skinModelRender = NewGO<SkinModelRender>(0);
-	m_skinModelRender->Init(MODELPATH_UTC, enCommonShading, enModelUpAxisZ);
 	
-	//m_skinModelRender->InitShader(MODEL_SHADER_PATH, VS_ENTRYPOINT_NAME);
-
-	m_skinModelRender->SetPosition(INIT_POINT);
-	m_skinModelRender->SetScale(m_scale);
 
 }
 
@@ -28,13 +22,22 @@ Player_new::~Player_new()
 	DeleteGO(m_skinModelRender);
 }
 
-void Player_new::Init()
+void Player_new::Init(RenderingEngine& renderingEngine)
 {
+
+	m_skinModelRender = NewGO<SkinModelRender>(0);
+	m_skinModelRender->Init(MODELPATH_UTC, enModelUpAxisZ,renderingEngine,true);
+
+	//m_skinModelRender->InitShader(MODEL_SHADER_PATH, VS_ENTRYPOINT_NAME);
+
+	m_skinModelRender->SetPosition(INIT_POINT);
+	m_skinModelRender->SetScale(m_scale);
 
 }
 
 bool Player_new::Start()
 {
+
 	return true;
 }
 
@@ -105,6 +108,7 @@ SkinModelRender* Player_new::GetSkinModelRender()
 void Player_new::Update()
 {
 	//Rotation();
-
-	m_skinModelRender->SetRotation(m_rot);
+	if (m_skinModelRender != nullptr) {
+		m_skinModelRender->SetRotation(m_rot);
+	}
 }

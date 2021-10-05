@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Bloom.h"
+//#include "GaussianBlur.h"
 
 namespace
 {

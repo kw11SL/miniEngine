@@ -1,9 +1,13 @@
 #pragma once
+#include "GaussianBlur.h"
+
+//class GaussianBlur;
+
 class Bloom
 {
 public:
-	Bloom() {};
-	~Bloom() {};
+	Bloom() {}
+	~Bloom() {}
 
 	void Init(RenderTarget& mainRenderTatget);
 	void Render(RenderContext& rc, RenderTarget& mainRenderTarget);

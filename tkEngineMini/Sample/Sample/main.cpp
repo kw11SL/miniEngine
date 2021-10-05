@@ -75,6 +75,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ゲームシーンを作成
 	Game* game = nullptr;
 	game = NewGO<Game>(0, "game");
+	game->Init(renderingEngine);
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
@@ -115,8 +116,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		
 		////////モデルのドロー////////
 		//登録されているゲームオブジェクトの描画関数を呼び出す。
-		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
+		//GameObjectManager::GetInstance()->ExecuteRender(renderContext);
 		//////////////////////////////
+		
+		//テスト：レンダリングエンジンによる通常描画
+		renderingEngine.CommonRender(renderContext);
 		
 		//メインレンダリングターゲットへの書き込み終了待ち
 		renderContext.WaitUntilFinishDrawingToRenderTarget(renderingEngine.GetRenderTarget());

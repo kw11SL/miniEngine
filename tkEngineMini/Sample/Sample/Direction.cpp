@@ -13,8 +13,7 @@ namespace
 Direction::Direction()
 {
 	m_skinModelRender = NewGO<SkinModelRender>(0);
-	m_skinModelRender->Init("Assets/modelData/direction/direction_yellow.tkm", enCommonShading, enModelUpAxisZ);
-	m_skinModelRender->InitShader(MODEL_SHADER_PATH, VS_ENTRYPOINT_NAME);
+	m_skinModelRender->Init("Assets/modelData/direction/direction_yellow.tkm", enModelUpAxisZ);
 
 	m_skinModelRender->SetPosition(INIT_POINT);
 

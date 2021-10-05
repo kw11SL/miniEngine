@@ -12,6 +12,7 @@ public:
 	~BG();
 	bool Start() override;
 	void Update() override;
+	void Init(RenderingEngine& renderingEngine);
 
 	void RecieveDirectionLight(DirectionLight* dirLight);
 	void RecievePointLight(PointLight* ptLight);

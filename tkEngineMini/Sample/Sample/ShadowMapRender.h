@@ -11,18 +11,46 @@ public:
 
 	/// @brief シャドウマップに描画するモデルを登録
 	/// @param model 
-	void AddModel(Model& model) { m_models[0].push_back(&model); }
+	void AddModel(Model& model) { m_model = &model; }
 
-	/// @brief 描画処理
+	/*/// @brief カスケードシャドウ用のシャドウマップに描画するモデルを登録
+	/// @param model1 //近景用モデル
+	/// @param model2 //中景用モデル
+	/// @param model3 //遠景用モデル
+	void MultiAddModel(Model& model1,Model& model2,Model& model3) 
+	{ 
+		m_models[0].push_back(&model1);
+		m_models[1].push_back(&model2);
+		m_models[2].push_back(&model3);
+	}*/
+
+	/// @brief シャドウマップへの描画処理
 	/// @param rc レンダリングコンテキスト
 	/// @param lightCamera ライトカメラ
 	void Render(RenderContext& rc, Camera& lightCamera);
-
+	
+	/*/// @brief シャドウマップへの描画処理(カスケードシャドウ用) 
+	/// @param rc レンダリングコンテキスト
+	/// @param lightCamera ライトカメラ
+	void MultiRender(RenderContext& rc, Camera& lightCamera);*/
 
 private:
-	//Model* m_model = nullptr;
-	std::vector<Model*> m_models[4];
-	RenderTarget m_shadowMaps[4];
+	/// @brief シャドウマップを初期化
+	void InitShadowMap();
+
+	/// @brief カスケードシャドウ用に複数のシャドウマップを初期化
+	void InitMultiShadowMap();
+
+private:
+	
+	//1つだけ影を生成する場合
+	Model* m_model = nullptr;						//影描画用モデル
+	RenderTarget m_shadowMap;						//シャドウマップ
+	
+	////カスケードシャドウ用
+	////距離に合わせたモデルとシャドウマップが必要
+	//std::vector<Model*> m_models[NUM_SHADOW_MAP];	//モデルの配列
+	//RenderTarget m_shadowMaps[NUM_SHADOW_MAP];		//シャドウマップの配列
 
 };
 

@@ -21,57 +21,54 @@ namespace
 	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
 }
 
-SkinModelRender::SkinModelRender()
-{
-
-}
-
-SkinModelRender::~SkinModelRender()
-{
-
-}
-
 bool SkinModelRender::Start()
 {
 
 	return true;
 }
 
-void SkinModelRender::Init(const char* modelFilePath, EnShadingMode shadingMode, EnModelUpAxis upAxis)
+void SkinModelRender::Init(const char* modelFilePath, EnModelUpAxis upAxis , RenderingEngine& renderingEngine , bool shadowCasterFlag)
 {
-	m_modelInitData.m_tkmFilePath = modelFilePath;
-	
-	//指定したシェーディングモード毎にシェーダのファイルパスを振り分け
-	switch (shadingMode) {
-		case enCommonShading:
-			m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH;
-			m_modelInitData.m_vsEntryPointFunc = VS_ENTRYPOINT_NAME;
-			break;
-		case enShadowMap:
-			m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH_SHADOWMAP;
-			m_modelInitData.m_vsEntryPointFunc = VS_ENTRYPOINT_NAME;
-			break;
-		case enShadowReciever:
-			m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH_SHADOWRECIEVER;
-			m_modelInitData. m_vsEntryPointFunc = VS_ENTRYPOINT_NAME;
-			break;
-		default:
-			break;
+	m_renderingEngine = &renderingEngine;
+	//シャドウキャスターフラグをつける
+	m_isShadowCaster = shadowCasterFlag;
+
+	//通常描画用モデルを初期化
+	{
+		m_modelInitData.m_tkmFilePath = modelFilePath;
+
+		m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH;
+		m_modelInitData.m_vsEntryPointFunc = VS_ENTRYPOINT_NAME;
+		m_modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+
+		/*m_modelInitData.m_vsEntryPointFunc = "VSMain";
+		m_modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";*/
+		m_modelInitData.m_modelUpAxis = upAxis;
+
+		m_model.Init(m_modelInitData);
 	}
 
-	/*m_modelInitData.m_vsEntryPointFunc = "VSMain";
-	m_modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";*/
-	m_modelInitData.m_modelUpAxis = upAxis;
-	
-	m_model.Init(m_modelInitData);
-}
+	//影用モデルを初期化
+	{
+		m_shadowModelInitData.m_tkmFilePath = modelFilePath;
 
-void SkinModelRender::InitShader(const char* fxFilePath, const char* entryPoint)
-{
-	m_modelInitData.m_fxFilePath = fxFilePath;
-	m_modelInitData.m_vsEntryPointFunc = entryPoint;
+		m_shadowModelInitData.m_fxFilePath = MODEL_FX_FILEPATH_SHADOWMAP;
+		m_shadowModelInitData.m_vsEntryPointFunc = VS_ENTRYPOINT_NAME;
+		m_shadowModelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
+
+		m_shadowModelInitData.m_modelUpAxis = upAxis;
+
+		m_shadowModel.Init(m_shadowModelInitData);
+	}
+
+	//通常モデルをレンダリングエンジンに追加
+	m_renderingEngine->Add3DModelToCommonModel(m_model);
+
+	//シャドウキャスターフラグが立っていたら影用モデルをレンダリングエンジンに追加
+	if (m_isShadowCaster == true) {
+		m_renderingEngine->Add3DModelToShadowModel(m_shadowModel);
+	}
 	
-	m_model.Init(m_modelInitData);
 }
 
 void SkinModelRender::InitDirectionLight(DirectionLight* dirLight)
@@ -115,9 +112,7 @@ void SkinModelRender::SetRotation(const Quaternion& rot)
 
 void SkinModelRender::Render(RenderContext& rc)
 {
-	if (m_shadingMode == enCommonShading) {
-		m_model.Draw(rc);
-	}
+	m_model.Draw(rc);
 }
 
 void SkinModelRender::Update()

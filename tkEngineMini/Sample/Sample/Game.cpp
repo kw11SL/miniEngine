@@ -22,6 +22,13 @@ Game::~Game()
 
 bool Game::Start()
 {
+	
+	return true;
+}
+
+void Game::Init(RenderingEngine& renderingEngine)
+{
+
 	//ライトカメラの初期化
 	//視点の設定
 	m_lightCamera.SetPosition(0.0f, 500.0f, 0.0f);
@@ -47,15 +54,17 @@ bool Game::Start()
 	Vector3 spDir = { 0.0f,0.0f,-1.0f };
 	spDir.Normalize();
 	float spEmitAngle = Math::DegToRad(25.0f);
-	m_spotLight->Init({ 0.0f,0.0f,200.0f }, { 2.0f,2.0f,2.0f },1000.0f, spDir, spEmitAngle);
+	m_spotLight->Init({ 0.0f,0.0f,200.0f }, { 2.0f,2.0f,2.0f }, 1000.0f, spDir, spEmitAngle);
 
 
 	//プレイヤーの初期化
-	m_player = NewGO<Player_new>(0, "player");	
-	
+	m_player = NewGO<Player_new>(0, "player");
+	m_player->Init(renderingEngine);
+
 	//背景の初期化
 	m_bg = NewGO<BG>(0, "bg");
-	
+	m_bg->Init(renderingEngine);
+
 	////方向指示の初期化
 	//m_direction = NewGO<Direction>(0, "direction");
 	//m_direction->SetScale({ 1.0f,1.0f,1.0f });
@@ -80,13 +89,12 @@ bool Game::Start()
 	//	//m_direction->RecievePointLight(m_pointLight);
 	//	m_direction->RecieveSpotLight(m_spotLight);
 	//}
-	
+
 	////スプライト表示テスト
 	//m_sprite = NewGO<SpriteRender>(0, "sprite");
 	//m_sprite->Init("Assets/sprite/finish.dds",256,256,AlphaBlendMode_Trans);
 	//m_sprite->SetColor({ 1.0f,0.0f,0.0f,0.5f });
 
-	return true;
 }
 
 void Game::Update()

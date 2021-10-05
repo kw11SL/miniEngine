@@ -11,9 +11,7 @@ namespace
 
 BG::BG()
 {
-	m_skinModelRender = NewGO<SkinModelRender>(0);
-	m_skinModelRender->Init(MODEL_FILEPATH, enCommonShading, enModelUpAxisZ);
-	m_skinModelRender->InitShader(MODEL_SHADER_PATH, VS_ENTRYPOINT_NAME);
+	
 }
 
 BG::~BG()
@@ -24,6 +22,12 @@ BG::~BG()
 bool BG::Start()
 {
 	return true;
+}
+
+void BG::Init(RenderingEngine& renderingEngine)
+{
+	m_skinModelRender = NewGO<SkinModelRender>(0);
+	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisZ,renderingEngine);
 }
 
 void BG::Update()

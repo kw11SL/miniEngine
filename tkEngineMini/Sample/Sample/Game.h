@@ -15,6 +15,9 @@ public:
 	~Game();
 	bool Start() override;
 	void Update() override;
+
+	void Init(RenderingEngine& renderingEngine);
+
 private:
 	Player_new* m_player = nullptr;
 	BG* m_bg = nullptr;

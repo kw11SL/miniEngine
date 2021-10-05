@@ -28,7 +28,7 @@ public:
 	void SetAngle(const float& angle);
 	void SetIsInitDirLig(const bool& isInit) { m_isInitDirLig = isInit; }
 
-	void Init();
+	void Init(RenderingEngine& renderingEngine);
 	//ƒ‰ƒCƒg‚ğ“n‚·‚½‚ß‚ÌŠÖ”
 	void RecieveDirectionLight(DirectionLight* dirLight);
 	void RecievePointLight(PointLight* ptLight);
@@ -36,6 +36,8 @@ public:
 	SkinModelRender* GetSkinModelRender();
 
 private:
+	//RenderingEngine* m_renderingEngine = nullptr;
+
 	SkinModelRender* m_skinModelRender = nullptr;
 	CharacterController m_charaCon;
 
