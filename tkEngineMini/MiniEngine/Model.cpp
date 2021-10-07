@@ -41,7 +41,10 @@ void Model::Init(const ModelInitData& initData)
 		initData.m_expandConstantBufferSize_1,	
 		initData.m_expandConstantBuffer_2,		
 		initData.m_expandConstantBufferSize_2,
-		initData.m_expandShaderResoruceView
+		initData.m_expandConstantBuffer_3,
+		initData.m_expandConstantBufferSize_3,
+		initData.m_expandShaderResoruceView,
+		initData.m_colorBufferFormat
 	);
 
 	UpdateWorldMatrix(g_vec3Zero, g_quatIdentity, g_vec3One);

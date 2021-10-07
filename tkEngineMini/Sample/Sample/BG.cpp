@@ -27,7 +27,8 @@ bool BG::Start()
 void BG::Init(RenderingEngine& renderingEngine)
 {
 	m_skinModelRender = NewGO<SkinModelRender>(0);
-	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisZ,renderingEngine);
+	//背景には影を落としたいのでシャドウレシーバーフラグをオンにする
+	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisZ,renderingEngine , false ,true);
 }
 
 void BG::Update()

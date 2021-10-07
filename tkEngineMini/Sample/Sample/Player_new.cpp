@@ -70,6 +70,14 @@ void Player_new::SetAngle(const float& angle)
 
 void Player_new::Move()
 {
+	//テスト：移動
+	float x = g_pad[0]->GetLStickXF();
+	float y = g_pad[0]->GetLStickYF();
+
+	m_position.x -= x;
+	m_position.z -= y;
+
+	m_skinModelRender->SetPosition(m_position);
 	
 }
 
@@ -107,8 +115,10 @@ SkinModelRender* Player_new::GetSkinModelRender()
 
 void Player_new::Update()
 {
+	Move();
 	//Rotation();
 	if (m_skinModelRender != nullptr) {
 		m_skinModelRender->SetRotation(m_rot);
 	}
+
 }

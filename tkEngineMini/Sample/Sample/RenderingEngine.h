@@ -6,12 +6,33 @@
 //class bloom;
 //class RenderTarget;
 
+//シングルトンパターン
 class RenderingEngine
 {
 public:
-	RenderingEngine() {}
-	~RenderingEngine() {}
+
+	/// @brief オブジェクトの作成
+	static void CreateInstance()
+	{
+		if (m_renderingEngine == nullptr) {
+			m_renderingEngine = new RenderingEngine;
+		}
+	}
 	
+	/// @brief オブジェクトの取得
+	/// @return 自身のオブジェクト
+	static RenderingEngine* GetInstance()
+	{
+		return m_renderingEngine;
+	}
+	
+	/// @brief オブジェクトの削除
+	static void DeleteInstance()
+	{
+		delete m_renderingEngine;
+		m_renderingEngine = nullptr;
+	}
+
 	/// @brief レンダリングエンジンの初期化まとめ
 	void Init();
 	
@@ -33,6 +54,20 @@ public:
 		return m_mainRenderTarget; 
 	}
 
+	/// @brief シャドウマップレンダー内のシャドウマップを取得
+	/// @return シャドウマップ
+	RenderTarget& GetShadowMap()
+	{
+		return m_shadowMap.GetShadowMap();
+	}
+
+	/// @brief ライトカメラを取得
+	/// @return ライトカメラ
+	Camera& GetLightCamera()
+	{
+		return m_lightCamera;
+	}
+
 	/// @brief 影描画用モデルを追加
 	/// @param model モデル
 	void Add3DModelToShadowModel(Model& model)
@@ -49,6 +84,9 @@ public:
 
 private:
 	//内部で実行する関数
+	RenderingEngine() {}
+	~RenderingEngine() {}
+
 
 	/// @brief ライトカメラの初期化
 	void InitLightCamera();
@@ -68,6 +106,8 @@ private:
 	void BloomRendering(RenderContext& rc, RenderTarget& mainRT);
 
 private:
+	static RenderingEngine* m_renderingEngine;	//唯一のオブジェクト
+
 	//std::vector<Model*> m_shadowModels;		//影描画用モデル
 	ShadowMapRender m_shadowMap;				//シャドウマップ
 	std::vector<Model*> m_commonModels;			//通常描画用モデル

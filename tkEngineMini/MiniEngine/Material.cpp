@@ -59,7 +59,9 @@ void Material::InitFromTkmMaterila(
 	const wchar_t* fxFilePath,
 	const char* vsEntryPointFunc,
 	const char* vsSkinEntryPointFunc,
-	const char* psEntryPointFunc)
+	const char* psEntryPointFunc,
+	const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat
+)
 {
 	//テクスチャをロード。
 	InitTexture(tkmMat);
@@ -81,10 +83,10 @@ void Material::InitFromTkmMaterila(
 		//シェーダーを初期化。
 		InitShaders(fxFilePath, vsEntryPointFunc, vsSkinEntryPointFunc, psEntryPointFunc);
 		//パイプラインステートを初期化。
-		InitPipelineState();
+		InitPipelineState(colorBufferFormat);
 	}
 }
-void Material::InitPipelineState()
+void Material::InitPipelineState(const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat)
 {
 	// 頂点レイアウトを定義する。
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] =
@@ -112,15 +114,28 @@ void Material::InitPipelineState()
 	psoDesc.DepthStencilState.StencilEnable = FALSE;
 	psoDesc.SampleMask = UINT_MAX;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	psoDesc.NumRenderTargets = 3;
-	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;		//アルベドカラー出力用。
-#ifdef SAMPE_16_02
-	psoDesc.RTVFormats[1] = DXGI_FORMAT_R16G16B16A16_FLOAT;	//法線出力用。	
-	psoDesc.RTVFormats[2] = DXGI_FORMAT_R32_FLOAT;						//Z値。
-#else
-	psoDesc.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;			//法線出力用。	
-	psoDesc.RTVFormats[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;	//Z値。
-#endif
+	
+//	psoDesc.NumRenderTargets = 3;
+//	psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;		//アルベドカラー出力用。
+//#ifdef SAMPE_16_02
+//	psoDesc.RTVFormats[1] = DXGI_FORMAT_R16G16B16A16_FLOAT;	//法線出力用。	
+//	psoDesc.RTVFormats[2] = DXGI_FORMAT_R32_FLOAT;						//Z値。
+//#else
+//	psoDesc.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;			//法線出力用。	
+//	psoDesc.RTVFormats[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;	//Z値。
+//#endif
+
+	int numRenderTarget = 0;
+	for (auto& format : colorBufferFormat) {
+		if (format == DXGI_FORMAT_UNKNOWN) {
+			//フォーマットが指定されていない場所が来たら終わり。
+			break;
+		}
+		psoDesc.RTVFormats[numRenderTarget] = colorBufferFormat[numRenderTarget];
+		numRenderTarget++;
+	}
+	psoDesc.NumRenderTargets = numRenderTarget;
+
 	psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 	psoDesc.SampleDesc.Count = 1;
 
@@ -147,6 +162,7 @@ void Material::InitPipelineState()
 }
 void Material::InitShaders(
 	const wchar_t* fxFilePath,
+	//const char* fxFilePath,
 	const char* vsEntryPointFunc,
 	const char* vsSkinEntriyPointFunc,
 	const char* psEntryPointFunc
@@ -154,10 +170,29 @@ void Material::InitShaders(
 {
 	//スキンなしモデル用のシェーダーをロードする。
 	m_vsNonSkinModel.LoadVS(fxFilePath, vsEntryPointFunc);
+	/*m_vsNonSkinModel = g_engine->GetShaderFromBank(fxFilePath, vsEntryPointFunc);
+	if (m_vsNonSkinModel == nullptr) {
+		m_vsNonSkinModel = new Shader;
+		m_vsNonSkinModel->LoadVS(fxFilePath, vsEntryPointFunc);
+		g_engine->RegistShaderToBank(fxFilePath, vsEntryPointFunc, m_vsNonSkinModel);
+	}*/
+
 	//スキンありモデル用のシェーダーをロードする。
 	m_vsSkinModel.LoadVS(fxFilePath, vsSkinEntriyPointFunc);
+	/*m_vsSkinModel = g_engine->GetShaderFromBank(fxFilePath, vsSkinEntriyPointFunc);
+	if (m_vsSkinModel == nullptr) {
+		m_vsSkinModel = new Shader;
+		m_vsSkinModel->LoadVS(fxFilePath, vsSkinEntriyPointFunc);
+		g_engine->RegistShaderToBank(fxFilePath, vsSkinEntriyPointFunc, m_vsSkinModel);
+	}*/
 	
 	m_psModel.LoadPS(fxFilePath, psEntryPointFunc);
+	/*m_psModel = g_engine->GetShaderFromBank(fxFilePath, psEntryPointFunc);
+	if (m_psModel == nullptr) {
+		m_psModel = new Shader;
+		m_psModel->LoadPS(fxFilePath, psEntryPointFunc);
+		g_engine->RegistShaderToBank(fxFilePath, psEntryPointFunc, m_psModel);
+	}*/
 }
 void Material::BeginRender(RenderContext& rc, int hasSkin)
 {

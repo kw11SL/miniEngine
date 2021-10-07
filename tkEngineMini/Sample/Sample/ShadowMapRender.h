@@ -11,7 +11,17 @@ public:
 
 	/// @brief シャドウマップに描画するモデルを登録
 	/// @param model 
-	void AddModel(Model& model) { m_model = &model; }
+	void AddModel(Model& model) 
+	{ 
+		m_model = &model; 
+	}
+
+	/// @brief シャドウマップを取得
+	/// @return シャドウマップ
+	RenderTarget& GetShadowMap()
+	{
+		return m_shadowMap;
+	}
 
 	/*/// @brief カスケードシャドウ用のシャドウマップに描画するモデルを登録
 	/// @param model1 //近景用モデル

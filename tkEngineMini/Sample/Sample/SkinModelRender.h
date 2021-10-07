@@ -15,7 +15,7 @@ public:
 	void Update() override;
 	void Render(RenderContext& rc) override;
 
-	void Init(const char* modelFilePath, EnModelUpAxis upAxis , RenderingEngine& renderingEngine, bool shadowCasterFlag = false);
+	void Init(const char* modelFilePath, EnModelUpAxis upAxis , RenderingEngine& renderingEngine, bool shadowCasterFlag = false , bool shadowRecieverFlag = false);
 	void InitDirectionLight(DirectionLight* dirLight);
 	void InitPointLight(PointLight* ptLight);
 	void InitSpotLight(SpotLight* spLight);

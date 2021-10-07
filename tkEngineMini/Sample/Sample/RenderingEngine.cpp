@@ -4,6 +4,8 @@
 #include "RenderTarget.h"
 #include "RenderContext.h"
 
+RenderingEngine* RenderingEngine::m_renderingEngine = nullptr;
+
 void RenderingEngine::Init()
 {
 	//ライトカメラの初期化
@@ -14,6 +16,7 @@ void RenderingEngine::Init()
 	InitShadowMap();
 	
 	
+
 	//ブルームの初期化
 	InitBloom(m_mainRenderTarget);
 }
@@ -21,9 +24,9 @@ void RenderingEngine::Init()
 void RenderingEngine::Execute(RenderContext& rc)
 {
 	//シャドウマップへの描画
-	//RenderToShadowMap(rc, m_lightCamera);
+	RenderToShadowMap(rc, m_lightCamera);
 
-	//ブルーム
+	//ブルーム処理
 	BloomRendering(rc, m_mainRenderTarget);
 
 }
@@ -34,11 +37,15 @@ void RenderingEngine::CommonRender(RenderContext& rc)
 	for (auto& model : m_commonModels) {
 		model->Draw(rc);
 	}
+
+	//レンダリングターゲットの書き込み終了待ち
+	rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
 }
 
 void RenderingEngine::RenderToShadowMap(RenderContext& rc , Camera camera)
 {
 	m_shadowMap.Render(rc, camera);
+
 }
 
 void RenderingEngine::InitLightCamera()

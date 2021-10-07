@@ -50,14 +50,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	EffectEngine::CreateInstance();
 
 	//テスト：レンダリングエンジン
-	RenderingEngine renderingEngine;
+	RenderingEngine::CreateInstance();
+	//RenderingEngine renderingEngine;
 	//レンダリングエンジンの初期化
-	renderingEngine.Init();
+	RenderingEngine::GetInstance()->Init();
+	//renderingEngine.Init();
 
 	//テクスチャを貼りつけるためのスプライトを初期化
 	SpriteInitData spriteInitData;
 	//テクスチャはメインレンダリングターゲットのカラーバッファ
-	spriteInitData.m_textures[0] = &renderingEngine.GetRenderTarget().GetRenderTargetTexture();
+	spriteInitData.m_textures[0] = &RenderingEngine::GetInstance()->GetRenderTarget().GetRenderTargetTexture();
 	spriteInitData.m_width = WINDOW_WIDTH;
 	spriteInitData.m_height = WINDOW_HEIGHT;
 	//通常のシェーダを指定
@@ -75,7 +77,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ゲームシーンを作成
 	Game* game = nullptr;
 	game = NewGO<Game>(0, "game");
-	game->Init(renderingEngine);
+	game->Init(*RenderingEngine::GetInstance());
 
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
@@ -108,11 +110,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		
 		//レンダリングターゲットをメインレンダリングターゲットに変更(=オフスクリーンレンダリングにする)
 		//レンダリングターゲットとして利用できるまで待つ
-		renderContext.WaitUntilToPossibleSetRenderTarget(renderingEngine.GetRenderTarget());
+		renderContext.WaitUntilToPossibleSetRenderTarget(RenderingEngine::GetInstance()->GetRenderTarget());
 		//レンダリングターゲットを設定
-		renderContext.SetRenderTargetAndViewport(renderingEngine.GetRenderTarget());
+		renderContext.SetRenderTargetAndViewport(RenderingEngine::GetInstance()->GetRenderTarget());
 		//レンダリングターゲットのクリア
-		renderContext.ClearRenderTargetView(renderingEngine.GetRenderTarget());
+		renderContext.ClearRenderTargetView(RenderingEngine::GetInstance()->GetRenderTarget());
 		
 		////////モデルのドロー////////
 		//登録されているゲームオブジェクトの描画関数を呼び出す。
@@ -120,13 +122,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//////////////////////////////
 		
 		//テスト：レンダリングエンジンによる通常描画
-		renderingEngine.CommonRender(renderContext);
+		RenderingEngine::GetInstance()->CommonRender(renderContext);
 		
-		//メインレンダリングターゲットへの書き込み終了待ち
-		renderContext.WaitUntilFinishDrawingToRenderTarget(renderingEngine.GetRenderTarget());
-
 		//テスト：レンダリングエンジンの処理
-		renderingEngine.Execute(renderContext);
+		RenderingEngine::GetInstance()->Execute(renderContext);
 
 		//メインレンダリングターゲットに描画したものをフレームバッファにコピー
 		//レンダリングターゲットをオンスクリーンに戻す

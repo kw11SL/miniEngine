@@ -54,6 +54,11 @@ cbuffer SpotLightCb : register(b3) {
 	SpotLight spotLight;
 };
 
+//ライトビュープロジェクション行列にアクセスする定数バッファ
+cbuffer ShadowCb : register(b4) {
+	float4x4 mLVP;
+};
+
 //関数宣言
 float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 normal);
 float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldPos, float3 normal);
@@ -81,14 +86,16 @@ struct SPSIn{
 	float2 uv 			: TEXCOORD0;	//uv座標。
 	float3 worldPos		: TEXCOORD1;	//ワールド座標
 	float3 normalInView : TEXCOORD2;	//カメラ空間の法線
+	float4 posInLVP		: TEXCOORD3;	//ライトビュースクリーン空間でのピクセルの座標
 };
 
 ////////////////////////////////////////////////
 // グローバル変数。
 ////////////////////////////////////////////////
-Texture2D<float4> g_albedo : register(t0);				//アルベドマップ
-StructuredBuffer<float4x4> g_boneMatrix : register(t3);	//ボーン行列。
-sampler g_sampler : register(s0);	//サンプラステート。
+Texture2D<float4> g_albedo : register(t0);					//アルベドマップ
+StructuredBuffer<float4x4> g_boneMatrix : register(t3);		//ボーン行列。
+Texture2D<float4> g_shadowMap : register(t10);				//シャドウマップ
+sampler g_sampler : register(s0);							//サンプラステート。
 
 ////////////////////////////////////////////////
 // 関数定義。
@@ -119,20 +126,33 @@ float4x4 CalcSkinMatrix(SSkinVSIn skinVert)
 SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 {
 	SPSIn psIn;
+
 	float4x4 m;
 	if( hasSkin ){
 		m = CalcSkinMatrix(vsIn.skinVert);
 	}else{
 		m = mWorld;
 	}
-	psIn.pos = mul(m, vsIn.pos);
+
+
+
+	/*psIn.pos = mul(m, vsIn.pos);
 	psIn.worldPos = vsIn.pos;
 	psIn.pos = mul(mView, psIn.pos);
+	psIn.pos = mul(mProj, psIn.pos);*/
+
+	//通常の座標変換
+	psIn.worldPos = vsIn.pos;
+	float4 worldPos = mul(m, vsIn.pos);
+	psIn.pos = mul(mView, worldPos);
 	psIn.pos = mul(mProj, psIn.pos);
 
+	//ライトビュープロジェクション空間の座標を計算する
+	psIn.posInLVP = mul(mLVP, worldPos);
 
 	//頂点法線をピクセルシェーダに渡す
-	psIn.normal = mul(mWorld, vsIn.normal);		//法線を回転させる
+	//psIn.normal = mul(mWorld, vsIn.normal);		//法線を回転させる
+	psIn.normal = mul(m, vsIn.normal);		//法線を回転させる
 	psIn.uv = vsIn.uv;
 
 	//カメラ空間の法線を求める
@@ -290,6 +310,34 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 	//アルベドカラーをサンプルして最終出力カラーのベースを作成
 	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
+
+	//影を描く処理
+	
+	//ライトビュースクリーン空間　→　UV空間　への座標変換
+	//xyの値をwで除算することによって -1～1の範囲に収まる(=正規化スクリーン座標系への変換)
+	float2 shadowMapUV = psIn.posInLVP.xy / psIn.posInLVP.w;
+	//正規化スクリーン座標系(-1～1)の範囲に0.5(yは反転させるために-0.5)を掛け、-0.5～0.5の範囲にする
+	shadowMapUV *= float2(0.5f, -0.5f);
+	//それぞれに0.5を加算し、0～1の範囲にする
+	shadowMapUV += 0.5f;
+
+	//ライトビュースクリーン空間でのz値を計算
+	float zInLVP = psIn.posInLVP.z / psIn.posInLVP.w;
+
+	if (shadowMapUV.x > 0.0f && shadowMapUV.x < 1.0f
+		&& shadowMapUV.y > 0.0f && shadowMapUV.y < 1.0f) 
+	{
+		//シャドウマップに描き込まれたz値(深度値)と比較
+		//シャドウマップに描かれているのはR成分だけなのでr成分をサンプルする
+		float zInShadowMap = g_shadowMap.Sample(g_sampler, shadowMapUV).r;
+
+		//遮蔽されているかどうかの判定
+		//ライトビュースクリーン空間でのz値がシャドウマップに描かれたz値より大きい場合
+		if (zInLVP > zInShadowMap) {
+			//遮蔽されているので影を描画する
+			albedoColor.xyz *= 0.5f;
+		}
+	}
 	
 	//最終出力カラーにライトを乗算して出力カラーを決める
 	albedoColor.xyz *= lig;

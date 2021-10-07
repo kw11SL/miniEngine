@@ -79,7 +79,9 @@ void ShadowMapRender::Render(RenderContext& rc, Camera& lightCamera)
 	rc.ClearRenderTargetView(m_shadowMap);
 
 	//ƒ‚ƒfƒ‹‚ğ•`‰æ
-	m_model->Draw(rc, lightCamera);
+	if (m_model != nullptr) {
+		m_model->Draw(rc, lightCamera);
+	}
 
 	//•`‚«‚İŠ®—¹‘Ò‚¿
 	rc.WaitUntilFinishDrawingToRenderTarget(m_shadowMap);

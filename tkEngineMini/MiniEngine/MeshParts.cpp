@@ -30,14 +30,25 @@ void MeshParts::InitFromTkmFile(
 	int expandDataSize_1,				//追加の定数バッファ1のサイズ
 	void* expandData_2,					//追加の定数バッファ2
 	int expandDataSize_2,				//追加の定数バッファ2のサイズ
-	IShaderResource* expandShaderResourceView
+	void* expandData_3,					//追加の定数バッファ3
+	int expandDataSize_3,				//追加の定数バッファ3のサイズ
+	const std::array<IShaderResource*,MAX_MODEL_EXPAND_SRV>& expandShaderResourceView,
+	const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat
 )
 {
 	m_meshs.resize(tkmFile.GetNumMesh());
 	int meshNo = 0;
 	tkmFile.QueryMeshParts([&](const TkmFile::SMesh& mesh) {
 		//tkmファイルのメッシュ情報からメッシュを作成する。
-		CreateMeshFromTkmMesh(mesh, meshNo, fxFilePath, vsEntryPointFunc, vsSkinEntryPointFunc, psEntryPointFunc);
+		CreateMeshFromTkmMesh(
+			mesh,
+			meshNo,
+			fxFilePath,
+			vsEntryPointFunc,
+			vsSkinEntryPointFunc,
+			psEntryPointFunc,
+			colorBufferFormat
+		);
 		meshNo++;
 	});
 	//共通定数バッファの作成。
@@ -47,17 +58,26 @@ void MeshParts::InitFromTkmFile(
 		m_expandConstantBuffer.Init(expandDataSize, nullptr);
 		m_expandData = expandData;
 	}
-	//追加の定数バッファを作成
+	//追加の定数バッファ1を作成
 	if (expandData_1) {
 		m_expandConstantBuffer_1.Init(expandDataSize_1, nullptr);
 		m_expandData_1 = expandData_1;
 	}
-	//追加の定数バッファを作成
+	//追加の定数バッファ2を作成
 	if (expandData_2) {
 		m_expandConstantBuffer_2.Init(expandDataSize_2, nullptr);
 		m_expandData_2 = expandData_2;
 	}
-	m_expandShaderResourceView = expandShaderResourceView;
+	//追加の定数バッファ3を作成
+	if (expandData_3) {
+		m_expandConstantBuffer_3.Init(expandDataSize_3, nullptr);
+		m_expandData_3 = expandData_3;
+	}
+
+	for (int i = 0; i < MAX_MODEL_EXPAND_SRV; i++) {
+		m_expandShaderResourceView[i] = expandShaderResourceView[i];
+	}
+	
 	//ディスクリプタヒープを作成。
 	CreateDescriptorHeaps();
 }
@@ -83,21 +103,31 @@ void MeshParts::CreateDescriptorHeaps()
 			descriptorHeap.RegistShaderResource(1, mesh->m_materials[matNo]->GetNormalMap());		//法線マップ。
 			descriptorHeap.RegistShaderResource(2, mesh->m_materials[matNo]->GetSpecularMap());		//スペキュラマップ。
 			descriptorHeap.RegistShaderResource(3, m_boneMatricesStructureBuffer);							//ボーンのストラクチャードバッファ。
-			if (m_expandShaderResourceView){
-				descriptorHeap.RegistShaderResource(EXPAND_SRV_REG__START_NO, *m_expandShaderResourceView);
+			for (int i = 0; i < MAX_MODEL_EXPAND_SRV; i++) {
+				if (m_expandShaderResourceView[i]) {
+					descriptorHeap.RegistShaderResource(EXPAND_SRV_REG__START_NO + i, *m_expandShaderResourceView[i]);
+				}
 			}
+
+			//定数バッファをディスクリプタヒープに登録する
 			descriptorHeap.RegistConstantBuffer(0, m_commonConstantBuffer);
 			if (m_expandConstantBuffer.IsValid()) {
 				descriptorHeap.RegistConstantBuffer(1, m_expandConstantBuffer);
 			}
-			//追加の定数バッファをディスクリプタヒープに登録する
+			//追加の定数バッファ1をディスクリプタヒープに登録する
 			if (m_expandConstantBuffer_1.IsValid()) {
 				descriptorHeap.RegistConstantBuffer(2, m_expandConstantBuffer_1);
 			}
-			//追加の定数バッファをディスクリプタヒープに登録する
+			//追加の定数バッファ2をディスクリプタヒープに登録する
 			if (m_expandConstantBuffer_2.IsValid()) {
 				descriptorHeap.RegistConstantBuffer(3, m_expandConstantBuffer_2);
 			}
+			//追加の定数バッファ3をディスクリプタヒープに登録する
+			if (m_expandConstantBuffer_3.IsValid()) {
+				descriptorHeap.RegistConstantBuffer(4, m_expandConstantBuffer_3);
+			}
+
+
 			//ディスクリプタヒープへの登録を確定させる。
 			descriptorHeap.Commit();
 			descriptorHeapNo++;
@@ -110,7 +140,8 @@ void MeshParts::CreateMeshFromTkmMesh(
 	const wchar_t* fxFilePath,
 	const char* vsEntryPointFunc,
 	const char* vsSkinEntryPointFunc,
-	const char* psEntryPointFunc)
+	const char* psEntryPointFunc,
+	const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat)
 {
 	//1. 頂点バッファを作成。
 	int numVertex = (int)tkmMesh.vertexBuffer.size();
@@ -163,7 +194,14 @@ void MeshParts::CreateMeshFromTkmMesh(
 	mesh->m_materials.reserve(tkmMesh.materials.size());
 	for (auto& tkmMat : tkmMesh.materials) {
 		auto mat = new Material;
-		mat->InitFromTkmMaterila(tkmMat, fxFilePath, vsEntryPointFunc, vsSkinEntryPointFunc, psEntryPointFunc);
+		mat->InitFromTkmMaterila(
+			tkmMat,
+			fxFilePath,
+			vsEntryPointFunc,
+			vsSkinEntryPointFunc,
+			psEntryPointFunc,
+			colorBufferFormat
+		);
 		mesh->m_materials.push_back(mat);
 	}
 
@@ -200,17 +238,22 @@ void MeshParts::Draw(
 	cb.mProj = mProj;
 
 	m_commonConstantBuffer.CopyToVRAM(&cb);
-
+	
+	//定数バッファをGPUにコピー
 	if (m_expandData) {
 		m_expandConstantBuffer.CopyToVRAM(m_expandData);
 	}
-	//追加の定数バッファをGPUにコピー
+	//追加の定数バッファ1をGPUにコピー
 	if (m_expandData_1) {
 		m_expandConstantBuffer_1.CopyToVRAM(m_expandData_1);
 	}
-	//追加の定数バッファをGPUにコピー
+	//追加の定数バッファ2をGPUにコピー
 	if (m_expandData_2) {
 		m_expandConstantBuffer_2.CopyToVRAM(m_expandData_2);
+	}
+	//追加の定数バッファ3をGPUにコピー
+	if (m_expandData_3) {
+		m_expandConstantBuffer_3.CopyToVRAM(m_expandData_3);
 	}
 	if (m_boneMatricesStructureBuffer.IsInited()) {
 		//ボーン行列を更新する。

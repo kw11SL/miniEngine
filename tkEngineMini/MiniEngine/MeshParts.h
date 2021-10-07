@@ -12,6 +12,7 @@ class Skeleton;
 class Material;
 class IShaderResource;
 
+const int MAX_MODEL_EXPAND_SRV = 16;					//拡張SRVの最大数
 
 /// <summary>
 /// メッシュ
@@ -52,7 +53,10 @@ public:
 		int expandDataSize_1,				
 		void* expandData_2,					
 		int expandDataSize_2,
-		IShaderResource* expandShaderResourceView
+		void* expandData_3,
+		int expandDataSize_3,
+		const std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV>& expandShaderResourceView,
+		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat
 	);
 	/// <summary>
 	/// 描画。
@@ -104,7 +108,9 @@ private:
 		const wchar_t* fxFilePath,
 		const char* vsEntryPointFunc,
 		const char* vsSkinEntryPointFunc,
-		const char* psEntryPointFunc );
+		const char* psEntryPointFunc, 
+		const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat
+	);
 
 	
 private:
@@ -121,11 +127,15 @@ private:
 		Matrix mView;		//ビュー行列。
 		Matrix mProj;		//プロジェクション行列。
 	};
+
 	ConstantBuffer m_commonConstantBuffer;					//メッシュ共通の定数バッファ。
 	ConstantBuffer m_expandConstantBuffer;					//ユーザー拡張用の定数バッファ
 	ConstantBuffer m_expandConstantBuffer_1;				
 	ConstantBuffer m_expandConstantBuffer_2;
-	IShaderResource* m_expandShaderResourceView = nullptr;	//ユーザー拡張シェーダーリソースビュー。
+	ConstantBuffer m_expandConstantBuffer_3;
+
+
+	std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV> m_expandShaderResourceView = { nullptr };	//ユーザー拡張シェーダーリソースビュー。
 	StructuredBuffer m_boneMatricesStructureBuffer;	//ボーン行列の構造化バッファ。
 	std::vector< SMesh* > m_meshs;							//メッシュ。
 	std::vector< DescriptorHeap > m_descriptorHeap;		//ディスクリプタヒープ。
@@ -133,4 +143,5 @@ private:
 	void* m_expandData = nullptr;						//ユーザー拡張データ。
 	void* m_expandData_1 = nullptr;						
 	void* m_expandData_2 = nullptr;
+	void* m_expandData_3 = nullptr;
 };

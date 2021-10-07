@@ -26,7 +26,10 @@ struct ModelInitData {
 	int m_expandConstantBufferSize_1 = 0;							
 	void* m_expandConstantBuffer_2 = nullptr;						
 	int m_expandConstantBufferSize_2 = 0;
-	IShaderResource* m_expandShaderResoruceView = nullptr;			//ユーザー拡張のシェーダーリソース。
+	void* m_expandConstantBuffer_3 = nullptr;
+	int m_expandConstantBufferSize_3 = 0;
+
+	std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV> m_expandShaderResoruceView = { nullptr };
 	Skeleton* m_skeleton = nullptr;									//スケルトン。
 	EnModelUpAxis m_modelUpAxis = enModelUpAxisZ;					//モデルの上方向。
 	std::array<DXGI_FORMAT, MAX_RENDERING_TARGET> m_colorBufferFormat = {
