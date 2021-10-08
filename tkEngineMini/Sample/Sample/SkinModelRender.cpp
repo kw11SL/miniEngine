@@ -62,7 +62,7 @@ void SkinModelRender::Init(const char* modelFilePath, EnModelUpAxis upAxis , Ren
 		}
 
 		
-
+		//モデルの初期化
 		m_model.Init(m_modelInitData);
 	}
 
@@ -116,6 +116,7 @@ void SkinModelRender::InitSpotLight(SpotLight* spLight)
 void SkinModelRender::SetPosition(const Vector3& pos)
 {
 	m_position = pos;
+
 }
 
 void SkinModelRender::SetScale(const Vector3& scale)
@@ -135,5 +136,12 @@ void SkinModelRender::Render(RenderContext& rc)
 
 void SkinModelRender::Update()
 {
+	//モデルの更新
 	m_model.UpdateWorldMatrix(m_position,m_rot,m_scale);
+
+	//シャドウキャスターフラグがついていたら影モデルも更新
+	if (m_isShadowCaster) {
+		m_shadowModel.UpdateWorldMatrix(m_position, m_rot, m_scale);
+	}
+
 }
