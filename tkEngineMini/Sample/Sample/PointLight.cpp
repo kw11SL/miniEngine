@@ -7,11 +7,6 @@ bool PointLight::Start()
 	return true;
 }
 
-void PointLight::Update()
-{
-	Move();
-}
-
 void PointLight::Init(const Vector3& position,const Vector3& color, float range)
 {
 	//ƒƒ“ƒo•Ï”‚É‹L˜^
@@ -74,4 +69,9 @@ void PointLight::SetRange(float range)
 
 	//‰e‹¿”ÍˆÍ‚ğŒˆ’è
 	m_ptLight.pointLight.ptRange = m_range;
+}
+
+void PointLight::Update()
+{
+	Move();
 }

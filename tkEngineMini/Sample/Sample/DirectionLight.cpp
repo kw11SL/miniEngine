@@ -2,25 +2,10 @@
 #include "DirectionLight.h"
 #include "Light.h"
 
-DirectionLight::DirectionLight()
-{
-
-}
-
-DirectionLight::~DirectionLight()
-{
-
-}
-
 bool DirectionLight::Start()
 {
 
 	return true;
-}
-
-void DirectionLight::Update()
-{
-	Rotation();
 }
 
 void DirectionLight::Init(const Vector3& direction, const Vector3& color,const Vector3& ambLig)
@@ -32,11 +17,11 @@ void DirectionLight::Init(const Vector3& direction, const Vector3& color,const V
 	m_ambientLig = ambLig;
 
 	//方向を決定
-	m_light.directionLight.direction = m_direction;
+	m_dirLight.directionLight.direction = m_direction;
 	//カラーを決定
-	m_light.directionLight.color = m_color;
+	m_dirLight.directionLight.color = m_color;
 	//アンビエントライトを決定
-	m_light.ambientLight = m_ambientLig;
+	m_dirLight.ambientLight = m_ambientLig;
 }
 
 void DirectionLight::Rotation()
@@ -69,7 +54,7 @@ void DirectionLight::SetDirection(const Vector3& direction)
 	//方向を正規化
 	m_direction.Normalize();
 
-	m_light.directionLight.direction = m_direction;
+	m_dirLight.directionLight.direction = m_direction;
 }
 
 void DirectionLight::SetRotationH(const Quaternion& rotH)
@@ -86,12 +71,17 @@ void DirectionLight::SetColor(const Vector3& color)
 {
 	m_color = color;
 
-	m_light.directionLight.color = m_color;
+	m_dirLight.directionLight.color = m_color;
 }
 
 void DirectionLight::SetEyePos(const Vector3& pos)
 {
 	m_eyePos = pos;
 
-	m_light.eyePos = m_eyePos;
+	m_dirLight.eyePos = m_eyePos;
+}
+
+void DirectionLight::Update()
+{
+	Rotation();
 }

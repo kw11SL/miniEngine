@@ -21,13 +21,13 @@ public:
 private:
 	Player_new* m_player = nullptr;
 	BG* m_bg = nullptr;
-	Direction* m_direction = nullptr;
+	//Direction* m_direction = nullptr;
 	DirectionLight* m_directionLight = nullptr;
 	PointLight* m_pointLight = nullptr;
 	SpotLight* m_spotLight = nullptr;
 	
-	//影生成用のライトカメラ
-	Camera m_lightCamera;
+	////影生成用のライトカメラ
+	//Camera m_lightCamera;
 
 	//テスト
 	SpriteRender* m_sprite = nullptr;

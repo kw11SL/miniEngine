@@ -11,7 +11,7 @@ Game::~Game()
 {
 	DeleteGO(m_player);
 	DeleteGO(m_bg);
-	DeleteGO(m_direction);
+	//DeleteGO(m_direction);
 	DeleteGO(m_directionLight);
 	DeleteGO(m_pointLight);
 	DeleteGO(m_spotLight);
@@ -29,15 +29,15 @@ bool Game::Start()
 void Game::Init(RenderingEngine& renderingEngine)
 {
 
-	//ライトカメラの初期化
-	//視点の設定
-	m_lightCamera.SetPosition(0.0f, 500.0f, 0.0f);
-	//注視点の設定
-	m_lightCamera.SetTarget(0.0f, 0.0f, 0.0f);
-	//上方向の設定
-	m_lightCamera.SetUp({ 1.0f, 0.0f, 0.0f });
-	//ライトビュープロジェクション行列の更新
-	m_lightCamera.Update();
+	////ライトカメラの初期化
+	////視点の設定
+	//m_lightCamera.SetPosition(0.0f, 500.0f, 0.0f);
+	////注視点の設定
+	//m_lightCamera.SetTarget(0.0f, 0.0f, 0.0f);
+	////上方向の設定
+	//m_lightCamera.SetUp({ 1.0f, 0.0f, 0.0f });
+	////ライトビュープロジェクション行列の更新
+	//m_lightCamera.Update();
 
 
 	//ディレクションライトの初期化

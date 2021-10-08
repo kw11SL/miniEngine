@@ -20,8 +20,8 @@ struct DirLight
 class DirectionLight : public IGameObject
 {
 public:
-	DirectionLight();
-	~DirectionLight();
+	DirectionLight(){}
+	~DirectionLight(){}
 	bool Start() override;
 	void Update() override;
 
@@ -38,23 +38,23 @@ public:
 	void SetEyePos(const Vector3& pos);
 
 	//ゲッター
-	const Vector3& GetDirection() { return m_light.directionLight.direction; }
+	const Vector3& GetDirection() { return m_dirLight.directionLight.direction; }
 	const Quaternion& GetRotationH() { return m_rotationH; }
 	const Quaternion& GetRotationV() { return m_rotationV; }
 	const float& GetAngleH() { return m_angleH; }
 	const float& GetAngleV() { return m_angleV; }
-	const Vector3& GetColor() { return m_light.directionLight.color; }
+	const Vector3& GetColor() { return m_dirLight.directionLight.color; }
 	
 	/// @brief ライト構造体を返す関数
 	/// @return m_light
-	const DirLight& GetDirLight() { return m_light; }
+	const DirLight& GetDirLight() { return m_dirLight; }
 	
 	/// @brief ライトの構造体のアドレスを返す関数
 	/// @return m_lightのアドレス値
-	DirLight* GetDirLightAddress() { return &m_light; }
+	DirLight* GetDirLightAddress() { return &m_dirLight; }
 
 private:
-	DirLight m_light;
+	DirLight m_dirLight;
 	Vector3 m_direction = Vector3::Zero;
 	Quaternion m_rotationH = Quaternion::Identity;
 	Quaternion m_rotationV = Quaternion::Identity;

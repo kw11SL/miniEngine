@@ -20,8 +20,8 @@ struct SpLight
 class SpotLight : public IGameObject
 {
 public:
-	SpotLight();
-	~SpotLight();
+	SpotLight() {}
+	~SpotLight() {}
 	bool Start() override;
 	void Update() override;
 
@@ -53,7 +53,8 @@ public:
 	SpLight* GetSpotLightAddress() { return &m_spLight; }
 
 private:
-	SpLight m_spLight;
+	SpLight m_spLight;								//スポットライト構造体
+	
 	Vector3 m_position = Vector3::Zero;
 	Quaternion m_qRot = Quaternion::Identity;
 	Vector3 m_color = Vector3::One;
@@ -63,9 +64,6 @@ private:
 
 	Quaternion m_rotationH = Quaternion::Identity;
 	Quaternion m_rotationV = Quaternion::Identity;
-
-	//ライトの実体確認用モデル
-	SkinModelRender* m_skinModelRender = nullptr;
 };
 
 

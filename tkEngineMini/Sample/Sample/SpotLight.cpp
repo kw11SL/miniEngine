@@ -2,20 +2,6 @@
 #include "SpotLight.h"
 #include "SkinModelRender.h"
 
-SpotLight::SpotLight()
-{
-	/*m_skinModelRender = NewGO<SkinModelRender>(0);
-	m_skinModelRender->Init("Assets/modelData/light/light.tkm", enModelUpAxisZ);
-
-	m_skinModelRender->SetPosition(m_position);*/
-
-}
-
-SpotLight::~SpotLight()
-{
-	DeleteGO(m_skinModelRender);
-}
-
 bool SpotLight::Start()
 {
 	return true;

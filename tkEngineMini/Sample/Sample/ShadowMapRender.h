@@ -13,7 +13,7 @@ public:
 	/// @param model 
 	void AddModel(Model& model) 
 	{ 
-		m_model = &model; 
+		m_modelsArray.push_back(&model); 
 	}
 
 	/// @brief シャドウマップを取得
@@ -54,7 +54,7 @@ private:
 private:
 	
 	//1つだけ影を生成する場合
-	Model* m_model = nullptr;						//影描画用モデル
+	std::vector<Model*> m_modelsArray;				//影描画用モデルの可変長配列
 	RenderTarget m_shadowMap;						//シャドウマップ
 	
 	////カスケードシャドウ用

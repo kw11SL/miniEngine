@@ -78,9 +78,11 @@ void ShadowMapRender::Render(RenderContext& rc, Camera& lightCamera)
 	rc.SetRenderTargetAndViewport(m_shadowMap);
 	rc.ClearRenderTargetView(m_shadowMap);
 
-	//モデルを描画
-	if (m_model != nullptr) {
-		m_model->Draw(rc, lightCamera);
+	//モデルをシャドウマップに描画
+	for (auto& model : m_modelsArray) {
+		if (model != nullptr) {
+			model->Draw(rc , lightCamera);
+		}
 	}
 
 	//描き込み完了待ち
