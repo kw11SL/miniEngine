@@ -31,8 +31,13 @@ bool SkinModelRender::Start()
 void SkinModelRender::Init(const char* modelFilePath, EnModelUpAxis upAxis , RenderingEngine& renderingEngine , bool shadowCasterFlag , bool shadowRecieverFlag)
 {
 	m_renderingEngine = &renderingEngine;
+	
 	//シャドウキャスターフラグをつける
-	m_isShadowCaster = shadowCasterFlag;
+	SetShadowChastarFlag(shadowCasterFlag);
+	
+	//シャドウレシーバーフラグをつける
+	SetShadowRecieverFlag(shadowRecieverFlag);
+
 
 	//通常描画用モデルを初期化
 	{

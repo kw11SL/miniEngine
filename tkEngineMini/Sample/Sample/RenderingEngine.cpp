@@ -50,7 +50,7 @@ void RenderingEngine::RenderToShadowMap(RenderContext& rc , Camera camera)
 
 void RenderingEngine::InitLightCamera()
 {
-	m_lightCamera.SetPosition(0, 600, 0);
+	m_lightCamera.SetPosition(0.0f, 600.0f, 0.0f);
 	m_lightCamera.SetTarget(0.0f, 0.0f, 0.0f);
 	m_lightCamera.SetUp({ 1.0f,0.0f,0.0f });
 	m_lightCamera.SetViewAngle(Math::DegToRad(60.0f));

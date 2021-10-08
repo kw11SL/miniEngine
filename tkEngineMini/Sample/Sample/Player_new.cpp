@@ -26,7 +26,7 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 {
 
 	m_skinModelRender = NewGO<SkinModelRender>(0);
-	m_skinModelRender->Init(MODELPATH_UTC, enModelUpAxisZ,renderingEngine,true);
+	m_skinModelRender->Init(MODELPATH_UTC, enModelUpAxisZ,renderingEngine,true,false);
 
 	//m_skinModelRender->InitShader(MODEL_SHADER_PATH, VS_ENTRYPOINT_NAME);
 

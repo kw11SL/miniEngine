@@ -270,7 +270,20 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 	//スポットライトの入射光と射出方向の角度を求める
 	float angleSp = dot(spLigDir, spotLight.direction);
-	angleSp = acos(angleSp);
+	//angleSp = acos(angleSp);
+	if (-1 < angleSp && angleSp < 1)
+	{
+		angleSp = acos(angleSp);
+	}
+	else if (angleSp > 0.9)
+	{
+		angleSp = 0;
+	}
+	else
+	{
+		angleSp = acos(-1.0f);
+	}
+
 	//角度による影響率を求める
 	affectSp = 1.0f - 1.0f / spotLight.angle * angleSp;
 	//0を下回る場合0に補正
