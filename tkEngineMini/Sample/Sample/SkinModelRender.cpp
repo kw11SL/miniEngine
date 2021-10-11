@@ -22,6 +22,18 @@ namespace
 	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
 }
 
+SkinModelRender::~SkinModelRender()
+{
+	//レンダリングエンジンからモデルを削除
+	m_renderingEngine->DeleteCommonModel(m_model);
+	
+	//シャドウキャスターフラグが立っていたら影用モデルも削除
+	if (m_isShadowCaster) {
+		m_renderingEngine->DeleteShadowModel(m_shadowModel);
+	}
+
+}
+
 bool SkinModelRender::Start()
 {
 
@@ -44,10 +56,8 @@ void SkinModelRender::Init(const char* modelFilePath, EnModelUpAxis upAxis , Ren
 		//共通処理
 		m_modelInitData.m_tkmFilePath = modelFilePath;
 		m_modelInitData.m_vsEntryPointFunc = VS_ENTRYPOINT_NAME;
+		//m_modelInitData.m_vsSkinEntryPointFunc = VS_SKIN_ENTRYPOINT_NAME;
 		m_modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
-
-		/*m_modelInitData.m_vsEntryPointFunc = "VSMain";
-		m_modelInitData.m_vsSkinEntryPointFunc = "VSSkinMain";*/
 		m_modelInitData.m_modelUpAxis = upAxis;
 
 		if (shadowRecieverFlag == false) {

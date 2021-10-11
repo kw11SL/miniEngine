@@ -28,18 +28,6 @@ bool Game::Start()
 
 void Game::Init(RenderingEngine& renderingEngine)
 {
-
-	////ライトカメラの初期化
-	////視点の設定
-	//m_lightCamera.SetPosition(0.0f, 500.0f, 0.0f);
-	////注視点の設定
-	//m_lightCamera.SetTarget(0.0f, 0.0f, 0.0f);
-	////上方向の設定
-	//m_lightCamera.SetUp({ 1.0f, 0.0f, 0.0f });
-	////ライトビュープロジェクション行列の更新
-	//m_lightCamera.Update();
-
-
 	//ディレクションライトの初期化
 	m_directionLight = NewGO<DirectionLight>(0, "directionlight");
 	m_directionLight->Init({ 1.0f,0.0f,1.0f }, { 1.0f,1.0f,1.0f }, { 0.3f,0.3f,0.3f });
@@ -99,5 +87,10 @@ void Game::Init(RenderingEngine& renderingEngine)
 
 void Game::Update()
 {
+
+	//テスト：プレイヤーの削除
+	if (g_pad[0]->IsTrigger(enButtonX)) {
+		DeleteGO(m_player);
+	}
 
 }

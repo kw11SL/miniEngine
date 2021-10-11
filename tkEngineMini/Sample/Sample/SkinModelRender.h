@@ -9,22 +9,58 @@ class SpotLight;
 class SkinModelRender : public IGameObject
 {
 public:
+	/// @brief コンストラクタ
 	SkinModelRender() {}
-	~SkinModelRender() {}
+	
+	/// @brief デストラクタ
+	~SkinModelRender();
+	
+	/// @brief	NewGOした1フレーム後に呼び出される処理 
+	/// @return	初期化終了フラグ
 	bool Start() override;
+	
+	/// @brief	毎フレーム実行される処理
 	void Update() override;
+	
+	/// @brief	毎フレーム呼ばれる描画処理
+	/// @param rc	レンダリングコンテキスト
 	void Render(RenderContext& rc) override;
 
+	/// @brief 初期化処理
+	/// @param modelFilePath	モデルのファイルパス 
+	/// @param upAxis	上方向
+	/// @param renderingEngine	レンダリングエンジン
+	/// @param shadowCasterFlag	シャドウキャスターにするかどうか
+	/// @param shadowRecieverFlag	シャドウレシーバーにするかどうか
 	void Init(const char* modelFilePath, EnModelUpAxis upAxis , RenderingEngine& renderingEngine, bool shadowCasterFlag = false , bool shadowRecieverFlag = false);
+	
+	/// @brief ディレクションライトを定数バッファに渡す処理
+	/// @param dirLight ディレクションライト
 	void InitDirectionLight(DirectionLight* dirLight);
+
+	/// @brief ポイントライトを定数バッファに渡す処理
+	/// @param ptLight ポイントライト
 	void InitPointLight(PointLight* ptLight);
+	
+	/// @brief スポットライトを定数バッファに渡す処理
+	/// @param spLight スポットライト
 	void InitSpotLight(SpotLight* spLight);
+
 	/*void InitAnimation(AnimationClip* animation, int animationNum);
 	void PlayAnimation(int animNo, float interpolateTime = 0.0f);*/
 
 	//セッター
+	
+	/// @brief 座標の設定
+	/// @param pos 座標
 	void SetPosition(const Vector3& pos);
+
+	/// @brief 拡大率の設定
+	/// @param scale 拡大率
 	void SetScale(const Vector3& scale);
+
+	/// @brief 回転の設定
+	/// @param rot 回転
 	void SetRotation(const Quaternion& rot);
 
 	/// @brief シャドウキャスターフラグをセット
@@ -42,9 +78,18 @@ public:
 	}
 
 	//ゲッター
-	Vector3 GetPosition() { return m_position; }
-	Vector3 GetScale() { return m_scale; }
-	Quaternion GetRotation() { return m_rot; }
+
+	/// @brief 座標を取得
+	/// @return 座標
+	Vector3& GetPosition() { return m_position; }
+	
+	/// @brief 拡大率を取得
+	/// @return 拡大率
+	Vector3& GetScale() { return m_scale; }
+	
+	/// @brief 回転を取得
+	/// @return 回転
+	Quaternion& GetRotation() { return m_rot; }
 
 private:
 	RenderingEngine* m_renderingEngine = nullptr;	//レンダリングエンジン
@@ -56,7 +101,6 @@ private:
 	ModelInitData m_shadowModelInitData;		//影用モデルの初期化データ
 
 	Skeleton m_skeleton;						//スケルトン
-	CharacterController m_charaCon;				//キャラコン
 
 	Vector3 m_position = Vector3::Zero;			//座標
 	Vector3 m_scale = Vector3::One;				//拡大率

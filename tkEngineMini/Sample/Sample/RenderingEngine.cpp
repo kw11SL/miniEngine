@@ -44,8 +44,15 @@ void RenderingEngine::CommonRender(RenderContext& rc)
 
 void RenderingEngine::RenderToShadowMap(RenderContext& rc , Camera camera)
 {
+	//シャドウマップに描き込み
 	m_shadowMap.Render(rc, camera);
 
+}
+
+void RenderingEngine::BloomRendering(RenderContext& rc, RenderTarget& mainRT)
+{
+	//ブルーム処理
+	m_bloom.Render(rc, mainRT);
 }
 
 void RenderingEngine::InitLightCamera()
@@ -79,7 +86,20 @@ void RenderingEngine::InitBloom(RenderTarget& mainRT)
 	m_bloom.Init(mainRT);
 }
 
-void RenderingEngine::BloomRendering(RenderContext& rc, RenderTarget& mainRT)
+void RenderingEngine::DeleteCommonModel(Model& model)
 {
-	m_bloom.Render(rc, mainRT);
+	//イテレータを作成
+	std::vector<Model*>::iterator itr;
+	
+	//モデルを検索
+	itr = std::find(
+		m_commonModels.begin(),
+		m_commonModels.end(),
+		&model);
+
+	//モデルが見つかったら削除
+	if (itr != m_commonModels.end()) {
+		m_commonModels.erase(itr);
+	}
 }
+

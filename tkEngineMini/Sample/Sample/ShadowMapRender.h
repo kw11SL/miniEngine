@@ -23,6 +23,10 @@ public:
 		return m_shadowMap;
 	}
 
+	/// @brief モデルを削除
+	/// @param model モデル
+	void DeleteModel(Model& model);
+
 	/*/// @brief カスケードシャドウ用のシャドウマップに描画するモデルを登録
 	/// @param model1 //近景用モデル
 	/// @param model2 //中景用モデル

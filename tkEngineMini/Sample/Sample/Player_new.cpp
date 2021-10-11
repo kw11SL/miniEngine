@@ -9,12 +9,9 @@ namespace{
 	const char* VS_ENTRYPOINT_NAME = "VSMain";
 	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
 	const Vector3 INIT_POINT = {0.0f,0.0f,0.0f};
-}
 
-Player_new::Player_new()
-{
-	
-
+	const float CHARACON_RADIUS = 50.0f;
+	const float CHARACON_HEIGHT = 120.0f;
 }
 
 Player_new::~Player_new()
@@ -32,6 +29,13 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 
 	m_skinModelRender->SetPosition(INIT_POINT);
 	m_skinModelRender->SetScale(m_scale);
+
+	//キャラコンの初期化
+	m_charaCon.Init(
+		CHARACON_RADIUS,
+		CHARACON_HEIGHT,
+		m_position
+	);
 
 }
 
@@ -119,6 +123,12 @@ void Player_new::Update()
 	//Rotation();
 	if (m_skinModelRender != nullptr) {
 		m_skinModelRender->SetRotation(m_rot);
+	}
+
+	//テスト：削除処理
+	if (g_pad[0]->IsTrigger(enButtonY))
+	{
+		 DeleteGO(m_skinModelRender);
 	}
 
 }

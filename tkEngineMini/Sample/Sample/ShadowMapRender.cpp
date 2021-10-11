@@ -89,6 +89,24 @@ void ShadowMapRender::Render(RenderContext& rc, Camera& lightCamera)
 	rc.WaitUntilFinishDrawingToRenderTarget(m_shadowMap);
 }
 
+void ShadowMapRender::DeleteModel(Model& model)
+{
+	//イテレータを作成
+	std::vector<Model*>::iterator itr;
+
+	//モデル配列を検索
+	itr = std::find(
+		m_modelsArray.begin(),
+		m_modelsArray.end(),
+		&model
+	);
+
+	//見つかったら削除
+	if (itr != m_modelsArray.end()) {
+		m_modelsArray.erase(itr);
+	}
+}
+
 //void ShadowMapRender::MultiRender(RenderContext& rc , Camera& lightCamera)
 //{
 //

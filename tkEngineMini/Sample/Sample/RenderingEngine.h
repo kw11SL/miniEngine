@@ -82,6 +82,17 @@ public:
 		m_commonModels.push_back(&model);
 	}
 
+	/// @brief 通常描画モデルの削除処理
+	/// @param model 
+	void DeleteCommonModel(Model& model);
+
+	/// @brief	影描画用モデルの削除処理
+	/// @param model 
+	void DeleteShadowModel(Model& model)
+	{
+		m_shadowMap.DeleteModel(model);
+	}
+
 private:
 	//内部で実行する関数
 	RenderingEngine() {}
