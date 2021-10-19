@@ -3,10 +3,10 @@ class Player_new;
 class SkinModelRender;
 class SpriteRender;
 class BG;
-class Direction;
 class DirectionLight;
 class PointLight;
 class SpotLight;
+class GameCamera;
 
 class Game : public IGameObject
 {
@@ -26,19 +26,14 @@ public:
 	void Init(RenderingEngine& renderingEngine);
 
 private:
+	GameCamera* m_gameCamera = nullptr;				//ゲームカメラ
+
 	Player_new* m_player = nullptr;					//プレイヤー
 
-	//Player_new* m_player2 = nullptr;					//プレイヤー
-
-
 	BG* m_bg = nullptr;								//背景
-	//Direction* m_direction = nullptr;
 	DirectionLight* m_directionLight = nullptr;		//ディレクションライト
 	PointLight* m_pointLight = nullptr;				//ポイントライト
 	SpotLight* m_spotLight = nullptr;				//スポットライト
-	
-	////影生成用のライトカメラ
-	//Camera m_lightCamera;
 
 	//テスト
 	SpriteRender* m_sprite = nullptr;				//テスト表示スプライト

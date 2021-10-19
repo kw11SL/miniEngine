@@ -298,6 +298,7 @@
     <ClCompile Include="Bloom.cpp" />
     <ClCompile Include="DirectionLight.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GaussianBlur.cpp" />
     <ClCompile Include="Hello2D.cpp" />
     <ClCompile Include="HelloFont.cpp" />
@@ -395,6 +396,7 @@
     <ClInclude Include="Bloom.h" />
     <ClInclude Include="DirectionLight.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GaussianBlur.h" />
     <ClInclude Include="Hello2D.h" />
     <ClInclude Include="HelloFont.h" />

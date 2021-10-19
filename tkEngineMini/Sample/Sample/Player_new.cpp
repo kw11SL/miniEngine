@@ -13,6 +13,8 @@ namespace{
 
 	const float CHARACON_RADIUS = 50.0f;
 	const float CHARACON_HEIGHT = 120.0f;
+
+	const float PL_MOVE_SPEED = -10.0f;
 }
 
 Player_new::~Player_new()
@@ -46,6 +48,17 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 		CHARACON_HEIGHT,
 		m_position
 	);
+
+	//下方向ベクトルを正規化
+	m_downVector.Normalize();
+
+	//前方、右、上の各ベクトルを各軸で初期化
+	//前方向をz軸
+	m_forward = g_vec3AxisZ;
+	//右方向をx軸
+	m_right = g_vec3AxisX;
+	//上方向をy軸
+	m_up = g_vec3AxisY;
 
 }
 
@@ -85,16 +98,18 @@ void Player_new::SetAngle(const float& angle)
 void Player_new::Move()
 {
 	//テスト：移動
+	//パッドのスティックからx成分とy成分を受け取る
 	float x = g_pad[0]->GetLStickXF();
 	float y = g_pad[0]->GetLStickYF();
 
-
-	m_moveSpeed.x = x * -10.0f;
-	m_moveSpeed.z = y * -10.0f;
+	//プレイヤーの左右方向への移動
+	m_moveSpeed = m_right * x * PL_MOVE_SPEED;
+	//プレイヤーの前後(奥、手前)方向への移動
+	m_moveSpeed += m_forward * y * PL_MOVE_SPEED;
 
 	//下方向ベクトルの座標更新
-	m_downVector.x = m_position.x;
-	m_downVector.z = m_position.z;
+	//m_downVector.x = m_position.x;
+	//m_downVector.z = m_position.z;
 
 	//重力
 	//m_moveSpeed.y += g_gameTime->GetFrameDeltaTime() * -10.0f;
@@ -105,20 +120,40 @@ void Player_new::Move()
 	//自作キャラコンに移動速度を渡す
 	m_position = m_myCharaCon.Execute(m_moveSpeed,m_downVector);
 
-
-	m_skinModelRender->SetPosition(m_position);
+	// 上ベクトルを更新
+	//下向きベクトル(=レイを飛ばす方向)* -1.0　= プレイヤーの上ベクトル
+	m_up = m_downVector * -1.0f;
+	//更新した上ベクトルと前方ベクトルの外積　=　右ベクトル
+	m_right.Cross(m_up, m_forward);
+	//求めた右ベクトルと更新した上ベクトルの外積　=　前方ベクトル
+	m_forward.Cross(m_right, m_up);
 	
+	
+	//モデルレンダーの座標更新
+	m_skinModelRender->SetPosition(m_position);
 }
 
 void Player_new::Rotation()
 {
-	m_angle += g_pad[0]->GetLStickXF() * 2.0f;
+	// キャラクターの前方、右、上から回転クォータニオンを決める。
+	Matrix mRot;
+	// 回転行列の1行目は、その座標系のexになる
+	mRot.m[0][0] = m_right.x;
+	mRot.m[0][1] = m_right.y;
+	mRot.m[0][2] = m_right.z;
+	
+	// 回転行列の1行目は、その座標系のeyになる
+	mRot.m[1][0] = m_up.x;
+	mRot.m[1][1] = m_up.y;
+	mRot.m[1][2] = m_up.z;
 
-	if (m_angle > 360.0f) {
-		m_angle = 0.0f;
-	}
+	// 回転行列の1行目は、その座標系のezになる
+	mRot.m[2][0] = m_forward.x;
+	mRot.m[2][1] = m_forward.y;
+	mRot.m[2][2] = m_forward.z;
 
-	m_rot.SetRotationDeg(Vector3::AxisY, m_angle);
+	// 回転行列からクォータニオンを計算する
+	m_rot.SetRotation(mRot);
 }
 
 void Player_new::RecieveDirectionLight(DirectionLight* dirLight)
@@ -149,7 +184,8 @@ void Player_new::InitModelFromInitData()
 void Player_new::Update()
 {
 	Move();
-	//Rotation();
+	Rotation();
+	
 	if (m_skinModelRender != nullptr) {
 		m_skinModelRender->SetRotation(m_rot);
 	}

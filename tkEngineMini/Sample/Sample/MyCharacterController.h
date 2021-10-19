@@ -6,13 +6,7 @@
 class MyCharacterController
 {
 public:
-	MyCharacterController() {}
 	
-	~MyCharacterController() 
-	{
-		RemoveRigidBody();
-	}
-
 	/// @brief 初期化処理
 	/// @param radius カプセルコライダーの半径
 	/// @param height カプセルコライダーの高さ
@@ -35,19 +29,13 @@ private:
 		m_position = pos;
 	}
 
-	/// @brief 剛体の削除
-	void RemoveRigidBody();
 
 private:
 	bool m_isInit = false;							//初期化フラグ
 	Vector3 m_position = Vector3::Zero;				//座標
 
-	CCapsuleCollider m_cupsuleCollider;				//カプセルコライダー
-	
 	float m_radius = 0.0f;							//カプセルコライダーの半径
 	float m_height = 0.0f;							//カプセルコライダーの高さ
-
-	RigidBody m_rigidBody;							//剛体
 
 };
 

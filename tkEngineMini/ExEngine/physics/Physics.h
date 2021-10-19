@@ -75,6 +75,22 @@ public:
 	{
 		m_dynamicWorld->convexSweepTest(castShape, convexFromWorld, convexToWorld, resultCallback, allowedCcdPenetration);
 	}
+	void RayTest( 
+		const Vector3& rayStart, 
+		const Vector3& rayEnd,
+		btCollisionWorld::RayResultCallback& rayResultCallback)
+	{
+		btVector3 btRayStart, btRayEnd;
+		btRayStart.setX(rayStart.x);
+		btRayStart.setY(rayStart.y);
+		btRayStart.setZ(rayStart.z);
+
+		btRayEnd.setX(rayEnd.x);
+		btRayEnd.setY(rayEnd.y);
+		btRayEnd.setZ(rayEnd.z);
+
+		m_dynamicWorld->rayTest(btRayStart, btRayEnd, rayResultCallback);
+	}
 #if 0
 	/*!
 	* @brief	コリジョンオブジェクトをワールドに登録。

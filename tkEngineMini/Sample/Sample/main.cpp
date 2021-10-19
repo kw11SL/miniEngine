@@ -37,10 +37,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	RootSignature rs;
 	InitRootSignature(rs);
 
-	//カメラの設定
-	g_camera3D->SetPosition({ 0.0f,500.0f,200.0f });
-	g_camera3D->SetTarget({ 0.0f,500.0f,0.0f });
-	float cameraH = 1000.0f;
+	////カメラの設定
+	//g_camera3D->SetPosition({ 0.0f,500.0f,200.0f });
+	//g_camera3D->SetTarget({ 0.0f,500.0f,0.0f });
+	//float cameraH = 1000.0f;
 
 	//ゲームオブジェクトマネージャーのインスタンスを作成する。
 	GameObjectManager::CreateInstance();
@@ -86,15 +86,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//レンダリング開始。
 		g_engine->BeginFrame();
 
-		//テスト：カメラ上下
-		if (g_pad[0]->IsPress(enButtonSelect)) {
-			cameraH -= 4.0f;
-		}
-		else if (g_pad[0]->IsPress(enButtonStart)) {
-			cameraH += 4.0f;
-		}
+		////テスト：カメラ上下
+		//if (g_pad[0]->IsPress(enButtonSelect)) {
+		//	cameraH -= 4.0f;
+		//}
+		//else if (g_pad[0]->IsPress(enButtonStart)) {
+		//	cameraH += 4.0f;
+		//}
 
-		g_camera3D->SetPosition({ 0.0f,cameraH,1000.0f });
+		//g_camera3D->SetPosition({ 0.0f,cameraH,1000.0f });
 		
 		//登録されているゲームオブジェクトの更新関数を呼び出す。
 		GameObjectManager::GetInstance()->ExecuteUpdate();

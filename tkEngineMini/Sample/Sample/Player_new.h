@@ -92,8 +92,10 @@ private:
 
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル
-	Vector3 m_downVector = { 0.0f,-1.0f,0.0f };		//下方向ベクトル
-
+	Vector3 m_downVector = { 0.0f,-10.0f,0.0f };		//レイを飛ばす方向ベクトル
+	Vector3 m_forward = Vector3::Zero;					//前方
+	Vector3 m_right	= Vector3::Zero;					//右
+	Vector3 m_up = Vector3::Zero;						//上
 	Vector3 m_scale = Vector3::One;						//拡大率
 	Quaternion m_rot = Quaternion::Identity;			//回転
 	float m_angle = 0.0f;								//回転角度

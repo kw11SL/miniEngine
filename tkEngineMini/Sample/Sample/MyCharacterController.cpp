@@ -4,37 +4,46 @@
 namespace {
 
 	//衝突時に呼ばれる関数オブジェクト(地面用)
-	struct SweepResultGround : public btCollisionWorld::ConvexResultCallback 
+	struct SweepResultGround : public btCollisionWorld::RayResultCallback
 	{
-		bool isHit = false;									//衝突フラグ
+		bool isHit = false;								//衝突フラグ
 		Vector3 hitPos = Vector3(0.0f, 0.0f, 0.0f);		//レイ衝突点の座標
 		Vector3 hitNormal;								//レイ衝突点の法線
+		float distToHitPos = FLT_MAX;					//交点までの距離。
+		Vector3 startPos;								//レイの始点
+		Vector3 endPos;									//レイの終点
 
-		//btCollisionObject* me = nullptr;					//自分自身を除外するためのメンバ
-
-		virtual btScalar addSingleResult(btCollisionWorld::LocalConvexResult& convexResult, bool normalInWorldSpace) 
+		/// @brief レイとコライダーが衝突した時に呼ばれるコールバック
+		/// @param rayResult 
+		/// @param normalInWorldSpace 
+		/// @return 
+		btScalar addSingleResult(
+			btCollisionWorld::LocalRayResult& rayResult, 
+			bool normalInWorldSpace ) override
 		{
-			////自分自身を衝突から除外する処理
-			//if (convexResult.m_hitCollisionObject == me) {
-			//	return 0.0f;
-			//}
 
-
-			//衝突点を引っ張ってくる処理
-			
+			//衝突点を引っ張ってくる処理		
 			//ヒットフラグをオン
 			isHit = true;
-
 			//レイの衝突点の座標を取得
-			Vector3 hitPosTmp = *(Vector3*)&convexResult.m_hitPointLocal;
-			//取得した衝突点を格納
+			Vector3 hitPosTmp;
+			//m_hitFraction：衝突点の補間率。始点と終点の間のどこに位置するかの情報
+			//つまり線形補完することで衝突点の座標が求められる
+			hitPosTmp.Lerp(rayResult.m_hitFraction, startPos, endPos );
+			
 			hitPos = hitPosTmp;
 
-			////レイの衝突点の法線を取得
-			//Vector3 hitNormalTmp = *(Vector3*)&convexResult.m_hitNormalLocal;
-			////取得した法線を格納
-			//hitNormal = hitNormalTmp;
+			if (rayResult.m_hitFraction < distToHitPos) {
+				// こちらの方が近いので、衝突点を更新
+				hitPos = hitPosTmp;
+				//衝突点の法線を持ってくる
+				hitNormal.x = rayResult.m_hitNormalLocal.x();
+				hitNormal.y = rayResult.m_hitNormalLocal.y();
+				hitNormal.z = rayResult.m_hitNormalLocal.z();
 
+				distToHitPos = rayResult.m_hitFraction;
+			}
+			
 			return 0.0f;
 		}
 	};
@@ -51,90 +60,40 @@ void MyCharacterController::Init(float radius, float height, Vector3& pos)
 	//カプセルコライダーの初期化
 	m_radius = radius;
 	m_height = height;
-	//半径と高さを渡し、カプセルコライダーを初期化
-	m_cupsuleCollider.Init(m_radius, m_height);
-	////////////////////////////////////////////////////////////////////////////////////////
-
-
-	////////////////////////////////////////////////////////////////////////////////////////
-	//剛体の初期化データを作成
-	RigidBodyInitData rbInitData;
-	//カプセルコライダーを剛体に登録
-	rbInitData.collider = &m_cupsuleCollider;
-	//質量を設定
-	rbInitData.mass = 0.0f;
-	
-	//剛体を初期化情報で初期化
-	m_rigidBody.Init(rbInitData);
-	////////////////////////////////////////////////////////////////////////////////////////
-
-
-	////////////////////////////////////////////////////////////////////////////////////////
-	//剛体の各種設定
-	//剛体のワールド座標を取得
-	btTransform& trans = m_rigidBody.GetBody()->getWorldTransform();
-	//剛体の基点を更新
-	//カプセルコライダーの高さの半分を基点にしている
-	trans.setOrigin(btVector3(pos.x, pos.y + m_height * 0.5, pos.z));
-	//剛体にコリジョン属性を付与する(=処理を分ける際の識別に使用)
-	m_rigidBody.GetBody()->setUserIndex(enCollisionAttr_Character);
-	m_rigidBody.GetBody()->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
-	////////////////////////////////////////////////////////////////////////////////////////
-
 
 	//初期化終了
 	m_isInit = true;
 }
 
-void MyCharacterController::RemoveRigidBody()
-{
-	PhysicsWorld::GetInstance()->RemoveRigidBody(m_rigidBody);
-}
 
 const Vector3& MyCharacterController::Execute(Vector3& moveSpeed,Vector3& downVector)
 {
-	//座標を保存
-	Vector3 posTmp = m_position;
-
-	// 移動速度を使って、キャラコンの座標を動かす
-	// 1フレームの移動量を計算する
-	Vector3 addPos = moveSpeed;
-	//m_position += addPos;
-	
-	// step-1 下方向にレイを飛ばして、地面との当たり判定を行う。
-	// ヒント　当たり判定はCharaConの179行目
+	// 次の移動先となる座標を計算する。
+	Vector3 nextPos = m_position + moveSpeed;
 	
 	//レイの作成
 	//始点と終点を作成
-	btTransform start;
-	btTransform end;
+	Vector3 start;
+	Vector3 end;
 
-	start.setIdentity();
-	end.setIdentity();
-
-	//レイの始点をコライダの底辺にする
-	start.setOrigin(btVector3(posTmp.x, posTmp.y, posTmp.z));
-
-	////レイの始点から終点へのベクトルを作る
-	//btVector3 endTmp = start.getOrigin() + (btVector3(downVector.x, downVector.y, downVector.z));
+	//レイの始点は移動先の座標
+	start = nextPos;
+	//下方向と逆向きにやや上を指定(衝突点を確定させるため)
+	start += downVector * -10.0f;
 	
-	////レイの終点をコライダから下方向ベクトルの終点にする
-	//end.setOrigin(endTmp);
-
-	end.setOrigin(btVector3(downVector.x, downVector.y, downVector.z));
-	//end.setOrigin(btVector3(posTmp.x, posTmp.y - 10.0f, posTmp.z));
+	//終点に始点の座標を代入
+	end = start;
+	// 終点は下方向に300
+	end += downVector * 300.0f;
 
 
 	//関数オブジェクトを定義
 	SweepResultGround callBack;
-	//callBack.me = m_rigidBody.GetBody();
+	callBack.startPos = start;
+	callBack.endPos = end;
 
-	// step-2 ぶつかっていたら、m_positionに交点の座標を代入する
-	// ヒント　ぶつかっているときに呼ばれるコールバック関数はキャラコンの27行目。
-
-	//レイの衝突を検出し、関数オブジェクトに結果を格納する
-	PhysicsWorld::GetInstance()->ConvexSweepTest(
-		(const btConvexShape*)m_cupsuleCollider.GetBody(),
+	// 物理ワールドに登録されているコライダーとレイの交差テスト
+	PhysicsWorld::GetInstance()->RayTest(
 		start,
 		end,
 		callBack
@@ -142,13 +101,16 @@ const Vector3& MyCharacterController::Execute(Vector3& moveSpeed,Vector3& downVe
 
 	//衝突していたら
 	if (callBack.isHit) {
+		
 		//座標を衝突点にする
-		m_position = callBack.hitPos;
+		nextPos = callBack.hitPos;
+		
+		//下方向を引っ張ってきた法線と逆方向にする
+		downVector = callBack.hitNormal * -1.0f;
 	}
 
-	//座標を移動速度で更新
-	m_position += addPos;
-
+	//移動先の座標が確定したのでm_positionに代入
+	m_position = nextPos;
 
 	//処理後の座標を返す
 	return m_position;
