@@ -4,6 +4,8 @@
 
 #include "stdafx.h"
 #include "CharacterController.h"
+#include "CapsuleCollider.h"
+#include "RigidBody.h"
 
 
 namespace {

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Player_new.h"
+//#include "MyCharacterController.h"
 
 namespace{
 	const char* MODELPATH_UTC = "Assets/modelData/unityChan.tkm";
@@ -8,7 +9,7 @@ namespace{
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
 	const char* VS_ENTRYPOINT_NAME = "VSMain";
 	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
-	const Vector3 INIT_POINT = {0.0f,0.0f,0.0f};
+	const Vector3 INIT_POINT = {0.0f,700.0f,0.0f};
 
 	const float CHARACON_RADIUS = 50.0f;
 	const float CHARACON_HEIGHT = 120.0f;
@@ -27,11 +28,20 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 
 	//m_skinModelRender->InitShader(MODEL_SHADER_PATH, VS_ENTRYPOINT_NAME);
 
-	m_skinModelRender->SetPosition(INIT_POINT);
+	m_position = INIT_POINT;
+
+	m_skinModelRender->SetPosition(m_position);
 	m_skinModelRender->SetScale(m_scale);
 
-	//キャラコンの初期化
-	m_charaCon.Init(
+	////キャラコンの初期化
+	//m_charaCon.Init(
+	//	CHARACON_RADIUS,
+	//	CHARACON_HEIGHT,
+	//	m_position
+	//);
+
+	//自作キャラコンの初期化
+	m_myCharaCon.Init(
 		CHARACON_RADIUS,
 		CHARACON_HEIGHT,
 		m_position
@@ -78,8 +88,23 @@ void Player_new::Move()
 	float x = g_pad[0]->GetLStickXF();
 	float y = g_pad[0]->GetLStickYF();
 
-	m_position.x -= x;
-	m_position.z -= y;
+
+	m_moveSpeed.x = x * -10.0f;
+	m_moveSpeed.z = y * -10.0f;
+
+	//下方向ベクトルの座標更新
+	m_downVector.x = m_position.x;
+	m_downVector.z = m_position.z;
+
+	//重力
+	//m_moveSpeed.y += g_gameTime->GetFrameDeltaTime() * -10.0f;
+
+	////キャラコンに移動速度を渡す
+	//m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
+
+	//自作キャラコンに移動速度を渡す
+	m_position = m_myCharaCon.Execute(m_moveSpeed,m_downVector);
+
 
 	m_skinModelRender->SetPosition(m_position);
 	
@@ -116,6 +141,10 @@ SkinModelRender* Player_new::GetSkinModelRender()
 	return m_skinModelRender;
 }
 
+void Player_new::InitModelFromInitData()
+{
+	m_skinModelRender->InitModel();
+}
 
 void Player_new::Update()
 {

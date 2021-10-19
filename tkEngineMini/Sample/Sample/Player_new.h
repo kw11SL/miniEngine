@@ -1,4 +1,6 @@
 #pragma once
+#include "MyCharacterController.h"
+
 class SkinModelRender;
 class DirectionLight;
 class PointLight;
@@ -66,6 +68,9 @@ public:
 	/// @param spLight スポットライト
 	void RecieveSpotLight(SpotLight* spLight);
 
+	/// @brief モデルの初期化
+	void InitModelFromInitData();
+
 private:
 	bool Start() override;
 
@@ -79,10 +84,16 @@ private:
 
 private:
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
-	CharacterController m_charaCon;						//キャラクターコントローラ
+	
+	//CharacterController m_charaCon;						//キャラクターコントローラ
+
+	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
+	
 
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル
+	Vector3 m_downVector = { 0.0f,-1.0f,0.0f };		//下方向ベクトル
+
 	Vector3 m_scale = Vector3::One;						//拡大率
 	Quaternion m_rot = Quaternion::Identity;			//回転
 	float m_angle = 0.0f;								//回転角度

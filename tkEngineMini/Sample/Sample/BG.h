@@ -18,15 +18,18 @@ public:
 	void RecievePointLight(PointLight* ptLight);
 	void RecieveSpotLight(SpotLight* spLight);
 
+
+	void InitModelFromInitData();
+
 	SkinModelRender* GetSkinModelRender() { return m_skinModelRender; }
 
 private:
-	SkinModelRender* m_skinModelRender = nullptr;
-	PhysicsStaticObject m_physicsStaticObject;
+	SkinModelRender* m_skinModelRender = nullptr;		//モデルレンダー
+	PhysicsStaticObject m_physicsStaticObject;			//静的物理オブジェクト
 
-	Vector3 m_position = Vector3::Zero;
-	Quaternion m_rotation = Quaternion::Identity;
-	Vector3 m_scale = Vector3::One;
-	float m_angle = 0.0f;
+	Vector3 m_position = Vector3::Zero;					//座標
+	Quaternion m_rotation = Quaternion::Identity;		//回転
+	Vector3 m_scale = Vector3::One;						//拡大率
+	float m_angle = 0.0f;								//角度
 };
 

@@ -303,6 +303,7 @@
     <ClCompile Include="HelloFont.cpp" />
     <ClCompile Include="HelloLevel2D.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MyCharacterController.cpp" />
     <ClCompile Include="PhysicsBall.cpp" />
     <ClCompile Include="Player_new.cpp" />
     <ClCompile Include="PointLight.cpp" />
@@ -398,6 +399,7 @@
     <ClInclude Include="Hello2D.h" />
     <ClInclude Include="HelloFont.h" />
     <ClInclude Include="HelloLevel2D.h" />
+    <ClInclude Include="MyCharacterController.h" />
     <ClInclude Include="PhysicsBall.h" />
     <ClInclude Include="Player_new.h" />
     <ClInclude Include="PointLight.h" />

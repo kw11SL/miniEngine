@@ -109,7 +109,7 @@ void SkinModelRender::InitDirectionLight(DirectionLight* dirLight)
 	m_modelInitData.m_expandConstantBuffer = dirLight->GetDirLightAddress();
 	m_modelInitData.m_expandConstantBufferSize = sizeof(dirLight->GetDirLight());
 	
-	m_model.Init(m_modelInitData);
+	//m_model.Init(m_modelInitData);
 }
 
 void SkinModelRender::InitPointLight(PointLight* ptLight)
@@ -117,7 +117,7 @@ void SkinModelRender::InitPointLight(PointLight* ptLight)
 	m_modelInitData.m_expandConstantBuffer_1 = ptLight->GetPointLightAddress();
 	m_modelInitData.m_expandConstantBufferSize_1 = sizeof(ptLight->GetPointLight());
 
-	m_model.Init(m_modelInitData);
+	//m_model.Init(m_modelInitData);
 }
 
 void SkinModelRender::InitSpotLight(SpotLight* spLight)
@@ -125,6 +125,11 @@ void SkinModelRender::InitSpotLight(SpotLight* spLight)
 	m_modelInitData.m_expandConstantBuffer_2 = spLight->GetSpotLightAddress();
 	m_modelInitData.m_expandConstantBufferSize_2 = sizeof(spLight->GetSpotLight());
 
+	//m_model.Init(m_modelInitData);
+}
+
+void SkinModelRender::InitModel()
+{
 	m_model.Init(m_modelInitData);
 }
 

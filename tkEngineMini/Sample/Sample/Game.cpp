@@ -10,6 +10,7 @@
 Game::~Game()
 {
 	DeleteGO(m_player);
+	//DeleteGO(m_player2);
 	DeleteGO(m_bg);
 	//DeleteGO(m_direction);
 	DeleteGO(m_directionLight);
@@ -49,6 +50,11 @@ void Game::Init(RenderingEngine& renderingEngine)
 	m_player = NewGO<Player_new>(0, "player");
 	m_player->Init(renderingEngine);
 
+	/*m_player2 = NewGO<Player_new>(0, "player");
+	m_player2->Init(renderingEngine);
+	m_player2->SetPostion({ 200.0f,0.0f,-200.0f });*/
+
+
 	//背景の初期化
 	m_bg = NewGO<BG>(0, "bg");
 	m_bg->Init(renderingEngine);
@@ -62,13 +68,25 @@ void Game::Init(RenderingEngine& renderingEngine)
 		m_player->RecieveDirectionLight(m_directionLight);
 		m_player->RecievePointLight(m_pointLight);
 		m_player->RecieveSpotLight(m_spotLight);
+		
+		m_player->InitModelFromInitData();
 	}
+
+	/*if (m_player2->GetSkinModelRender() != nullptr) {
+		m_player2->RecieveDirectionLight(m_directionLight);
+		m_player2->RecievePointLight(m_pointLight);
+		m_player2->RecieveSpotLight(m_spotLight);
+
+		m_player2->InitModelFromInitData();
+	}*/
 
 	//背景にライトを渡す処理
 	if (m_bg->GetSkinModelRender() != nullptr) {
 		m_bg->RecieveDirectionLight(m_directionLight);
 		m_bg->RecievePointLight(m_pointLight);
 		m_bg->RecieveSpotLight(m_spotLight);
+
+		m_bg->InitModelFromInitData();
 	}
 
 	////方向表示モデルにライトを渡す処理
@@ -91,6 +109,15 @@ void Game::Update()
 	//テスト：プレイヤーの削除
 	if (g_pad[0]->IsTrigger(enButtonX)) {
 		DeleteGO(m_player);
+	}
+
+	//テスト：ライトの受け渡し
+	if ((g_pad[0]->IsTrigger(enButtonA))) {
+		m_player->RecieveDirectionLight(m_directionLight);
+		m_player->RecievePointLight(m_pointLight);
+		m_player->RecieveSpotLight(m_spotLight);
+
+		m_player->InitModelFromInitData();
 	}
 
 }

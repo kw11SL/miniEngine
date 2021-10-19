@@ -14,6 +14,7 @@
 #include "SpotLight.h"
 
 
+
 //シャドウマップ周りの定数
 namespace {
 

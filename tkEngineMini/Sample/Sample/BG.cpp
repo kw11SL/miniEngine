@@ -5,8 +5,10 @@ namespace
 {
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
 	const char* VS_ENTRYPOINT_NAME = "VSMain";
-	const char* MODEL_FILEPATH = "Assets/modelData/bg/bg2.tkm";
-	const Vector3 INIT_POINT = { 0.0f,50.0f,50.0f };
+	const char* MODEL_FILEPATH = "Assets/modelData/bg/stage_cupsule2.tkm";
+	const Vector3 INIT_POINT = { 0.0f,0.0f,0.0f };
+
+	const float MODEL_INIT_SCALE_RATIO = 5.0f;
 }
 
 BG::BG()
@@ -29,10 +31,21 @@ void BG::Init(RenderingEngine& renderingEngine)
 	m_skinModelRender = NewGO<SkinModelRender>(0);
 	//背景には影を落としたいのでシャドウレシーバーフラグをオンにする
 	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisZ,renderingEngine , false ,true);
-}
 
-void BG::Update()
-{
+	//モデル拡大
+	m_scale *= MODEL_INIT_SCALE_RATIO;
+
+	m_skinModelRender->SetPosition(INIT_POINT);
+	m_skinModelRender->SetScale(m_scale);
+
+	//ワールド行列の更新
+	m_skinModelRender->UpdateMatrix();
+
+	//静的オブジェクトの作成
+	m_physicsStaticObject.CreateFromModel(
+		m_skinModelRender->GetModel(),
+		m_skinModelRender->GetMatrix()
+	);
 
 }
 
@@ -49,4 +62,14 @@ void BG::RecievePointLight(PointLight* ptLight)
 void BG::RecieveSpotLight(SpotLight* spLight)
 {
 	m_skinModelRender->InitSpotLight(spLight);
+}
+
+void BG::InitModelFromInitData()
+{
+	m_skinModelRender->InitModel();
+}
+
+void BG::Update()
+{
+
 }

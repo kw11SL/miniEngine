@@ -46,6 +46,9 @@ public:
 	/// @param spLight スポットライト
 	void InitSpotLight(SpotLight* spLight);
 
+	/// @brief モデルを初期化情報で初期化
+	void InitModel();
+
 	/*void InitAnimation(AnimationClip* animation, int animationNum);
 	void PlayAnimation(int animNo, float interpolateTime = 0.0f);*/
 
@@ -90,6 +93,23 @@ public:
 	/// @brief 回転を取得
 	/// @return 回転
 	Quaternion& GetRotation() { return m_rot; }
+
+	/// @brief モデルを取得
+	/// @return モデル
+	Model& GetModel() { return m_model; }
+
+	/// @brief モデルのワールド行列を取得
+	/// @return ワールド行列
+	const Matrix& GetMatrix() const
+	{
+		return m_model.GetWorldMatrix();
+	}
+
+	/// @brief ワールド行列の更新(手動)
+	void UpdateMatrix() 
+	{
+		m_model.UpdateWorldMatrix(m_position, m_rot, m_scale); 
+	}
 
 private:
 	RenderingEngine* m_renderingEngine = nullptr;	//レンダリングエンジン

@@ -27,6 +27,10 @@ public:
 
 private:
 	Player_new* m_player = nullptr;					//プレイヤー
+
+	//Player_new* m_player2 = nullptr;					//プレイヤー
+
+
 	BG* m_bg = nullptr;								//背景
 	//Direction* m_direction = nullptr;
 	DirectionLight* m_directionLight = nullptr;		//ディレクションライト

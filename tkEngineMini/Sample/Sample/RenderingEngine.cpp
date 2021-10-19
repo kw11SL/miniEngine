@@ -16,7 +16,6 @@ void RenderingEngine::Init()
 	InitShadowMap();
 	
 	
-
 	//ƒuƒ‹[ƒ€‚Ì‰Šú‰»
 	InitBloom(m_mainRenderTarget);
 }
