@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Player_new.h"
-//#include "MyCharacterController.h"
 
 namespace{
 	const char* MODELPATH_UTC = "Assets/modelData/unityChan.tkm";
@@ -60,6 +59,14 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 	//上方向をy軸
 	m_up = g_vec3AxisY;
 
+	Vector3 toCamera;
+	toCamera.x = 0.0f;
+	toCamera.y = 700.0f;
+	toCamera.z = 1000.0f;
+
+	m_gameCamera.SetTargetPosition(m_position);
+	//視点を設定
+	m_gameCamera.SetCameraPosition(m_position + toCamera);
 }
 
 bool Player_new::Start()
@@ -102,10 +109,13 @@ void Player_new::Move()
 	float x = g_pad[0]->GetLStickXF();
 	float y = g_pad[0]->GetLStickYF();
 
+	Vector3 forward;
+	forward.Cross(m_up, g_camera3D->GetRight());
+	forward.Normalize();
 	//プレイヤーの左右方向への移動
-	m_moveSpeed = m_right * x * PL_MOVE_SPEED;
+	m_moveSpeed = g_camera3D->GetRight() * -x * PL_MOVE_SPEED;
 	//プレイヤーの前後(奥、手前)方向への移動
-	m_moveSpeed += m_forward * y * PL_MOVE_SPEED;
+	m_moveSpeed += forward * y * PL_MOVE_SPEED;
 
 	//下方向ベクトルの座標更新
 	//m_downVector.x = m_position.x;
@@ -122,9 +132,15 @@ void Player_new::Move()
 
 	// 上ベクトルを更新
 	//下向きベクトル(=レイを飛ばす方向)* -1.0　= プレイヤーの上ベクトル
-	m_up = m_downVector * -1.0f;
+	Vector3 newUp = m_downVector * -1.0f;
+	// 現在の上ベクトルから、新しい上ベクトルに向けるための回転クォータニオンを計算
+	//		→　カメラの計算で使う。
+	m_rotUpToGroundNormal.SetRotation(m_up, newUp);
+	
+	m_up = newUp;
+
 	//更新した上ベクトルと前方ベクトルの外積　=　右ベクトル
-	m_right.Cross(m_up, m_forward);
+	m_right = g_camera3D->GetRight();
 	//求めた右ベクトルと更新した上ベクトルの外積　=　前方ベクトル
 	m_forward.Cross(m_right, m_up);
 	
@@ -195,5 +211,23 @@ void Player_new::Update()
 	{
 		 DeleteGO(m_skinModelRender);
 	}
+
+
+	//カメラ追従
+	//カメラ注視点から視点へのベクトルを作成
+	Vector3 toCamera = g_camera3D->GetPosition() - g_camera3D->GetTarget();
+	m_rotUpToGroundNormal.Apply(toCamera);
+
+	
+	//注視点を自身に設定
+	m_gameCamera.SetTargetPosition(m_position);
+	//視点を設定
+	m_gameCamera.SetCameraPosition(m_position + toCamera);
+	// カメラの上方向はプレイヤーの上方向と同じ。
+	m_gameCamera.SetUp(m_up);
+	////それぞれ正規化
+	//toCameraTmp.Normalize();
+	//upVectorTmp.Normalize();
+
 
 }

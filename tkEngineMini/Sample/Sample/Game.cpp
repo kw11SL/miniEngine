@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Game.h"
-#include "GameCamera.h"
 #include "Player_new.h"
 #include "BG.h"
 #include "DirectionLight.h"
@@ -9,7 +8,6 @@
 
 Game::~Game()
 {
-	DeleteGO(m_gameCamera);
 	DeleteGO(m_player);
 	DeleteGO(m_bg);
 	DeleteGO(m_directionLight);
@@ -28,10 +26,6 @@ bool Game::Start()
 
 void Game::Init(RenderingEngine& renderingEngine)
 {
-	m_gameCamera = NewGO<GameCamera>(0, "gamecamera");
-	//ゲームカメラの初期化
-	m_gameCamera->Init();
-
 	//ディレクションライトの初期化
 	m_directionLight = NewGO<DirectionLight>(0, "directionlight");
 	m_directionLight->Init({ 1.0f,0.0f,1.0f }, { 1.0f,1.0f,1.0f }, { 0.3f,0.3f,0.3f });
@@ -86,12 +80,6 @@ void Game::Init(RenderingEngine& renderingEngine)
 
 void Game::Update()
 {
-	//カメラ注視点から視点へのベクトルを作成
-	Vector3 toCamera;
-	toCamera.x = 0.0f;
-	toCamera.y = 200.0f;
-	toCamera.z = 1500.0f;
-
 	//テスト：プレイヤーの削除
 	if (g_pad[0]->IsTrigger(enButtonX)) {
 		DeleteGO(m_player);
@@ -107,13 +95,6 @@ void Game::Update()
 
 			m_player->InitModelFromInitData();
 		}
-
-		//テスト：カメラ追従処理
-
-		//カメラの注視点をプレイヤーの座標に設定
-		m_gameCamera->SetTargetPosition(m_player->GetPosition());
-		//注視点からカメラの視点を決定
-		m_gameCamera->SetCameraPosition(m_player->GetPosition() + toCamera);
 	}
 
 }

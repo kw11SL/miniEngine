@@ -1,10 +1,4 @@
 #pragma once
-#include "MyCharacterController.h"
-
-class SkinModelRender;
-class DirectionLight;
-class PointLight;
-class SpotLight;
 
 class Player_new : public IGameObject
 {
@@ -89,6 +83,7 @@ private:
 
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
 	
+	GameCamera m_gameCamera;							//ゲームカメラ
 
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル
@@ -98,6 +93,7 @@ private:
 	Vector3 m_up = Vector3::Zero;						//上
 	Vector3 m_scale = Vector3::One;						//拡大率
 	Quaternion m_rot = Quaternion::Identity;			//回転
+	Quaternion m_rotUpToGroundNormal;					//プレイヤーの上ベクトルを地面の法線に向かせる回転クォータニオン
 	float m_angle = 0.0f;								//回転角度
 
 };

@@ -26,8 +26,11 @@ public:
 	/// @brief 注視点の座標を取得
 	/// @return 座標
 	const Vector3& GetTargetPosition() { return m_targetPosition; }
-
 	
+	/// @brief カメラの上ベクトルを設定。
+	/// @param up 
+	void SetUp(const Vector3& up);
+
 
 private:
 	Vector3 m_cameraPosition = Vector3::Zero;				//視点

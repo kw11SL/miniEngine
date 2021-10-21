@@ -5,7 +5,7 @@ namespace
 {
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
 	const char* VS_ENTRYPOINT_NAME = "VSMain";
-	const char* MODEL_FILEPATH = "Assets/modelData/bg/stage_cupsule2.tkm";
+	const char* MODEL_FILEPATH = "Assets/modelData/bg/stage_cupsule3.tkm";
 	const Vector3 INIT_POINT = { 0.0f,0.0f,0.0f };
 
 	const float MODEL_INIT_SCALE_RATIO = 5.0f;
@@ -33,7 +33,7 @@ void BG::Init(RenderingEngine& renderingEngine)
 	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisZ,renderingEngine , false ,true);
 
 	//ƒ‚ƒfƒ‹Šg‘å
-	m_scale *= MODEL_INIT_SCALE_RATIO;
+	//m_scale *= MODEL_INIT_SCALE_RATIO;
 
 	m_skinModelRender->SetPosition(INIT_POINT);
 	m_skinModelRender->SetScale(m_scale);

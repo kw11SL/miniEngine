@@ -6,7 +6,6 @@ class BG;
 class DirectionLight;
 class PointLight;
 class SpotLight;
-class GameCamera;
 
 class Game : public IGameObject
 {
@@ -26,8 +25,6 @@ public:
 	void Init(RenderingEngine& renderingEngine);
 
 private:
-	GameCamera* m_gameCamera = nullptr;				//ゲームカメラ
-
 	Player_new* m_player = nullptr;					//プレイヤー
 
 	BG* m_bg = nullptr;								//背景

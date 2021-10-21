@@ -28,6 +28,10 @@ void GameCamera::SetTargetPosition(const Vector3& pos)
 	m_targetPosition = pos;
 	g_camera3D->SetTarget(m_targetPosition);
 }
+void GameCamera::SetUp(const Vector3& up)
+{
+	g_camera3D->SetUp(up);
+}
 
 
 void GameCamera::Update()

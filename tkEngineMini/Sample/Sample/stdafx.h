@@ -12,6 +12,8 @@
 #include "DirectionLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "GameCamera.h"
+#include "MyCharacterController.h"
 
 
 
