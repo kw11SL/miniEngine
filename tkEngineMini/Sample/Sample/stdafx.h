@@ -14,6 +14,7 @@
 #include "SpotLight.h"
 #include "GameCamera.h"
 #include "MyCharacterController.h"
+#include "SphericalMove.h"
 
 
 

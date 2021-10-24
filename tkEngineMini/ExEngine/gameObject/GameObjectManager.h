@@ -74,6 +74,7 @@ public:
 	{
 		T* newObject = new T();
 		m_gameObjectListArray.at(prio).push_back(newObject);
+		newObject->SetName(objectName);
 		return newObject;
 	}
 	/*!

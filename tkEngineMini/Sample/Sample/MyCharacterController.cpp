@@ -3,6 +3,12 @@
 
 namespace {
 
+	//レイの始点の位置(キャラの下方向を正として逆方向に設定するので負の値)
+	const float RAY_START_OFFSET = -10.0f;
+	//レイの終点の位置(キャラの下方向を正として順方向に設定するので正の値)
+	const float RAY_END_OFFSET = 300.0f;
+
+
 	//衝突時に呼ばれる関数オブジェクト(地面用)
 	struct SweepResultGround : public btCollisionWorld::RayResultCallback
 	{
@@ -79,12 +85,12 @@ const Vector3& MyCharacterController::Execute(Vector3& moveSpeed,Vector3& downVe
 	//レイの始点は移動先の座標
 	start = nextPos;
 	//下方向と逆向きにやや上を指定(衝突点を確定させるため)
-	start += downVector * -10.0f;
+	start += downVector * RAY_START_OFFSET;
 	
 	//終点に始点の座標を代入
 	end = start;
 	// 終点は下方向に300
-	end += downVector * 300.0f;
+	end += downVector * RAY_END_OFFSET;
 
 
 	//関数オブジェクトを定義
@@ -105,6 +111,7 @@ const Vector3& MyCharacterController::Execute(Vector3& moveSpeed,Vector3& downVe
 		//座標を衝突点にする
 		nextPos = callBack.hitPos;
 		
+		//下方向ベクトルの更新
 		//下方向を引っ張ってきた法線と逆方向にする
 		downVector = callBack.hitNormal * -1.0f;
 	}

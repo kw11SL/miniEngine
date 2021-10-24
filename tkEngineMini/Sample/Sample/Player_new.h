@@ -83,6 +83,8 @@ private:
 
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
 	
+	SphericalMove m_sphericalMove;						//球面移動用クラス
+
 	GameCamera m_gameCamera;							//ゲームカメラ
 
 	Vector3 m_position = Vector3::Zero;					//座標
@@ -93,7 +95,7 @@ private:
 	Vector3 m_up = Vector3::Zero;						//上
 	Vector3 m_scale = Vector3::One;						//拡大率
 	Quaternion m_rot = Quaternion::Identity;			//回転
-	Quaternion m_rotUpToGroundNormal;					//プレイヤーの上ベクトルを地面の法線に向かせる回転クォータニオン
+	Quaternion m_rotUpToGroundNormal = Quaternion::Identity;					//プレイヤーの上ベクトルを地面の法線に向かせる回転クォータニオン
 	float m_angle = 0.0f;								//回転角度
 
 };

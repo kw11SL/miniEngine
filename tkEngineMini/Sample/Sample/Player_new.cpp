@@ -51,19 +51,24 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 	//下方向ベクトルを正規化
 	m_downVector.Normalize();
 
+	////前方向をz軸
+	//m_forward = g_vec3AxisZ;
+	////右方向をx軸
+	//m_right = g_vec3AxisX;
+	////上方向をy軸
+	//m_up = g_vec3AxisY;
+	
+	//※上記処理まとめ
 	//前方、右、上の各ベクトルを各軸で初期化
-	//前方向をz軸
-	m_forward = g_vec3AxisZ;
-	//右方向をx軸
-	m_right = g_vec3AxisX;
-	//上方向をy軸
-	m_up = g_vec3AxisY;
-
+	m_sphericalMove.Init(m_forward, m_right, m_up);
+	
+	//カメラ注視点から視点へのベクトルを設定
 	Vector3 toCamera;
 	toCamera.x = 0.0f;
 	toCamera.y = 700.0f;
 	toCamera.z = 1000.0f;
 
+	//注視点を設定
 	m_gameCamera.SetTargetPosition(m_position);
 	//視点を設定
 	m_gameCamera.SetCameraPosition(m_position + toCamera);
@@ -109,9 +114,12 @@ void Player_new::Move()
 	float x = g_pad[0]->GetLStickXF();
 	float y = g_pad[0]->GetLStickYF();
 
+	//前方ベクトルを作成
 	Vector3 forward;
+	//上ベクトルとカメラの右ベクトルの外積を前方ベクトルにする
 	forward.Cross(m_up, g_camera3D->GetRight());
 	forward.Normalize();
+
 	//プレイヤーの左右方向への移動
 	m_moveSpeed = g_camera3D->GetRight() * -x * PL_MOVE_SPEED;
 	//プレイヤーの前後(奥、手前)方向への移動
@@ -151,25 +159,29 @@ void Player_new::Move()
 
 void Player_new::Rotation()
 {
-	// キャラクターの前方、右、上から回転クォータニオンを決める。
-	Matrix mRot;
-	// 回転行列の1行目は、その座標系のexになる
-	mRot.m[0][0] = m_right.x;
-	mRot.m[0][1] = m_right.y;
-	mRot.m[0][2] = m_right.z;
-	
-	// 回転行列の1行目は、その座標系のeyになる
-	mRot.m[1][0] = m_up.x;
-	mRot.m[1][1] = m_up.y;
-	mRot.m[1][2] = m_up.z;
+	//// キャラクターの前方、右、上から回転クォータニオンを決める。
+	//Matrix mRot;
+	//// 回転行列の1行目は、その座標系のexになる
+	//mRot.m[0][0] = m_right.x;
+	//mRot.m[0][1] = m_right.y;
+	//mRot.m[0][2] = m_right.z;
+	//
+	//// 回転行列の2行目は、その座標系のeyになる
+	//mRot.m[1][0] = m_up.x;
+	//mRot.m[1][1] = m_up.y;
+	//mRot.m[1][2] = m_up.z;
 
-	// 回転行列の1行目は、その座標系のezになる
-	mRot.m[2][0] = m_forward.x;
-	mRot.m[2][1] = m_forward.y;
-	mRot.m[2][2] = m_forward.z;
+	//// 回転行列の3行目は、その座標系のezになる
+	//mRot.m[2][0] = m_forward.x;
+	//mRot.m[2][1] = m_forward.y;
+	//mRot.m[2][2] = m_forward.z;
 
-	// 回転行列からクォータニオンを計算する
-	m_rot.SetRotation(mRot);
+	//// 回転行列からクォータニオンを計算する
+	//m_rot.SetRotation(mRot);
+
+	//※上記処理まとめ
+	m_sphericalMove.Rotation(m_forward, m_right, m_up, m_rot);
+
 }
 
 void Player_new::RecieveDirectionLight(DirectionLight* dirLight)

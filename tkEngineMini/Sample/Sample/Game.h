@@ -1,5 +1,6 @@
 #pragma once
 class Player_new;
+class Enemy;
 class SkinModelRender;
 class SpriteRender;
 class BG;
@@ -26,6 +27,8 @@ public:
 
 private:
 	Player_new* m_player = nullptr;					//プレイヤー
+	
+	Enemy* m_enemy = nullptr;						//エネミー
 
 	BG* m_bg = nullptr;								//背景
 	DirectionLight* m_directionLight = nullptr;		//ディレクションライト

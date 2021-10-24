@@ -297,6 +297,7 @@
     <ClCompile Include="BG.cpp" />
     <ClCompile Include="Bloom.cpp" />
     <ClCompile Include="DirectionLight.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GaussianBlur.cpp" />
@@ -312,6 +313,7 @@
     <ClCompile Include="Seesaw.cpp" />
     <ClCompile Include="ShadowMapRender.cpp" />
     <ClCompile Include="SkinModelRender.cpp" />
+    <ClCompile Include="SphericalMove.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="SpriteRender.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -395,6 +397,7 @@
     <ClInclude Include="BG.h" />
     <ClInclude Include="Bloom.h" />
     <ClInclude Include="DirectionLight.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GaussianBlur.h" />
@@ -409,6 +412,7 @@
     <ClInclude Include="Seesaw.h" />
     <ClInclude Include="ShadowMapRender.h" />
     <ClInclude Include="SkinModelRender.h" />
+    <ClInclude Include="SphericalMove.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="SpriteRender.h" />
     <ClInclude Include="stdafx.h" />

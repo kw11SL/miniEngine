@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Game.h"
 #include "Player_new.h"
+#include "Enemy.h"
 #include "BG.h"
 #include "DirectionLight.h"
 #include "PointLight.h"
@@ -9,6 +10,7 @@
 Game::~Game()
 {
 	DeleteGO(m_player);
+	DeleteGO(m_enemy);
 	DeleteGO(m_bg);
 	DeleteGO(m_directionLight);
 	DeleteGO(m_pointLight);
@@ -47,6 +49,10 @@ void Game::Init(RenderingEngine& renderingEngine)
 	m_player = NewGO<Player_new>(0, "player");
 	m_player->Init(renderingEngine);
 
+	//ƒGƒlƒ~[‚Ì‰Šú‰»
+	m_enemy = NewGO<Enemy>(0, "enemy");
+	m_enemy->Init(renderingEngine, { 0.0f,700.0f,-300.0f });
+
 	//”wŒi‚Ì‰Šú‰»
 	m_bg = NewGO<BG>(0, "bg");
 	m_bg->Init(renderingEngine);
@@ -58,6 +64,14 @@ void Game::Init(RenderingEngine& renderingEngine)
 		m_player->RecieveSpotLight(m_spotLight);
 		
 		m_player->InitModelFromInitData();
+	}
+
+	if (m_enemy->GetSkinModelRender() != nullptr) {
+		m_enemy->RecieveDirectionLight(m_directionLight);
+		m_enemy->RecievePointLight(m_pointLight);
+		m_enemy->RecieveSpotLight(m_spotLight);
+
+		m_enemy->InitModelFromInitData();
 	}
 
 	//”wŒi‚Éƒ‰ƒCƒg‚ğ“n‚·ˆ—
