@@ -97,6 +97,9 @@ void Enemy::Init(RenderingEngine& renderingEngine,const Vector3& initPoint)
 	//前方、右、上の各ベクトルを各軸で初期化
 	m_sphericalMove.Init(m_forward, m_right, m_up);
 
+	//生存フラグをオン
+	m_exist = true;
+
 }
 
 void Enemy::Move()
@@ -155,10 +158,51 @@ void Enemy::Rotation()
 	m_sphericalMove.Rotation(m_forward,m_right,m_up,m_rot);
 }
 
+void Enemy::Hit()
+{
+	//弾を検索
+	QueryGOs<Bullet>("bullet", [&](Bullet* bullet) {
+		Vector3 diff = bullet->GetPosition() - m_position;
+		float length = diff.Length();
+		
+		//距離が一定値以下のとき
+		if (length < 50.0f) {
+			//耐久値を弾の威力分減算
+			m_life -= bullet->GetPower();
+			
+			//現状、削除処理とする
+			DeleteGO(bullet);
+			
+			//問い合わせ終了
+			return false;
+		}
+		
+		//問い合わせ続行
+		return true;
+	});
+
+}
+
+void Enemy::Destroy()
+{
+	if (m_life <= 0.0f) {
+		m_life = 0.0f;
+		
+		//生存フラグをオフ
+		m_exist = false;
+	}
+
+	if (m_exist == false) {
+		DeleteGO(this);
+	}
+}
+
 void Enemy::Update()
 {
 	Move();
 	Rotation();
+	Hit();
+	Destroy();
 
 	m_skinModelRender->SetRotation(m_rot);
 

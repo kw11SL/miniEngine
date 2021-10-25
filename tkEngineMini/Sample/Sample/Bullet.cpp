@@ -6,17 +6,21 @@ namespace{
 	const char* MODELPATH_PLAYER_NORMAL = "Assets/modelData/bullet/bullet.tkm";
 	const char* MODELPATH_ENEMY_NORMAL = "Assets/modelData/bullet/bullet.tkm";
 
+	//弾の耐久値
+	const float LIFE_PLAYER_NORMAL = 1.0f;
+	const float LIFE_ENEMY_NORMAL = 1.0f;
+	
 	//弾ごとの弾速
 	const float MOVE_SPEED_PLAYER_NORMAL = 20.0f;
 	const float MOVE_SPEED_ENEMY_NORMAL = 3.0f;
 
-	//エネミーのタイプ毎の耐久値
-	const float LIFE_PLAYER_NORMAL = 1.0f;
-	const float LIFE_ENEMY_NORMAL = 1.0f;
-
 	//弾の残存時間
 	const float LIFETIME_PLAYER_NORMAL = 1.0f;
 	const float LIFETIME_ENEMY_NORMAL = 6.0f;
+
+	//弾の威力
+	const float POWER_PLAYER_NORMAL = 5.0f;
+	const float POWER_ENEMY_NORMAL = 1.0f;
 
 	//シェーダーのファイルパス
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
@@ -53,11 +57,15 @@ void Bullet::Init(RenderingEngine& renderingEngine, const Vector3& initPoint,con
 	case enPlayerNormal:
 		modelPath = MODELPATH_PLAYER_NORMAL;
 		m_life = LIFE_PLAYER_NORMAL;
+		m_lifeTime = LIFETIME_PLAYER_NORMAL;
+		m_power = POWER_PLAYER_NORMAL;
 		m_speed = MOVE_SPEED_PLAYER_NORMAL;
 		break;
 	case enEnemyNormal:
-		modelPath = MODELPATH_PLAYER_NORMAL;
+		modelPath = MODELPATH_ENEMY_NORMAL;
 		m_life = LIFETIME_ENEMY_NORMAL;
+		m_lifeTime = LIFETIME_ENEMY_NORMAL;
+		m_power = POWER_ENEMY_NORMAL;
 		m_speed = MOVE_SPEED_ENEMY_NORMAL;
 		break;
 

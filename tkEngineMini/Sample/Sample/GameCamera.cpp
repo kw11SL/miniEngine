@@ -21,6 +21,15 @@ void GameCamera::SetCameraPosition(const Vector3& pos)
 {
 	m_cameraPosition = pos;
 	g_camera3D->SetPosition(m_cameraPosition);
+
+	/*m_cameraPositionTarget = pos;
+	g_camera3D->SetPosition(m_cameraPosition);*/
+
+}
+
+void GameCamera::SetCameraPositionTarget(const Vector3& pos)
+{
+	m_cameraPositionTarget = pos;
 }
 
 void GameCamera::SetTargetPosition(const Vector3& pos)
@@ -33,6 +42,15 @@ void GameCamera::SetUp(const Vector3& up)
 	g_camera3D->SetUp(up);
 }
 
+void GameCamera::Chase()
+{
+	Vector3 posToTarget = m_cameraPositionTarget - m_cameraPosition;
+	posToTarget.Normalize();
+
+	m_cameraPosition += posToTarget * m_moveSpeed;
+
+	//g_camera3D->SetPosition(m_cameraPosition);
+}
 
 void GameCamera::Update()
 {

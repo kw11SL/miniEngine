@@ -83,5 +83,5 @@ void DirectionLight::SetEyePos(const Vector3& pos)
 
 void DirectionLight::Update()
 {
-	Rotation();
+	//Rotation();
 }

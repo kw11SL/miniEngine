@@ -107,6 +107,8 @@ public:
 	}
 
 private:
+	//内部で使う処理
+
 	bool Start() override;
 
 	void Update() override;
@@ -123,17 +125,13 @@ private:
 	void FireBullet();
 
 private:
+
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
-	
-	//CharacterController m_charaCon;						//キャラクターコントローラ
-
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
-	
 	SphericalMove m_sphericalMove;						//球面移動用クラス
-
 	GameCamera m_gameCamera;							//ゲームカメラ
-
-	Bullet* m_bullet = nullptr;
+	//Vector3 m_cameraPoint = Vector3::Zero;				//カメラが追いかけるポイント
+	Bullet* m_bullet = nullptr;							//弾クラス
 
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル
@@ -146,8 +144,8 @@ private:
 	Quaternion m_rotUpToGroundNormal = Quaternion::Identity;					//プレイヤーの上ベクトルを地面の法線に向かせる回転クォータニオン
 	float m_angle = 0.0f;								//回転角度
 
-	float m_fireCounter = 0.0f;
-	Vector3 m_shotDirection = Vector3::Zero;
+	float m_fireCounter = 0.0f;							//発射間隔カウンタ
+	Vector3 m_shotDirection = Vector3::Zero;			//ショットを撃つ方向
 
 };
 

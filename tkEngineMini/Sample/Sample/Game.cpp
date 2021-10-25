@@ -30,7 +30,7 @@ void Game::Init(RenderingEngine& renderingEngine)
 {
 	//ディレクションライトの初期化
 	m_directionLight = NewGO<DirectionLight>(0, "directionlight");
-	m_directionLight->Init({ 1.0f,0.0f,1.0f }, { 1.0f,1.0f,1.0f }, { 0.3f,0.3f,0.3f });
+	m_directionLight->Init({ 1.0f,0.0f,1.0f }, { 0.5f,0.5f,0.5f }, { 0.3f,0.3f,0.3f });
 	m_directionLight->SetEyePos(g_camera3D->GetPosition());
 
 	//ポイントライトの初期化

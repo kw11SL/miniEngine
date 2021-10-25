@@ -133,6 +133,11 @@ private:
 	/// @brief 回転処理
 	void Rotation();
 
+	/// @brief ヒット処理
+	void Hit();
+
+	/// @brief 撃破処理
+	void Destroy();
 
 private:
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
@@ -142,8 +147,9 @@ private:
 
 	Player_new* m_player = nullptr;
 
-	float m_life = 0.0f;								//耐久値
+	float m_life = 0.0f;							//耐久値
 	float m_speed = 1.0f;							//移動速度
+	bool m_exist = false;							//存在フラグ
 
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル

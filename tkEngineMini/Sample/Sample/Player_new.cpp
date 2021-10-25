@@ -15,7 +15,7 @@ namespace{
 
 	const float PL_MOVE_SPEED = -15.0f;
 
-	const float FIRECOUNTER = 20.0f;
+	const float FIRECOUNTER = 0.25f;
 }
 
 Player_new::~Player_new()
@@ -75,6 +75,9 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 	//視点を設定
 	m_gameCamera.SetCameraPosition(m_position + toCamera);
 
+	//追いかけられる座標を視点に設定しておく
+	m_gameCamera.SetCameraPositionTarget(m_gameCamera.GetCameraPosition());
+
 	//発射方向を前方にしておく
 	//m_shotDirection = m_forward;
 }
@@ -87,7 +90,6 @@ bool Player_new::Start()
 
 void Player_new::Move()
 {
-	//m_shotDirection = m_forward;
 
 	//テスト：移動
 	//パッドのスティックからx成分とy成分を受け取る
@@ -160,16 +162,26 @@ void Player_new::RotateShotDirection()
 
 void Player_new::FireBullet()
 {
-	//RB1を押すと弾を発射
-	if (g_pad[0]->IsTrigger(enButtonRB1)) {
+	if (g_pad[0]->IsPress(enButtonRB1)) {
+		if (m_fireCounter > FIRECOUNTER || m_fireCounter == 0.0f) {
+			m_bullet = NewGO<Bullet>(0, "bullet");
+			m_bullet->Init(
+				*RenderingEngine::GetInstance(),
+				m_position,
+				m_shotDirection
+			);
 
-		m_bullet = NewGO<Bullet>(0, "bullet");
-		m_bullet->Init(
-			*RenderingEngine::GetInstance(),
-			m_position,
-			m_shotDirection
-		);
+			m_fireCounter = 0.0f;
+		}
 	}
+
+	if (g_pad[0]->IsPress(enButtonRB1)) {
+		m_fireCounter += g_gameTime->GetFrameDeltaTime();
+	}
+	else{
+		m_fireCounter = 0.0f;
+	}
+
 }
 
 void Player_new::Update()
@@ -192,6 +204,7 @@ void Player_new::Update()
 	//カメラ追従
 	//カメラ注視点から視点へのベクトルを作成
 	Vector3 toCamera = g_camera3D->GetPosition() - g_camera3D->GetTarget();
+	//Vector3 toCamera = m_gameCamera.GetCameraPositionTarget() - m_gameCamera.GetTargetPosition();
 	m_rotUpToGroundNormal.Apply(toCamera);
 
 	//注視点を自身に設定
@@ -200,6 +213,10 @@ void Player_new::Update()
 	m_gameCamera.SetCameraPosition(m_position + toCamera);
 	// カメラの上方向はプレイヤーの上方向と同じ。
 	m_gameCamera.SetUp(m_up);
+
+
+	//m_gameCamera.Chase();
+	
 	////それぞれ正規化
 	//toCameraTmp.Normalize();
 	//upVectorTmp.Normalize();

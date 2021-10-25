@@ -99,6 +99,16 @@ public:
 			m_name = name;
 		}
 	}
+
+	/// <summary>
+	/// ゲームオブジェクトの名前を取得。
+	/// </summary>
+	/// <param name="name">名前</param>
+	std::string& GetName()
+	{
+		return m_name;
+	}
+
 	/// <summary>
 	/// 引数で渡された名前が、このゲームオブジェクトの名前とマッチするか判定。
 	/// </summary>

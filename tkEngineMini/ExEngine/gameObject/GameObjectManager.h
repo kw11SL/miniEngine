@@ -114,7 +114,10 @@ public:
 	{
 		for (auto goList : m_gameObjectListArray) {
 			for (auto go : goList) {
-				if (strcmp(go->m_name.cstr(), objectName) == 0) {
+				//m_nameはprotected指定で引っ張れないのでゲッターを作って取得するよう変更
+				std::string name_str = go->GetName();
+				const char* name = name_str.c_str();
+				if (strcmp(name, objectName) == 0) {
 					//見つけた。
 					T* p = dynamic_cast<T*>(go);
 					if (func(p) == false) {

@@ -118,14 +118,25 @@ public:
 		return m_isExist;
 	}
 
+	/// @brief 弾のタイプを設定
+	/// @param type 
 	void SetType(const EnBulletType& type)
 	{
 		m_enBulletType = type;
 	}
 
+	/// @brief 弾のタイプを取得
+	/// @return 
 	EnBulletType GetType()
 	{
 		return m_enBulletType;
+	}
+
+	/// @brief 弾のダメージを取得
+	/// @return 
+	float GetPower()
+	{
+		return m_power;
 	}
 
 private:
@@ -152,8 +163,9 @@ private:
 	Player_new* m_player = nullptr;
 
 	float m_life = 0.0f;							//耐久値
-	float m_speed = 1.0f;							//移動速度
-	float m_lifeTime = 2.0f;						//時間寿命
+	float m_speed = 0.0f;							//移動速度
+	float m_lifeTime = 0.0f;						//時間寿命
+	float m_power = 0.0f;							//弾が与えるダメージ
 	bool m_isExist = false;							//存在フラグ
 
 	Vector3 m_position = Vector3::Zero;					//座標
