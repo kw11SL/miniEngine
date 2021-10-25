@@ -80,33 +80,6 @@ bool Player_new::Start()
 	return true;
 }
 
-void Player_new::SetPostion(const Vector3& pos)
-{
-	m_position.x = pos.x;
-	m_position.y = pos.y;
-	m_position.z = pos.z;
-
-	m_skinModelRender->SetPosition(m_position);
-}
-
-void Player_new::SetScale(const Vector3& scale)
-{
-	m_scale.x = scale.x;
-	m_scale.y = scale.y;
-	m_scale.z = scale.z;
-
-	m_skinModelRender->SetScale(m_scale);
-}
-
-void Player_new::SetRotation(const Quaternion rot)
-{
-	m_rot = rot;
-}
-void Player_new::SetAngle(const float& angle)
-{
-	m_angle = angle;
-}
-
 void Player_new::Move()
 {
 	//テスト：移動
@@ -184,29 +157,10 @@ void Player_new::Rotation()
 
 }
 
-void Player_new::RecieveDirectionLight(DirectionLight* dirLight)
+void Player_new::FireBullet()
 {
-	m_skinModelRender->InitDirectionLight(dirLight);
-}
 
-void Player_new::RecievePointLight(PointLight* ptLight)
-{
-	m_skinModelRender->InitPointLight(ptLight);
-}
 
-void Player_new::RecieveSpotLight(SpotLight* spLight)
-{
-	m_skinModelRender->InitSpotLight(spLight);
-}
-
-SkinModelRender* Player_new::GetSkinModelRender()
-{
-	return m_skinModelRender;
-}
-
-void Player_new::InitModelFromInitData()
-{
-	m_skinModelRender->InitModel();
 }
 
 void Player_new::Update()
@@ -224,13 +178,11 @@ void Player_new::Update()
 		 DeleteGO(m_skinModelRender);
 	}
 
-
 	//カメラ追従
 	//カメラ注視点から視点へのベクトルを作成
 	Vector3 toCamera = g_camera3D->GetPosition() - g_camera3D->GetTarget();
 	m_rotUpToGroundNormal.Apply(toCamera);
 
-	
 	//注視点を自身に設定
 	m_gameCamera.SetTargetPosition(m_position);
 	//視点を設定
@@ -240,6 +192,5 @@ void Player_new::Update()
 	////それぞれ正規化
 	//toCameraTmp.Normalize();
 	//upVectorTmp.Normalize();
-
 
 }

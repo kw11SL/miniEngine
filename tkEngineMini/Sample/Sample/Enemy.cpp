@@ -101,22 +101,18 @@ void Enemy::Init(RenderingEngine& renderingEngine,const Vector3& initPoint)
 
 void Enemy::Move()
 {
-	Vector3 toPlayer;
-
-	/*QueryGOs<Player_new>("player", [&](Player_new* player) {
-		toPlayer = player->GetPosition() - m_position;
-		
-		return false;
-	});*/
-
-	//const char* plName = "player";
+	//プレイヤー追跡処理
+	Vector3 toPlayer = Vector3::Zero;
+	float toPlayerLength = 0.0f;
 
 	if (m_player == nullptr) {
 		m_player = FindGO<Player_new>("player");
 	}
 	
 	if(m_player != nullptr) {
+
 		toPlayer = m_player->GetPosition() - m_position;
+		toPlayerLength = toPlayer.Length();
 		toPlayer.Normalize();
 
 		m_moveSpeed = toPlayer * m_speed;
@@ -124,22 +120,30 @@ void Enemy::Move()
 
 	Vector3 playerToMe = m_position - m_player->GetPosition();
 
-	if (toPlayer.Dot(playerToMe) < 0.0f) {
-		//m_position = m_player->GetPosition();
-		OutputDebugStringA("hoge");
+	if (toPlayerLength < 300.0f){
+		m_speed = 0.0f;
 	}
-	else {
-		OutputDebugStringA("true");
+	else if (toPlayerLength >= 300.0f && m_enEnemyType == enCommon) {
+		m_speed = MOVE_SPEED_COMMON;
 	}
+
+	//if (toPlayer.Dot(playerToMe) < 0.0f) {
+	//	//m_position = m_player->GetPosition();
+	//	OutputDebugStringA("hoge");
+	//}
+	//else {
+	//	OutputDebugStringA("true");
+	//}
 
 	/*m_moveSpeed = m_right * m_speed * 0.0f;
 	m_moveSpeed += m_forward * m_speed;*/
 
 	//キャラコンによる座標更新
 	m_position = m_myCharaCon.Execute(m_moveSpeed, m_downVector);
-
+	//上方向を球面の法線で更新し、右と前方を更新
 	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
 
+	//モデルの座標を更新
 	m_skinModelRender->SetPosition(m_position);
 }
 

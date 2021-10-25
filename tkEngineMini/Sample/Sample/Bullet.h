@@ -1,39 +1,39 @@
 #pragma once
-
-class Player_new : public IGameObject
+class Bullet : public IGameObject
 {
+private:
+	/// @brief 弾の種類
+	enum EnBulletType
+	{
+		enPlayerNormal,
+		enEnemyNormal,
+		enTypeNum
+	};
+
 public:
-	Player_new(){}
-	~Player_new();
+	Bullet();
+	~Bullet();
+
+	/// @brief 初期化処理
+	/// @param renderingEngine　レンダリングエンジン 
+	void Init(RenderingEngine& renderingEngine, const Vector3& initPoint);
 
 	//ゲッター
 	/// @brief	座標を取得 
 	/// @return 座標
-	Vector3 GetPosition() 
-	{ 
-		return m_position; 
-	}
-	
+	Vector3 GetPosition() { return m_position; }
+
 	/// @brief 拡大率を取得
 	/// @return 拡大率
-	Vector3 GetScale() 
-	{ 
-		return m_scale; 
-	}
-	
+	Vector3 GetScale() { return m_scale; }
+
 	/// @brief 回転を取得
 	/// @return 回転
-	Quaternion GetRotation() 
-	{ 
-		return m_rot; 
-	}
-	
+	Quaternion GetRotation() { return m_rot; }
+
 	/// @brief 回転角度を取得
 	/// @return 回転角度
-	float GetAngle() 
-	{ 
-		return m_angle; 
-	}
+	float GetAngle() { return m_angle; }
 
 	/// @brief スキンモデルレンダーを取得
 	/// @return スキンモデルレンダー
@@ -64,35 +64,32 @@ public:
 	void SetRotation(const Quaternion rot)
 	{
 		m_rot = rot;
+		m_skinModelRender->SetRotation(m_rot);
 	}
-	
+
 	/// @brief 角度を設定
 	/// @param angle 角度
 	void SetAngle(const float& angle)
 	{
 		m_angle = angle;
 	}
-	
-	/// @brief 初期化処理
-	/// @param renderingEngine　レンダリングエンジン 
-	void Init(RenderingEngine& renderingEngine);
 
 	//ライトを渡すための関数
-	
+
 	/// @brief ディレクションライトを受けとる
 	/// @param dirLight ディレクションライト
 	void RecieveDirectionLight(DirectionLight* dirLight)
 	{
 		m_skinModelRender->InitDirectionLight(dirLight);
 	}
-	
+
 	/// @brief ポイントライトを受け取る
 	/// @param ptLight ポイントライト
 	void RecievePointLight(PointLight* ptLight)
 	{
 		m_skinModelRender->InitPointLight(ptLight);
 	}
-	
+
 	/// @brief スポットライトを受け取る
 	/// @param spLight スポットライト
 	void RecieveSpotLight(SpotLight* spLight)
@@ -106,7 +103,31 @@ public:
 		m_skinModelRender->InitModel();
 	}
 
+	/// @brief 存在フラグをオン
+	void SetIsExist()
+	{
+		m_isExist = true;
+	}
+
+	/// @brief 存在フラグを取得
+	/// @return 
+	bool GetIsExist()
+	{
+		return m_isExist;
+	}
+
+	void SetType(const EnBulletType& type)
+	{
+		m_enBulletType = type;
+	}
+
+	EnBulletType GetType()
+	{
+		return m_enBulletType;
+	}
+
 private:
+	//内部で使う関数
 	bool Start() override;
 
 	void Update() override;
@@ -117,30 +138,28 @@ private:
 	/// @brief 回転処理
 	void Rotation();
 
-	/// @brief 弾を射撃
-	void FireBullet();
-
 private:
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
-	
-	//CharacterController m_charaCon;						//キャラクターコントローラ
-
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
-	
 	SphericalMove m_sphericalMove;						//球面移動用クラス
+	EnBulletType m_enBulletType = enPlayerNormal;		//弾のタイプ
 
-	GameCamera m_gameCamera;							//ゲームカメラ
+	Player_new* m_player = nullptr;
+
+	float m_life = 0.0f;							//耐久値
+	float m_speed = 1.0f;							//移動速度
+	float m_lifeTime = 2.0f;						//時間寿命
+	bool m_isExist = false;							//存在フラグ
 
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル
 	Vector3 m_downVector = { 0.0f,-10.0f,0.0f };		//レイを飛ばす方向ベクトル
 	Vector3 m_forward = Vector3::Zero;					//前方
-	Vector3 m_right	= Vector3::Zero;					//右
+	Vector3 m_right = Vector3::Zero;					//右
 	Vector3 m_up = Vector3::Zero;						//上
 	Vector3 m_scale = Vector3::One;						//拡大率
 	Quaternion m_rot = Quaternion::Identity;			//回転
-	Quaternion m_rotUpToGroundNormal = Quaternion::Identity;					//プレイヤーの上ベクトルを地面の法線に向かせる回転クォータニオン
-	float m_angle = 0.0f;								//回転角度
+	float m_angle = 0.0f;								//角度
 
 };
 

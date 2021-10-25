@@ -4,6 +4,17 @@ class Player_new;
 
 class Enemy : public IGameObject
 {
+private:
+	/// @brief エネミーのタイプ
+	enum EnEnemyType
+	{
+		enCommon,
+		enPowered,
+		enChaser,
+		enBomb,
+		enTypeNum
+	};
+
 public:
 	Enemy(){}
 	~Enemy();
@@ -97,6 +108,20 @@ public:
 		m_skinModelRender->InitModel();
 	}
 
+	/// @brief エネミーの種類を設定
+	/// @param type 
+	void SetType(const EnEnemyType& type)
+	{
+		m_enEnemyType = type;
+	}
+
+	/// @brief エネミーの種類を取得
+	/// @return 
+	EnEnemyType GetType()
+	{
+		return m_enEnemyType;
+	}
+
 private:
 	bool Start() override;
 
@@ -110,17 +135,6 @@ private:
 
 
 private:
-	
-	/// @brief エネミーのタイプ
-	enum EnEnemyType
-	{
-		enCommon,
-		enPowered,
-		enChaser,
-		enBomb,
-		enTypeNum
-	};
-
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
 	SphericalMove m_sphericalMove;						//球面移動用クラス
