@@ -48,7 +48,7 @@ bool Enemy::Start()
 
 void Enemy::Init(RenderingEngine& renderingEngine,const Vector3& initPoint)
 {
-	m_skinModelRender = NewGO<SkinModelRender>(0,"enemy");
+	m_skinModelRender = NewGO<SkinModelRender>(0);
 
 	const char* modelPath = "hoge";
 	
@@ -105,10 +105,12 @@ void Enemy::Move()
 	Vector3 toPlayer = Vector3::Zero;
 	float toPlayerLength = 0.0f;
 
+	//プレイヤーを検索
 	if (m_player == nullptr) {
 		m_player = FindGO<Player_new>("player");
 	}
-	
+
+	//プレイヤーへのベクトルを取り、その方向を移動方向にする
 	if(m_player != nullptr) {
 
 		toPlayer = m_player->GetPosition() - m_position;
@@ -119,7 +121,8 @@ void Enemy::Move()
 	}
 
 	Vector3 playerToMe = m_position - m_player->GetPosition();
-
+	
+	//プレイヤーの位置までのベクトルを取り、一定距離まで近づくと速度を0にする
 	if (toPlayerLength < 300.0f){
 		m_speed = 0.0f;
 	}

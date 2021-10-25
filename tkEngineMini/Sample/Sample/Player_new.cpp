@@ -13,7 +13,9 @@ namespace{
 	const float CHARACON_RADIUS = 50.0f;
 	const float CHARACON_HEIGHT = 120.0f;
 
-	const float PL_MOVE_SPEED = -10.0f;
+	const float PL_MOVE_SPEED = -15.0f;
+
+	const float FIRECOUNTER = 20.0f;
 }
 
 Player_new::~Player_new()
@@ -72,6 +74,9 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 	m_gameCamera.SetTargetPosition(m_position);
 	//視点を設定
 	m_gameCamera.SetCameraPosition(m_position + toCamera);
+
+	//発射方向を前方にしておく
+	//m_shotDirection = m_forward;
 }
 
 bool Player_new::Start()
@@ -82,6 +87,8 @@ bool Player_new::Start()
 
 void Player_new::Move()
 {
+	//m_shotDirection = m_forward;
+
 	//テスト：移動
 	//パッドのスティックからx成分とy成分を受け取る
 	float x = g_pad[0]->GetLStickXF();
@@ -97,16 +104,6 @@ void Player_new::Move()
 	m_moveSpeed = g_camera3D->GetRight() * -x * PL_MOVE_SPEED;
 	//プレイヤーの前後(奥、手前)方向への移動
 	m_moveSpeed += forward * y * PL_MOVE_SPEED;
-
-	//下方向ベクトルの座標更新
-	//m_downVector.x = m_position.x;
-	//m_downVector.z = m_position.z;
-
-	//重力
-	//m_moveSpeed.y += g_gameTime->GetFrameDeltaTime() * -10.0f;
-
-	////キャラコンに移動速度を渡す
-	//m_position = m_charaCon.Execute(m_moveSpeed, g_gameTime->GetFrameDeltaTime());
 
 	//自作キャラコンに移動速度を渡す
 	m_position = m_myCharaCon.Execute(m_moveSpeed,m_downVector);
@@ -132,41 +129,55 @@ void Player_new::Move()
 
 void Player_new::Rotation()
 {
-	//// キャラクターの前方、右、上から回転クォータニオンを決める。
-	//Matrix mRot;
-	//// 回転行列の1行目は、その座標系のexになる
-	//mRot.m[0][0] = m_right.x;
-	//mRot.m[0][1] = m_right.y;
-	//mRot.m[0][2] = m_right.z;
-	//
-	//// 回転行列の2行目は、その座標系のeyになる
-	//mRot.m[1][0] = m_up.x;
-	//mRot.m[1][1] = m_up.y;
-	//mRot.m[1][2] = m_up.z;
-
-	//// 回転行列の3行目は、その座標系のezになる
-	//mRot.m[2][0] = m_forward.x;
-	//mRot.m[2][1] = m_forward.y;
-	//mRot.m[2][2] = m_forward.z;
-
-	//// 回転行列からクォータニオンを計算する
-	//m_rot.SetRotation(mRot);
-
-	//※上記処理まとめ
 	m_sphericalMove.Rotation(m_forward, m_right, m_up, m_rot);
+}
 
+void Player_new::RotateShotDirection()
+{
+	//発射方向を上方向とカメラの右の外積にしておく
+	m_shotDirection = Cross(m_up, g_camera3D->GetRight());
+	m_shotDirection.Normalize();
+
+	//回転軸は上ベクトル
+	Vector3 axis = m_up;
+	//軸周りの回転クォータニオンを作成
+	Quaternion rot;
+
+	//右スティックの入力を受け取り
+	float x = g_pad[0]->GetRStickXF() * -1.0f;
+	float y = g_pad[0]->GetRStickYF() * -1.0f;
+
+	//入力値から角度を求める
+	float angle = atan2f(x, y);
+
+	//軸周りの回転を求める
+	rot.SetRotation(m_up, angle);
+
+	//ベクトルを回転
+	rot.Apply(m_shotDirection);
+	
 }
 
 void Player_new::FireBullet()
 {
+	//RB1を押すと弾を発射
+	if (g_pad[0]->IsTrigger(enButtonRB1)) {
 
-
+		m_bullet = NewGO<Bullet>(0, "bullet");
+		m_bullet->Init(
+			*RenderingEngine::GetInstance(),
+			m_position,
+			m_shotDirection
+		);
+	}
 }
 
 void Player_new::Update()
 {
 	Move();
 	Rotation();
+	RotateShotDirection();
+	FireBullet();
 	
 	if (m_skinModelRender != nullptr) {
 		m_skinModelRender->SetRotation(m_rot);

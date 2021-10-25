@@ -15,6 +15,7 @@
 #include "GameCamera.h"
 #include "MyCharacterController.h"
 #include "SphericalMove.h"
+#include "Bullet.h"
 
 
 

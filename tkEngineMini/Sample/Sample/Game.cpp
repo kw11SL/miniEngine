@@ -66,6 +66,7 @@ void Game::Init(RenderingEngine& renderingEngine)
 		m_player->InitModelFromInitData();
 	}
 
+	//エネミーにライトを渡す処理
 	if (m_enemy->GetSkinModelRender() != nullptr) {
 		m_enemy->RecieveDirectionLight(m_directionLight);
 		m_enemy->RecievePointLight(m_pointLight);

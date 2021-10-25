@@ -6,7 +6,7 @@ namespace {
 	//レイの始点の位置(キャラの下方向を正として逆方向に設定するので負の値)
 	const float RAY_START_OFFSET = -10.0f;
 	//レイの終点の位置(キャラの下方向を正として順方向に設定するので正の値)
-	const float RAY_END_OFFSET = 300.0f;
+	const float RAY_END_OFFSET = 1000.0f;
 
 
 	//衝突時に呼ばれる関数オブジェクト(地面用)
