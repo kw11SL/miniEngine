@@ -3,6 +3,7 @@
 
 namespace{
 	const char* MODELPATH_UTC = "Assets/modelData/unityChan.tkm";
+	const char* SKELETON_PATH_UTC = "Assets/modelData/unityChan.tks";
 	const float UTC_RADIUS = 40.0f;
 	const float UTC_HEIHGT = 100.0f;
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
@@ -15,7 +16,7 @@ namespace{
 
 	const float PL_MOVE_SPEED = -15.0f;
 
-	const float FIRECOUNTER = 0.25f;
+	const float FIRECOUNTER = 0.20f;
 }
 
 Player_new::~Player_new()
@@ -27,7 +28,15 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 {
 
 	m_skinModelRender = NewGO<SkinModelRender>(0);
-	m_skinModelRender->Init(MODELPATH_UTC, enModelUpAxisZ,renderingEngine,true,false);
+	
+	m_skinModelRender->Init(
+		MODELPATH_UTC, 
+		enModelUpAxisZ,
+		renderingEngine,
+		true,
+		false,
+		SKELETON_PATH_UTC
+	);
 
 	//m_skinModelRender->InitShader(MODEL_SHADER_PATH, VS_ENTRYPOINT_NAME);
 
@@ -162,7 +171,10 @@ void Player_new::RotateShotDirection()
 
 void Player_new::FireBullet()
 {
+	//R1ボタンを押すと発射、押しっぱなしで連射
 	if (g_pad[0]->IsPress(enButtonRB1)) {
+		
+		//カウンターが0のときとカウンターが一定値を超えると発射
 		if (m_fireCounter > FIRECOUNTER || m_fireCounter == 0.0f) {
 			m_bullet = NewGO<Bullet>(0, "bullet");
 			m_bullet->Init(
@@ -171,10 +183,12 @@ void Player_new::FireBullet()
 				m_shotDirection
 			);
 
+			//発射後、カウンターを0にリセット
 			m_fireCounter = 0.0f;
 		}
 	}
 
+	//R1ボタン押下中、カウンターを加算、押していないときはカウンターを0にする。
 	if (g_pad[0]->IsPress(enButtonRB1)) {
 		m_fireCounter += g_gameTime->GetFrameDeltaTime();
 	}

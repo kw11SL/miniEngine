@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Material.h"
+#include <d3d12.h>
+#include <DirectXTK/Src/d3dx12.h>
 
 //ルートシグネチャとパイプラインステート周りはカリカリカリ
 enum {
@@ -57,6 +59,7 @@ void Material::InitTexture(const TkmFile::SMaterial& tkmMat)
 void Material::InitFromTkmMaterila(
 	const TkmFile::SMaterial& tkmMat,
 	const wchar_t* fxFilePath,
+	//const char* fxFilePath,
 	const char* vsEntryPointFunc,
 	const char* vsSkinEntryPointFunc,
 	const char* psEntryPointFunc,
@@ -85,6 +88,12 @@ void Material::InitFromTkmMaterila(
 		//パイプラインステートを初期化。
 		InitPipelineState(colorBufferFormat);
 	}
+	//if (strlen(fxFilePath) > 0) {
+	//	//シェーダーを初期化。
+	//	InitShaders(fxFilePath, vsEntryPointFunc, vsSkinEntryPointFunc, psEntryPointFunc);
+	//	//パイプラインステートを初期化。
+	//	InitPipelineState(colorBufferFormat);
+	//}
 }
 void Material::InitPipelineState(const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat)
 {
@@ -106,6 +115,8 @@ void Material::InitPipelineState(const std::array<DXGI_FORMAT, MAX_RENDERING_TAR
 	psoDesc.pRootSignature = m_rootSignature.Get();
 	psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsSkinModel.GetCompiledBlob());
 	psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_psModel.GetCompiledBlob());
+	/*psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsSkinModel->GetCompiledBlob());
+	psoDesc.PS = CD3DX12_SHADER_BYTECODE(m_psModel->GetCompiledBlob());*/
 	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	psoDesc.DepthStencilState.DepthEnable = TRUE;
@@ -143,10 +154,12 @@ void Material::InitPipelineState(const std::array<DXGI_FORMAT, MAX_RENDERING_TAR
 
 	//続いてスキンなしモデル用を作成。
 	psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsNonSkinModel.GetCompiledBlob());
+	//psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsNonSkinModel->GetCompiledBlob());
 	m_nonSkinModelPipelineState.Init(psoDesc);
 
 	//続いて半透明マテリアル用。
 	psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsSkinModel.GetCompiledBlob());
+	//psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsSkinModel->GetCompiledBlob());
 	psoDesc.BlendState.IndependentBlendEnable = TRUE;
 	psoDesc.BlendState.RenderTarget[0].BlendEnable = TRUE;
 	psoDesc.BlendState.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
@@ -157,6 +170,7 @@ void Material::InitPipelineState(const std::array<DXGI_FORMAT, MAX_RENDERING_TAR
 	m_transSkinModelPipelineState.Init(psoDesc);
 
 	psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsNonSkinModel.GetCompiledBlob());
+	//psoDesc.VS = CD3DX12_SHADER_BYTECODE(m_vsNonSkinModel->GetCompiledBlob());
 	m_transNonSkinModelPipelineState.Init(psoDesc);
 
 }
@@ -170,6 +184,12 @@ void Material::InitShaders(
 {
 	//スキンなしモデル用のシェーダーをロードする。
 	m_vsNonSkinModel.LoadVS(fxFilePath, vsEntryPointFunc);
+	/*m_vsNonSkinModel = g_engine->GetShaderFromBank(fxFilePath, vsSkinEntriyPointFunc);
+	if (m_vsNonSkinModel == nullptr) {
+		m_vsNonSkinModel = new Shader;
+		m_vsNonSkinModel->LoadVS(fxFilePath, vsEntryPointFunc);
+		g_engine->RegistShaderToBank(fxFilePath, vsEntryPointFunc, m_vsNonSkinModel);
+	}*/
 	/*m_vsNonSkinModel = g_engine->GetShaderFromBank(fxFilePath, vsEntryPointFunc);
 	if (m_vsNonSkinModel == nullptr) {
 		m_vsNonSkinModel = new Shader;

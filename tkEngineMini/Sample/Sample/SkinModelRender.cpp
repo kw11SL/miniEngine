@@ -14,7 +14,6 @@ namespace
 	//シャドウレシーバー用のシェーダーファイルパス
 	const char* MODEL_FX_FILEPATH_SHADOWRECIEVER = "Assets/shader/ShadowReciever.fx";
 
-
 	//シェーダのエントリーポイント名
 	//通常のエントリーポイント
 	const char* VS_ENTRYPOINT_NAME = "VSMain";
@@ -40,7 +39,13 @@ bool SkinModelRender::Start()
 	return true;
 }
 
-void SkinModelRender::Init(const char* modelFilePath, EnModelUpAxis upAxis , RenderingEngine& renderingEngine , bool shadowCasterFlag , bool shadowRecieverFlag)
+void SkinModelRender::Init(
+	const char* modelFilePath, 
+	EnModelUpAxis upAxis, 
+	RenderingEngine& renderingEngine, 
+	bool shadowCasterFlag, 
+	bool shadowRecieverFlag, 
+	const char* skeletonFilePath)
 {
 	m_renderingEngine = &renderingEngine;
 	
@@ -50,13 +55,20 @@ void SkinModelRender::Init(const char* modelFilePath, EnModelUpAxis upAxis , Ren
 	//シャドウレシーバーフラグをつける
 	SetShadowRecieverFlag(shadowRecieverFlag);
 
+	//スケルトンが指定されていたら
+	if (skeletonFilePath != nullptr) {
+		//スケルトンを初期化
+		m_skeleton.Init(skeletonFilePath);
+		//モデルの初期化情報のメンバにスケルトンにスケルトンを登録
+		m_modelInitData.m_skeleton = &m_skeleton;
+	}
 
 	//通常描画用モデルを初期化
 	{
 		//共通処理
 		m_modelInitData.m_tkmFilePath = modelFilePath;
 		m_modelInitData.m_vsEntryPointFunc = VS_ENTRYPOINT_NAME;
-		//m_modelInitData.m_vsSkinEntryPointFunc = VS_SKIN_ENTRYPOINT_NAME;
+		m_modelInitData.m_vsSkinEntryPointFunc = VS_SKIN_ENTRYPOINT_NAME;
 		m_modelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		m_modelInitData.m_modelUpAxis = upAxis;
 
@@ -158,6 +170,9 @@ void SkinModelRender::Update()
 {
 	//モデルの更新
 	m_model.UpdateWorldMatrix(m_position,m_rot,m_scale);
+
+	//スケルトンの更新
+	m_skeleton.Update(m_model.GetWorldMatrix());
 
 	//シャドウキャスターフラグがついていたら影モデルも更新
 	if (m_isShadowCaster) {

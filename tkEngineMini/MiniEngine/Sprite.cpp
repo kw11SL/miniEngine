@@ -53,7 +53,9 @@
 		//シェーダーをロードする。
 		m_vs.LoadVS(fxFilePath, initData.m_vsEntryPointFunc);
 		m_ps.LoadPS(fxFilePath, initData.m_psEntryPoinFunc);
-	}
+		/*m_vs.LoadVS(initData.m_fxFilePath, initData.m_vsEntryPointFunc);
+		m_ps.LoadPS(initData.m_fxFilePath, initData.m_psEntryPoinFunc);
+	*/}
 	void Sprite::InitDescriptorHeap(const SpriteInitData& initData)
 	{
 		if (m_textureExternal[0] != nullptr) {

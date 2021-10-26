@@ -44,6 +44,7 @@ public:
 	void InitFromTkmFile(
 		const TkmFile& tkmFile,
 		const wchar_t* fxFilePath,
+		//const char* fxFilePath,
 		const char* vsEntryPointFunc,
 		const char* vsSkinEntryPointFunc,
 		const char* psEntryPointFunc,
@@ -106,6 +107,7 @@ private:
 		const TkmFile::SMesh& mesh, 
 		int meshNo,
 		const wchar_t* fxFilePath,
+		//const char* fxFilePath,
 		const char* vsEntryPointFunc,
 		const char* vsSkinEntryPointFunc,
 		const char* psEntryPointFunc, 

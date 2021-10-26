@@ -299,8 +299,10 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="DirectionLight.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="FontRender.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
+    <ClCompile Include="GameDirector.cpp" />
     <ClCompile Include="GaussianBlur.cpp" />
     <ClCompile Include="Hello2D.cpp" />
     <ClCompile Include="HelloFont.cpp" />
@@ -400,8 +402,10 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="DirectionLight.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="FontRender.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
+    <ClInclude Include="GameDirector.h" />
     <ClInclude Include="GaussianBlur.h" />
     <ClInclude Include="Hello2D.h" />
     <ClInclude Include="HelloFont.h" />

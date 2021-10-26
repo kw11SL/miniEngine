@@ -122,6 +122,13 @@ public:
 		return m_enEnemyType;
 	}
 
+	/// @brief エネミーの撃破スコアを取得
+	/// @return 
+	int GetScore()
+	{
+		return m_score;
+	}
+
 private:
 	bool Start() override;
 
@@ -147,9 +154,10 @@ private:
 
 	Player_new* m_player = nullptr;
 
-	float m_life = 0.0f;							//耐久値
-	float m_speed = 1.0f;							//移動速度
-	bool m_exist = false;							//存在フラグ
+	float m_life = 0.0f;								//耐久値
+	float m_speed = 0.0f;								//移動速度
+	int m_score = 0;									//エネミーの撃破スコア
+	bool m_exist = false;								//存在フラグ
 
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル

@@ -29,9 +29,20 @@ void Model::Init(const ModelInitData& initData)
 	m_modelUpAxis = initData.m_modelUpAxis;
 
 	m_tkmFile.Load(initData.m_tkmFilePath);
+	//auto tkmFile = g_engine->GetTkmFileFromBank(initData.m_tkmFilePath);
+	//if (tkmFile == nullptr) {
+	//	//–¢“o˜^
+	//	tkmFile = new TkmFile;
+	//	tkmFile->Load(initData.m_tkmFilePath);
+	//	g_engine->RegistTkmFileToBank(initData.m_tkmFilePath, tkmFile);
+	//}
+	//m_tkmFile = tkmFile;
+	
 	m_meshParts.InitFromTkmFile(
 		m_tkmFile, 
 		wfxFilePath, 
+		//*m_tkmFile,
+		//initData.m_fxFilePath,
 		initData.m_vsEntryPointFunc,
 		initData.m_vsSkinEntryPointFunc,
 		initData.m_psEntryPointFunc,

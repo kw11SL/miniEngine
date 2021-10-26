@@ -122,7 +122,8 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 	float4x4 m;
 	if( hasSkin ){
 		m = CalcSkinMatrix(vsIn.skinVert);
-	}else{
+	}
+	else{
 		m = mWorld;
 	}
 	psIn.pos = mul(m, vsIn.pos);

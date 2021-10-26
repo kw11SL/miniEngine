@@ -1,6 +1,9 @@
 #pragma once
 
 #include "tkFile/TkmFile.h"
+#include <ExEngine.h>
+#include <MiniEngine.h>
+
 /// <summary>
 /// マテリアル。
 /// </summary>
@@ -13,6 +16,7 @@ public:
 	void InitFromTkmMaterila(
 		const TkmFile::SMaterial& tkmMat,
 		const wchar_t* fxFilePath,
+		//const char* fxFilePath,
 		const char* vsEntryPointFunc,
 		const char* vsSkinEntriyPointFunc,
 		const char* psEntryPointFunc,
@@ -119,6 +123,9 @@ private:
 	Shader m_vsNonSkinModel;						//スキンなしモデル用の頂点シェーダー。
 	Shader m_vsSkinModel;							//スキンありモデル用の頂点シェーダー。
 	Shader m_psModel;								//モデル用のピクセルシェーダー。
+	//Shader* m_vsNonSkinModel;						//スキンなしモデル用の頂点シェーダー。
+	//Shader* m_vsSkinModel;							//スキンありモデル用の頂点シェーダー。
+	//Shader* m_psModel;								//モデル用のピクセルシェーダー。
 };
 
 

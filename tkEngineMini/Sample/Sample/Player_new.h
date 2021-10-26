@@ -119,6 +119,7 @@ private:
 	/// @brief ‰ñ“]ˆ—
 	void Rotation();
 
+	/// @brief ’e‚Ì”­Ë•ûŒü‚ğ‰ñ“]
 	void RotateShotDirection();
 
 	/// @brief ’e‚ğ”­Ë

@@ -16,6 +16,7 @@ void Font::End(RenderContext& rc)
 	auto& fontEngine = g_graphicsEngine->GetFontEngine();
 	fontEngine.EndDraw(rc);
 }
+
 void Font::Draw(
 	wchar_t const* text,
 	const Vector2& position,

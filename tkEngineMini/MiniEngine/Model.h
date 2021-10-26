@@ -32,6 +32,7 @@ struct ModelInitData {
 	std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV> m_expandShaderResoruceView = { nullptr };
 	Skeleton* m_skeleton = nullptr;									//スケルトン。
 	EnModelUpAxis m_modelUpAxis = enModelUpAxisZ;					//モデルの上方向。
+	D3D12_FILTER m_samplerFilter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;	//テクスチャサンプリングのフィルタ。
 	std::array<DXGI_FORMAT, MAX_RENDERING_TARGET> m_colorBufferFormat = {
 		DXGI_FORMAT_R8G8B8A8_UNORM,
 		DXGI_FORMAT_UNKNOWN,
@@ -122,11 +123,13 @@ public:
 	const TkmFile& GetTkmFile() const
 	{
 		return m_tkmFile;
+		//return *m_tkmFile;
 	}
 private:
 
 	Matrix m_world;														//ワールド行列。
-	TkmFile m_tkmFile;													//tkmファイル。
+	TkmFile m_tkmFile;
+	//TkmFile* m_tkmFile;
 	Skeleton m_skeleton;												//スケルトン。
 	MeshParts m_meshParts;											//メッシュパーツ。
 	EnModelUpAxis m_modelUpAxis = enModelUpAxisY;		//モデルの上方向。

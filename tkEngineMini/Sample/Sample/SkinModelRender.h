@@ -32,7 +32,14 @@ public:
 	/// @param renderingEngine	レンダリングエンジン
 	/// @param shadowCasterFlag	シャドウキャスターにするかどうか
 	/// @param shadowRecieverFlag	シャドウレシーバーにするかどうか
-	void Init(const char* modelFilePath, EnModelUpAxis upAxis , RenderingEngine& renderingEngine, bool shadowCasterFlag = false , bool shadowRecieverFlag = false);
+	void Init(
+		const char* modelFilePath, 
+		EnModelUpAxis upAxis, 
+		RenderingEngine& renderingEngine, 
+		bool shadowCasterFlag = false, 
+		bool shadowRecieverFlag = false,
+		const char* skeletonFilePath = nullptr
+	);
 	
 	/// @brief ディレクションライトを定数バッファに渡す処理
 	/// @param dirLight ディレクションライト

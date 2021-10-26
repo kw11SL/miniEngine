@@ -44,7 +44,6 @@ void Game::Init(RenderingEngine& renderingEngine)
 	float spEmitAngle = Math::DegToRad(25.0f);
 	m_spotLight->Init({ 0.0f,0.0f,200.0f }, { 2.0f,2.0f,2.0f }, 1000.0f, spDir, spEmitAngle);
 
-
 	//ƒvƒŒƒCƒ„[‚Ì‰Šú‰»
 	m_player = NewGO<Player_new>(0, "player");
 	m_player->Init(renderingEngine);

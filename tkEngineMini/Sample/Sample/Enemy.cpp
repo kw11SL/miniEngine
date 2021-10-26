@@ -21,6 +21,11 @@ namespace {
 	const float LIFE_CHASER = 1.0f;
 	const float LIFE_BOMB = 1.0f;
 
+	//エネミーのタイプ別スコア
+	const float SCORE_COMMON = 100;
+	const float SCORE_POWERED = 500;
+	const float SCORE_CHASER = 300;
+	const float SCORE_BOMB = 200;
 
 	//シェーダーのファイルパス
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
@@ -57,21 +62,25 @@ void Enemy::Init(RenderingEngine& renderingEngine,const Vector3& initPoint)
 		modelPath = MODELPATH_COMMON;
 		m_life = LIFE_COMMON;
 		m_speed = MOVE_SPEED_COMMON;
+		m_score = SCORE_COMMON;
 		break;
 	case enPowered:
 		modelPath = MODELPATH_POWERED;
 		m_life = LIFE_POWERED;
 		m_speed = MOVE_SPEED_POWERED;
+		m_score = SCORE_POWERED;
 		break;
 	case enChaser:
 		modelPath = MODELPATH_CHASER;
 		m_life = LIFE_CHASER;
 		m_speed = MOVE_SPEED_CHASER;
+		m_score = SCORE_CHASER;
 		break;
 	case enBomb:
 		modelPath = MODELPATH_BOMB;
 		m_life = LIFE_BOMB;
 		m_speed = MOVE_SPEED_BOMB;
+		m_score = SCORE_BOMB;
 		break;
 	default:
 		break;
@@ -172,6 +181,9 @@ void Enemy::Hit()
 			
 			//現状、削除処理とする
 			DeleteGO(bullet);
+			
+			//点数を加点
+			GameDirector::GetInstance()->AddScore(m_score);
 			
 			//問い合わせ終了
 			return false;

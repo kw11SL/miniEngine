@@ -123,6 +123,7 @@ private:
 	ShadowMapRender m_shadowMap;				//シャドウマップ
 	std::vector<Model*> m_commonModels;			//通常描画用モデル
 
+
 	RenderTarget m_mainRenderTarget;			//メインレンダリングターゲット
 	Bloom m_bloom;								//ブルーム
 
