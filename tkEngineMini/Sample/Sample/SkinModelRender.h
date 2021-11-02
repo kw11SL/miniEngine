@@ -113,7 +113,7 @@ public:
 	}
 
 	/// @brief ワールド行列の更新(手動)
-	void UpdateMatrix() 
+	void UpdateWorldMatrix() 
 	{
 		m_model.UpdateWorldMatrix(m_position, m_rot, m_scale); 
 	}

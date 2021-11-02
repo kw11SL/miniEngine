@@ -43,8 +43,8 @@ public:
 	/// <param name="psEntryPointFunc">ピクセルシェーダーのエントリーポイントの関数名</param>
 	void InitFromTkmFile(
 		const TkmFile& tkmFile,
-		const wchar_t* fxFilePath,
-		//const char* fxFilePath,
+		//const wchar_t* fxFilePath,
+		const char* fxFilePath,
 		const char* vsEntryPointFunc,
 		const char* vsSkinEntryPointFunc,
 		const char* psEntryPointFunc,
@@ -106,8 +106,8 @@ private:
 	void CreateMeshFromTkmMesh(
 		const TkmFile::SMesh& mesh, 
 		int meshNo,
-		const wchar_t* fxFilePath,
-		//const char* fxFilePath,
+		//const wchar_t* fxFilePath,
+		const char* fxFilePath,
 		const char* vsEntryPointFunc,
 		const char* vsSkinEntryPointFunc,
 		const char* psEntryPointFunc, 

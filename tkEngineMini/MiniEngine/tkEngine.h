@@ -4,6 +4,7 @@
 #include "TResourceBank.h"
 #include "tkFile/TkmFile.h"
 #include "Shader.h"
+#include <MiniEngine.h>
 
 
 class GraphicsEngine;

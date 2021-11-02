@@ -90,6 +90,7 @@ void Game::Init(RenderingEngine& renderingEngine)
 	//m_sprite->Init("Assets/sprite/finish.dds",256,256,AlphaBlendMode_Trans);
 	//m_sprite->SetColor({ 1.0f,0.0f,0.0f,0.5f });
 
+
 }
 
 void Game::Update()

@@ -39,7 +39,7 @@ void BG::Init(RenderingEngine& renderingEngine)
 	m_skinModelRender->SetScale(m_scale);
 
 	//ワールド行列の更新
-	m_skinModelRender->UpdateMatrix();
+	m_skinModelRender->UpdateWorldMatrix();
 
 	//静的オブジェクトの作成
 	m_physicsStaticObject.CreateFromModel(

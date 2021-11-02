@@ -20,8 +20,8 @@ MeshParts::~MeshParts()
 }
 void MeshParts::InitFromTkmFile(
 	const TkmFile& tkmFile, 
-	const wchar_t* fxFilePath,
-	//const char* fxFilePath,
+	//const wchar_t* fxFilePath,
+	const char* fxFilePath,
 	const char* vsEntryPointFunc,
 	const char* vsSkinEntryPointFunc,
 	const char* psEntryPointFunc,
@@ -139,8 +139,8 @@ void MeshParts::CreateDescriptorHeaps()
 void MeshParts::CreateMeshFromTkmMesh(
 	const TkmFile::SMesh& tkmMesh, 
 	int meshNo,
-	const wchar_t* fxFilePath,
-	//const char* fxFilePath,
+	//const wchar_t* fxFilePath,
+	const char* fxFilePath,
 	const char* vsEntryPointFunc,
 	const char* vsSkinEntryPointFunc,
 	const char* psEntryPointFunc,

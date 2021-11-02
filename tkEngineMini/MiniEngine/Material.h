@@ -15,8 +15,8 @@ public:
 	/// <param name="tkmMat">tkmマテリアル</param>
 	void InitFromTkmMaterila(
 		const TkmFile::SMaterial& tkmMat,
-		const wchar_t* fxFilePath,
-		//const char* fxFilePath,
+		//const wchar_t* fxFilePath,
+		const char* fxFilePath,
 		const char* vsEntryPointFunc,
 		const char* vsSkinEntriyPointFunc,
 		const char* psEntryPointFunc,
@@ -90,8 +90,8 @@ private:
 	/// <param name="vsEntryPointFunc">スキンありマテリアル用の頂点シェーダーのエントリーポイントの関数名</param>
 	/// <param name="psEntryPointFunc">ピクセルシェーダーのエントリーポイントの関数名</param>
 	void InitShaders(
-		const wchar_t* fxFilePath,
-		//const char* fxFilePath,
+		//const wchar_t* fxFilePath,
+		const char* fxFilePath,
 		const char* vsEntryPointFunc,
 		const char* vsSkinEntriyPointFunc,
 		const char* psEntryPointFunc);
@@ -120,12 +120,12 @@ private:
 	PipelineState m_skinModelPipelineState;			//スキンありモデル用のパイプラインステート。
 	PipelineState m_transSkinModelPipelineState;	//スキンありモデル用のパイプラインステート(半透明マテリアル)。
 	PipelineState m_transNonSkinModelPipelineState;	//スキンなしモデル用のパイプラインステート(半透明マテリアル)。
-	Shader m_vsNonSkinModel;						//スキンなしモデル用の頂点シェーダー。
-	Shader m_vsSkinModel;							//スキンありモデル用の頂点シェーダー。
-	Shader m_psModel;								//モデル用のピクセルシェーダー。
-	//Shader* m_vsNonSkinModel;						//スキンなしモデル用の頂点シェーダー。
-	//Shader* m_vsSkinModel;							//スキンありモデル用の頂点シェーダー。
-	//Shader* m_psModel;								//モデル用のピクセルシェーダー。
+	//Shader m_vsNonSkinModel;						//スキンなしモデル用の頂点シェーダー。
+	//Shader m_vsSkinModel;							//スキンありモデル用の頂点シェーダー。
+	//Shader m_psModel;								//モデル用のピクセルシェーダー。
+	Shader* m_vsNonSkinModel;						//スキンなしモデル用の頂点シェーダー。
+	Shader* m_vsSkinModel;							//スキンありモデル用の頂点シェーダー。
+	Shader* m_psModel;								//モデル用のピクセルシェーダー。
 };
 
 
