@@ -6,6 +6,7 @@
 #include "DirectionLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include "UI.h"
 
 Game::~Game()
 {
@@ -15,6 +16,7 @@ Game::~Game()
 	DeleteGO(m_directionLight);
 	DeleteGO(m_pointLight);
 	DeleteGO(m_spotLight);
+	DeleteGO(m_ui);
 
 	//テスト
 	DeleteGO(m_sprite);
@@ -55,6 +57,11 @@ void Game::Init(RenderingEngine& renderingEngine)
 	//背景の初期化
 	m_bg = NewGO<BG>(0, "bg");
 	m_bg->Init(renderingEngine);
+
+	//UIの初期化
+	m_ui = NewGO<UI>(0, "ui");
+	m_ui->Init();
+
 
 	//プレイヤーにライトを渡す処理
 	if (m_player->GetSkinModelRender() != nullptr) {
@@ -101,15 +108,26 @@ void Game::Update()
 		m_player = nullptr;
 	}
 
-	if (m_player != nullptr) {
-		//テスト：ライトの受け渡し
-		if ((g_pad[0]->IsTrigger(enButtonA))) {
-			m_player->RecieveDirectionLight(m_directionLight);
-			m_player->RecievePointLight(m_pointLight);
-			m_player->RecieveSpotLight(m_spotLight);
+	//if (m_player != nullptr) {
+	//	//テスト：ライトの受け渡し
+	//	if ((g_pad[0]->IsTrigger(enButtonA))) {
+	//		m_player->RecieveDirectionLight(m_directionLight);
+	//		m_player->RecievePointLight(m_pointLight);
+	//		m_player->RecieveSpotLight(m_spotLight);
 
-			m_player->InitModelFromInitData();
-		}
-	}
+	//		m_player->InitModelFromInitData();
+	//	}
+	//}
+
+	/*if (g_pad[0]->IsTrigger(enButtonB)) {
+		m_font->SetScale(scale);
+	}*/
+
+	
+
+
+	/*scale += 0.002f;
+
+	m_font->SetScale(scale);*/
 
 }

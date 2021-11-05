@@ -7,6 +7,7 @@ class BG;
 class DirectionLight;
 class PointLight;
 class SpotLight;
+class UI;
 
 class Game : public IGameObject
 {
@@ -34,6 +35,10 @@ private:
 	DirectionLight* m_directionLight = nullptr;		//ディレクションライト
 	PointLight* m_pointLight = nullptr;				//ポイントライト
 	SpotLight* m_spotLight = nullptr;				//スポットライト
+	
+	UI* m_ui = nullptr;								//UI
+
+	
 
 	//テスト
 	SpriteRender* m_sprite = nullptr;				//テスト表示スプライト

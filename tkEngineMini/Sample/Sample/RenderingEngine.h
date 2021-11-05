@@ -3,8 +3,8 @@
 #include "Bloom.h"
 #include "ShadowMapRender.h"
 
-//class bloom;
-//class RenderTarget;
+struct SFontData;
+
 
 //シングルトンパターン
 class RenderingEngine
@@ -42,10 +42,19 @@ public:
 
 	/// @brief 通常描画処理
 	/// @param rc レンダリングコンテキスト
-	void CommonRender(RenderContext& rc);
+	void CommonRendering(RenderContext& rc);
 
 	/// @brief シャドウマップに描画
 	void RenderToShadowMap(RenderContext& rc,Camera camera);
+
+	/// @brief ブルームの実行
+	/// @param rc レンダリングコンテキスト
+	void BloomRendering(RenderContext& rc, RenderTarget& mainRT);
+
+	/// @brief フォントの描画
+	/// @param rc レンダリングコンテキスト
+	void FontRendering(RenderContext& rc);
+
 
 	/// @brief レンダリングターゲットを取得
 	/// @return レンダリングターゲット
@@ -82,6 +91,21 @@ public:
 		m_commonModels.push_back(&model);
 	}
 
+	/// @brief フォントデータの配列にフォントデータを追加
+	/// @param fontData 
+	void AddFontDataToFonts(SFontData& fontData)
+	{
+		m_fontDataVector.push_back(&fontData);
+	}
+
+	/// @brief スプライトの配列にスプライトを追加
+	/// @param sprite 
+	void AddSpriteToSprites(Sprite& sprite) 
+	{
+		m_sprites.push_back(&sprite);
+	}
+
+
 	/// @brief 通常描画モデルの削除処理
 	/// @param model 
 	void DeleteCommonModel(Model& model);
@@ -92,6 +116,10 @@ public:
 	{
 		m_shadowMap.DeleteModel(model);
 	}
+
+	/// @brief フォントデータの削除処理
+	/// @param fontData 
+	void DeleteFonts(SFontData& fontData);
 
 private:
 	//内部で実行する関数
@@ -112,17 +140,15 @@ private:
 	/// @param mainRT レンダリングターゲット
 	void InitBloom(RenderTarget& mainRT);
 
-	/// @brief ブルームの実行
-	/// @param rc レンダリングコンテキスト
-	void BloomRendering(RenderContext& rc, RenderTarget& mainRT);
+	
 
 private:
 	static RenderingEngine* m_renderingEngine;	//唯一のオブジェクト
 
-	//std::vector<Model*> m_shadowModels;		//影描画用モデル
 	ShadowMapRender m_shadowMap;				//シャドウマップ
 	std::vector<Model*> m_commonModels;			//通常描画用モデル
-
+	std::vector<Sprite*> m_sprites;				//スプライトの配列
+	std::vector<SFontData*> m_fontDataVector;	//フォントデータの配列
 
 	RenderTarget m_mainRenderTarget;			//メインレンダリングターゲット
 	Bloom m_bloom;								//ブルーム

@@ -1,24 +1,43 @@
 #include "stdafx.h"
 #include "FontRender.h"
 
-void FontRender::Init(
-	wchar_t const* text,
-	const Vector2& position,
-	const Vector4& color,
-	const float rotation,
-	const float scale,
-	const Vector2& pivot)
+FontRender::~FontRender()
 {
-	m_fontData.m_text = text;
-	m_fontData.m_position = position;
-	m_fontData.m_color = color;
-	m_fontData.m_rotation = rotation;
-	m_fontData.m_scale = scale;
-	m_fontData.m_pivot = pivot;
+	//レンダリングエンジンのフォントデータを削除
+	m_renderingEngine->DeleteFonts(m_fontData);
 }
 
+bool FontRender::Start()
+{
+
+	return true;
+}
+
+void FontRender::Init(const wchar_t* text)
+{
+	//レンダリングエンジンを取得
+	m_renderingEngine = RenderingEngine::GetInstance();
+
+	//フォントデータの構造体の各メンバを設定
+	m_fontData.text = text;
+
+	//レンダリングエンジンにフォントのデータを追加
+	m_renderingEngine->AddFontDataToFonts(m_fontData);
+}
+
+void FontRender::UpdateFontData()
+{
+	m_fontData.text = m_text;
+	m_fontData.position = m_position;
+	m_fontData.color = m_color;
+	m_fontData.rotation = m_rotation;
+	m_fontData.scale = m_scale;
+	m_fontData.pivot = m_pivot;
+}
 
 void FontRender::Update()
 {
+	//フォントデータを更新
+	UpdateFontData();
 
 }

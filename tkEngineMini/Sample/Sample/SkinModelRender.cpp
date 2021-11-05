@@ -1,8 +1,5 @@
 #include "stdafx.h"
 #include "SkinModelRender.h"
-#include "DirectionLight.h"
-#include "PointLight.h"
-#include "SpotLight.h"
 
 namespace
 {

@@ -7,7 +7,7 @@
 #include "effect/Effect.h"
 #include "SkinModelRender.h"
 #include "SpriteRender.h"
-//#include "GaussianBlur.h"
+#include "FontRender.h"
 #include "Game.h"
 #include "DirectionLight.h"
 #include "PointLight.h"
@@ -17,6 +17,7 @@
 #include "SphericalMove.h"
 #include "Bullet.h"
 #include "GameDirector.h"
+
 
 
 

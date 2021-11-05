@@ -1,7 +1,5 @@
 #pragma once
 
-class Model;
-class AnimationClip;
 class DirectionLight;
 class PointLight;
 class SpotLight;
