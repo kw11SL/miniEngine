@@ -140,9 +140,19 @@ private:
 	Vector3 m_forward = Vector3::Zero;					//前方
 	Vector3 m_right	= Vector3::Zero;					//右
 	Vector3 m_up = Vector3::Zero;						//上
+	Vector3 m_upPrev = Vector3::Zero;					//前フレームの上
+	Vector3 m_cameraUp = Vector3::Zero;					//カメラの上(カメラに反映する上方向)
 	Vector3 m_scale = Vector3::One;						//拡大率
 	Quaternion m_rot = Quaternion::Identity;			//回転
+
+	Quaternion m_rotUpToGroundNormalBegin = Quaternion::Identity;
 	Quaternion m_rotUpToGroundNormal = Quaternion::Identity;					//プレイヤーの上ベクトルを地面の法線に向かせる回転クォータニオン
+	Quaternion m_mulRotUpToGroundNormal = Quaternion::Identity;
+	
+	float m_rotFraction = 1.0f;
+
+	float m_cameraUpFraction = 0.0f;
+
 	float m_angle = 0.0f;								//回転角度
 
 	float m_fireCounter = 0.0f;							//発射間隔カウンタ

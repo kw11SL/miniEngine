@@ -9,14 +9,16 @@ namespace{
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
 	const char* VS_ENTRYPOINT_NAME = "VSMain";
 	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
+	
 	const Vector3 INIT_POINT = {0.0f,700.0f,0.0f};
 
 	const float CHARACON_RADIUS = 50.0f;
 	const float CHARACON_HEIGHT = 120.0f;
-
 	const float PL_MOVE_SPEED = -15.0f;
-
 	const float FIRECOUNTER = 0.20f;
+	
+	const float CAMERA_ROTATE_FRACTION_ADD_RATE = 0.02f;		//カメラの回転に使う補間係数に加算する定数
+	const float CAMERA_MOVESPEED_MAX = 1000.0f;					//カメラ、注視点の追従最高速度 
 }
 
 Player_new::~Player_new()
@@ -38,19 +40,10 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 		SKELETON_PATH_UTC
 	);
 
-	//m_skinModelRender->InitShader(MODEL_SHADER_PATH, VS_ENTRYPOINT_NAME);
-
 	m_position = INIT_POINT;
 
 	m_skinModelRender->SetPosition(m_position);
 	m_skinModelRender->SetScale(m_scale);
-
-	////キャラコンの初期化
-	//m_charaCon.Init(
-	//	CHARACON_RADIUS,
-	//	CHARACON_HEIGHT,
-	//	m_position
-	//);
 
 	//自作キャラコンの初期化
 	m_myCharaCon.Init(
@@ -62,14 +55,6 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 	//下方向ベクトルを正規化
 	m_downVector.Normalize();
 
-	////前方向をz軸
-	//m_forward = g_vec3AxisZ;
-	////右方向をx軸
-	//m_right = g_vec3AxisX;
-	////上方向をy軸
-	//m_up = g_vec3AxisY;
-	
-	//※上記処理まとめ
 	//前方、右、上の各ベクトルを各軸で初期化
 	m_sphericalMove.Init(m_forward, m_right, m_up);
 	
@@ -79,13 +64,19 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 	toCamera.y = 700.0f;
 	toCamera.z = 1000.0f;
 
+	//カメラの初期化
+	m_gameCamera.Init(CAMERA_MOVESPEED_MAX);
 	//注視点を設定
 	m_gameCamera.SetTargetPosition(m_position);
 	//視点を設定
 	m_gameCamera.SetCameraPosition(m_position + toCamera);
+	//注視点目標を設定
+	m_gameCamera.SetTargetPositionTarget(m_position);
+	//カメラ目標を設定
+	m_gameCamera.SetCameraPositionTarget(m_position + toCamera);
 
-	//追いかけられる座標を視点に設定しておく
-	m_gameCamera.SetCameraPositionTarget(m_gameCamera.GetCameraPosition());
+	//カメラの上方向を自身の上にしておく
+	m_cameraUp = m_up;
 
 	//発射方向を前方にしておく
 	//m_shotDirection = m_forward;
@@ -99,7 +90,6 @@ bool Player_new::Start()
 
 void Player_new::Move()
 {
-
 	//テスト：移動
 	//パッドのスティックからx成分とy成分を受け取る
 	float x = g_pad[0]->GetLStickXF();
@@ -119,6 +109,7 @@ void Player_new::Move()
 	//自作キャラコンに移動速度を渡す
 	m_position = m_myCharaCon.Execute(m_moveSpeed,m_downVector);
 
+
 	// 上ベクトルを更新
 	//下向きベクトル(=レイを飛ばす方向)* -1.0　= プレイヤーの上ベクトル
 	Vector3 newUp = m_downVector * -1.0f;
@@ -126,6 +117,12 @@ void Player_new::Move()
 	//		→　カメラの計算で使う。
 	m_rotUpToGroundNormal.SetRotation(m_up, newUp);
 	
+	////開始クォータニオン
+	//m_rotUpToGroundNormalBegin.SetRotation(m_up,m_up);
+	////補間されたクォータニオン
+	//m_mulRotUpToGroundNormal.Slerp(m_rotFraction, m_rotUpToGroundNormalBegin, m_rotUpToGroundNormal);
+
+	//自身の上ベクトルを更新
 	m_up = newUp;
 
 	//更新した上ベクトルと前方ベクトルの外積　=　右ベクトル
@@ -134,7 +131,7 @@ void Player_new::Move()
 	m_forward.Cross(m_right, m_up);
 	
 	
-	//モデルレンダーの座標更新
+	//モデルの座標更新
 	m_skinModelRender->SetPosition(m_position);
 }
 
@@ -200,6 +197,13 @@ void Player_new::FireBullet()
 
 void Player_new::Update()
 {
+	//カメラの上を補完する係数を加算
+	m_cameraUpFraction += CAMERA_ROTATE_FRACTION_ADD_RATE;
+	//1を超えたら1に補正
+	if (m_cameraUpFraction > 1.0f) {
+		m_cameraUpFraction = 1.0f;
+	}
+
 	Move();
 	Rotation();
 	RotateShotDirection();
@@ -209,30 +213,54 @@ void Player_new::Update()
 		m_skinModelRender->SetRotation(m_rot);
 	}
 
-	//テスト：削除処理
-	if (g_pad[0]->IsTrigger(enButtonY))
-	{
-		 DeleteGO(m_skinModelRender);
+	//前フレームの上方向が現フレームの上と変わっていたら補間係数を0にする
+	if (m_upPrev.x != m_up.x
+		|| m_upPrev.y != m_up.y
+		|| m_upPrev.z != m_up.z) {
+		m_cameraUpFraction = 0.0f;
 	}
 
 	//カメラ追従
-	//カメラ注視点から視点へのベクトルを作成
-	Vector3 toCamera = g_camera3D->GetPosition() - g_camera3D->GetTarget();
-	//Vector3 toCamera = m_gameCamera.GetCameraPositionTarget() - m_gameCamera.GetTargetPosition();
+	////カメラ注視点から視点へのベクトルを作成
+	//Vector3 toCamera = m_gameCamera.GetCameraPosition() - m_gameCamera.GetTargetPosition();
+	//注視点目標からカメラ目標へのベクトルを作成
+	Vector3 toCamera = m_gameCamera.GetCameraPositionTarget() - m_gameCamera.GetTargetPositionTarget();
+
+	//ベクトルにクォータニオンを適用
 	m_rotUpToGroundNormal.Apply(toCamera);
+	//m_mulRotUpToGroundNormal.Apply(toCamera);
 
-	//注視点を自身に設定
-	m_gameCamera.SetTargetPosition(m_position);
-	//視点を設定
-	m_gameCamera.SetCameraPosition(m_position + toCamera);
-	// カメラの上方向はプレイヤーの上方向と同じ。
-	m_gameCamera.SetUp(m_up);
+	////注視点を自身に設定
+	//m_gameCamera.SetTargetPosition(m_position);
+	//注視点目標を自身に設定
+	m_gameCamera.SetTargetPositionTarget(m_position);
 
+	////視点を設定
+	//m_gameCamera.SetCameraPosition(m_position + toCamera);
+	//カメラ目標を設定
+	m_gameCamera.SetCameraPositionTarget(m_position + toCamera);
+	
+	////カメラ目標を追いかける処理
+	//m_gameCamera.ChaseCameraPosition();
+	////注視点目標を追いかける処理
+	//m_gameCamera.ChaseTargetPosition();
 
-	//m_gameCamera.Chase();
+	// カメラの上方向目標をプレイヤーの上方向に設定。
+	m_gameCamera.SetUpVectorTarget(m_up);
+
+	//カメラのを少しずつ補間していく
+	m_gameCamera.LerpUpVector(m_cameraUpFraction, m_cameraUp);
+	//カメラの上でカメラの上を更新
+	m_gameCamera.SetUp(m_cameraUp);
+
+	//カメラの更新
+	m_gameCamera.UpdateCamera();
+
 	
 	////それぞれ正規化
 	//toCameraTmp.Normalize();
 	//upVectorTmp.Normalize();
 
+	//現フレームの上を記録
+	m_upPrev = m_up;
 }
