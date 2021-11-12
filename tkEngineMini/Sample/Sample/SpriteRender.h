@@ -7,7 +7,7 @@ class SpriteRender : public IGameObject
 {
 public:
 	SpriteRender() {};
-	~SpriteRender() {};
+	~SpriteRender();
 	bool Start() override;
 	void Update() override;
 	void Render(RenderContext& rc) override;
@@ -30,6 +30,7 @@ public:
 	const Vector4& GetColor() { return m_color; }
 
 private:
+	RenderingEngine* m_renderingEngine = nullptr;
 	Sprite m_sprite;
 	SpriteInitData m_spriteInitData;
 

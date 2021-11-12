@@ -6,6 +6,13 @@ namespace
 	const char* SPRITE_FX_FILEPATH = "Assets/shader/sprite.fx";
 }
 
+SpriteRender::~SpriteRender()
+{
+	//レンダリングエンジンからスプライトを削除
+	m_renderingEngine->DeleteSprite(m_sprite);
+}
+
+
 bool SpriteRender::Start()
 {
 	return true;
@@ -13,6 +20,9 @@ bool SpriteRender::Start()
 
 void SpriteRender::Init(const char* spriteFilePath, const UINT& width, const UINT& height, AlphaBlendMode alphaBrendMode)
 {
+	//レンダリングエンジンを取得
+	m_renderingEngine = RenderingEngine::GetInstance();
+
 	m_spriteInitData.m_ddsFilePath[0] = spriteFilePath;
 	m_spriteInitData.m_vsEntryPointFunc = "VSMain";
 	m_spriteInitData.m_psEntryPoinFunc = "PSMain";
@@ -22,6 +32,9 @@ void SpriteRender::Init(const char* spriteFilePath, const UINT& width, const UIN
 	m_spriteInitData.m_alphaBlendMode = alphaBrendMode;
 
 	m_sprite.Init(m_spriteInitData);
+
+	//レンダリングエンジンにスプライトを登録
+	m_renderingEngine->AddSpriteToSprites(m_sprite);
 }
 
 void SpriteRender::InitShader(const char* fxFilePath, const char* vsEntryPoint, const char* psEntryPoint)

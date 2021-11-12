@@ -17,7 +17,7 @@ namespace{
 	const float PL_MOVE_SPEED = -15.0f;
 	const float FIRECOUNTER = 0.20f;
 	
-	const float CAMERA_ROTATE_FRACTION_ADD_RATE = 0.02f;		//カメラの回転に使う補間係数に加算する定数
+	const float CAMERA_ROTATE_FRACTION_ADD_RATE = 0.008f;		//カメラの回転に使う補間係数に加算する定数
 	const float CAMERA_MOVESPEED_MAX = 1000.0f;					//カメラ、注視点の追従最高速度 
 }
 

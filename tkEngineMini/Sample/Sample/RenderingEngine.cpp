@@ -28,6 +28,9 @@ void RenderingEngine::Execute(RenderContext& rc)
 	//ブルーム処理
 	BloomRendering(rc, m_mainRenderTarget);
 
+	//スプライトを描画
+	SpriteRendering(rc);
+
 	//フォントを描画
 	FontRendering(rc);
 }
@@ -50,10 +53,27 @@ void RenderingEngine::RenderToShadowMap(RenderContext& rc , Camera camera)
 
 }
 
+void RenderingEngine::BloomRendering(RenderContext& rc, RenderTarget& mainRT)
+{
+	//ブルーム処理
+	m_bloom.Render(rc, mainRT);
+}
+
+void RenderingEngine::SpriteRendering(RenderContext& rc)
+{
+	for (auto& sprite : m_sprites) {
+		//スプライトを描画
+		sprite->Draw(rc);
+	}
+
+	//レンダリングターゲットの書き込み終了待ち
+	rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
+}
+
 void RenderingEngine::FontRendering(RenderContext& rc)
 {
 	for (auto& font : m_fontDataVector) {
-		
+
 		//描画開始
 		font->font.Begin(rc);
 
@@ -75,11 +95,6 @@ void RenderingEngine::FontRendering(RenderContext& rc)
 	rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
 }
 
-void RenderingEngine::BloomRendering(RenderContext& rc, RenderTarget& mainRT)
-{
-	//ブルーム処理
-	m_bloom.Render(rc, mainRT);
-}
 
 void RenderingEngine::InitLightCamera()
 {
@@ -127,6 +142,24 @@ void RenderingEngine::DeleteCommonModel(Model& model)
 	//モデルが見つかったら削除
 	if (itr != m_commonModels.end()) {
 		m_commonModels.erase(itr);
+	}
+}
+
+void RenderingEngine::DeleteSprite(Sprite& sprite)
+{
+	//イテレータを作成
+	std::vector<Sprite*>::iterator itr;
+
+	//スプライトを検索
+	itr = std::find(
+		m_sprites.begin(),
+		m_sprites.end(),
+		&sprite
+	);
+
+	//スプライトが見つかったら削除
+	if (itr != m_sprites.end()) {
+		m_sprites.erase(itr);
 	}
 }
 

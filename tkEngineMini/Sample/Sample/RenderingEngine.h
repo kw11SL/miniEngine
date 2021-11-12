@@ -51,6 +51,10 @@ public:
 	/// @param rc レンダリングコンテキスト
 	void BloomRendering(RenderContext& rc, RenderTarget& mainRT);
 
+	/// @brief スプライトを描画
+	/// @param rc 
+	void SpriteRendering(RenderContext& rc);
+
 	/// @brief フォントの描画
 	/// @param rc レンダリングコンテキスト
 	void FontRendering(RenderContext& rc);
@@ -105,7 +109,6 @@ public:
 		m_sprites.push_back(&sprite);
 	}
 
-
 	/// @brief 通常描画モデルの削除処理
 	/// @param model 
 	void DeleteCommonModel(Model& model);
@@ -116,6 +119,10 @@ public:
 	{
 		m_shadowMap.DeleteModel(model);
 	}
+
+	/// @brief スプライトを削除
+	/// @param sprite 
+	void DeleteSprite(Sprite& sprite);
 
 	/// @brief フォントデータの削除処理
 	/// @param fontData 

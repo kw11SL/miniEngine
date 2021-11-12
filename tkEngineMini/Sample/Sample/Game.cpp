@@ -90,8 +90,6 @@ void Game::Init(RenderingEngine& renderingEngine)
 		m_bg->InitModelFromInitData();
 	}
 
-	
-
 	////スプライト表示テスト
 	//m_sprite = NewGO<SpriteRender>(0, "sprite");
 	//m_sprite->Init("Assets/sprite/finish.dds",256,256,AlphaBlendMode_Trans);
