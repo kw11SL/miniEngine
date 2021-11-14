@@ -111,34 +111,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//テスト：レンダリングエンジンの処理
 		RenderingEngine::GetInstance()->Execute(renderContext);
 
-		//Font font;
-
-		//std::wstringstream wss;
-		//
-		//const wchar_t* hoge = L"hogehoge";
-		//float pt = 3.14f;
-
-		//wss.precision(5);
-		//wss << pt;
-
-
-		////std::wstring hogews = std::to_wstring(pt);
-		//std::wstring hogews = wss.str();
-
-		//hoge = hogews.c_str();
-
-		//font.Begin(renderContext);
-
-		//font.Draw(
-		//	hoge,
-		//	{ 0.0f,0.0f },
-		//	{ 0.0f,1.0f,1.0f,0.01f },
-		//	0.0f,
-		//	3.0f,
-		//	{ 0.5f,0.5f }
-		//);
-
-		//font.End(renderContext);
+		//step-6 エフェクトのドロー。
+		EffectEngine::GetInstance()->Draw();
 
 		//メインレンダリングターゲットに描画したものをフレームバッファにコピー
 		//レンダリングターゲットをオンスクリーンに戻す
@@ -148,8 +122,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		);
 		frameBufferSprite.Draw(renderContext);
 
-		//step-6 エフェクトのドロー。
-		EffectEngine::GetInstance()->Draw();
+		
 
 		g_engine->EndFrame();
 	}

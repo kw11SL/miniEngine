@@ -2,26 +2,29 @@
 
 class Player_new;
 
+/// @brief エネミーのタイプ
+enum EnEnemyType
+{
+	enCommon,
+	enPowered,
+	enChaser,
+	enBomb,
+	enShot,
+	enTypeNum
+};
+
 class Enemy : public IGameObject
 {
 private:
-	/// @brief エネミーのタイプ
-	enum EnEnemyType
-	{
-		enCommon,
-		enPowered,
-		enChaser,
-		enBomb,
-		enTypeNum
-	};
+	
 
 public:
-	Enemy(){}
+	Enemy();
 	~Enemy();
 	
 	/// @brief 初期化処理
 	/// @param renderingEngine　レンダリングエンジン 
-	void Init(RenderingEngine& renderingEngine,  const Vector3& initPoint);
+	void Init(RenderingEngine& renderingEngine,  const Vector3& initPoint ,const EnEnemyType& enemyType);
 
 	//ゲッター
 	/// @brief	座標を取得 
@@ -117,7 +120,7 @@ public:
 
 	/// @brief エネミーの種類を取得
 	/// @return 
-	EnEnemyType GetType()
+	EnEnemyType& GetType()
 	{
 		return m_enEnemyType;
 	}
@@ -168,5 +171,13 @@ private:
 	Vector3 m_scale = Vector3::One;						//拡大率
 	Quaternion m_rot = Quaternion::Identity;			//回転
 	float m_angle = 0.0f;								//角度
+
+	DirectionLight* m_directionLight = nullptr;
+	PointLight* m_pointLight = nullptr;
+	SpotLight* m_spotLight = nullptr;
+
+	//テスト　撃破エフェクト
+	Effect m_destroyEffect;
+
 };
 

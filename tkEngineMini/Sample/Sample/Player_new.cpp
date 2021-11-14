@@ -11,13 +11,18 @@ namespace{
 	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
 	
 	const Vector3 INIT_POINT = {0.0f,700.0f,0.0f};
+	const float UPPER_OFFSET = 0.0f;
 
 	const float CHARACON_RADIUS = 50.0f;
 	const float CHARACON_HEIGHT = 120.0f;
-	const float PL_MOVE_SPEED = -15.0f;
+	const float PL_MOVE_SPEED = -12.0f;
 	const float FIRECOUNTER = 0.20f;
 	
-	const float CAMERA_ROTATE_FRACTION_ADD_RATE = 0.008f;		//カメラの回転に使う補間係数に加算する定数
+	const float CAMERA_ROTATE_FRACTION_ADD_RATE = 0.005f;		//カメラの回転に使う補間係数に加算する定数
+	const float CAMERA_ROTATE_FRACTION_ADD_RATE_MIN = 0.003f;		//カメラの回転に使う補間係数に加算する定数
+	const float CAMERA_ROTATE_FRACTION_ADD_RATE_MAX = 0.03f;		//カメラの回転に使う補間係数に加算する定数
+
+
 	const float CAMERA_MOVESPEED_MAX = 1000.0f;					//カメラ、注視点の追従最高速度 
 }
 
@@ -47,8 +52,6 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 
 	//自作キャラコンの初期化
 	m_myCharaCon.Init(
-		CHARACON_RADIUS,
-		CHARACON_HEIGHT,
 		m_position
 	);
 
@@ -102,12 +105,13 @@ void Player_new::Move()
 	forward.Normalize();
 
 	//プレイヤーの左右方向への移動
-	m_moveSpeed = g_camera3D->GetRight() * -x * PL_MOVE_SPEED;
+	//m_moveSpeed = g_camera3D->GetRight() * -x * PL_MOVE_SPEED;
+	m_moveSpeed = m_right * x * PL_MOVE_SPEED;
 	//プレイヤーの前後(奥、手前)方向への移動
 	m_moveSpeed += forward * y * PL_MOVE_SPEED;
 
 	//自作キャラコンに移動速度を渡す
-	m_position = m_myCharaCon.Execute(m_moveSpeed,m_downVector);
+	m_position = m_myCharaCon.Execute(m_moveSpeed,m_downVector,UPPER_OFFSET);
 
 
 	// 上ベクトルを更新
@@ -116,17 +120,13 @@ void Player_new::Move()
 	// 現在の上ベクトルから、新しい上ベクトルに向けるための回転クォータニオンを計算
 	//		→　カメラの計算で使う。
 	m_rotUpToGroundNormal.SetRotation(m_up, newUp);
-	
-	////開始クォータニオン
-	//m_rotUpToGroundNormalBegin.SetRotation(m_up,m_up);
-	////補間されたクォータニオン
-	//m_mulRotUpToGroundNormal.Slerp(m_rotFraction, m_rotUpToGroundNormalBegin, m_rotUpToGroundNormal);
 
 	//自身の上ベクトルを更新
 	m_up = newUp;
 
 	//更新した上ベクトルと前方ベクトルの外積　=　右ベクトル
-	m_right = g_camera3D->GetRight();
+	//m_right = g_camera3D->GetRight();
+	m_right.Cross(m_up,m_forward);
 	//求めた右ベクトルと更新した上ベクトルの外積　=　前方ベクトル
 	m_forward.Cross(m_right, m_up);
 	
@@ -197,8 +197,24 @@ void Player_new::FireBullet()
 
 void Player_new::Update()
 {
+	float addRate = 0.0f;
+	float maxAddRate = CAMERA_ROTATE_FRACTION_ADD_RATE_MAX;
+	float minAddRate = CAMERA_ROTATE_FRACTION_ADD_RATE_MIN;
+
+	Vector3 addRateVec = { 0.0f,0.0f,0.0f, };
+	Vector3 maxAddRateVec = { maxAddRate,0.0f,0.0f };
+	Vector3 minAddRateVec = { minAddRate,0.0f,0.0f };
+
+	float dotVec = Dot(m_cameraUp,m_up);
+	dotVec += 1.0f;
+	dotVec /= 2.0f;
+
+	addRateVec.Lerp(dotVec, maxAddRateVec, minAddRateVec);
+	addRate = addRateVec.Length();
+
 	//カメラの上を補完する係数を加算
-	m_cameraUpFraction += CAMERA_ROTATE_FRACTION_ADD_RATE;
+	//m_cameraUpFraction += CAMERA_ROTATE_FRACTION_ADD_RATE;
+	m_cameraUpFraction += addRate;
 	//1を超えたら1に補正
 	if (m_cameraUpFraction > 1.0f) {
 		m_cameraUpFraction = 1.0f;
@@ -228,7 +244,6 @@ void Player_new::Update()
 
 	//ベクトルにクォータニオンを適用
 	m_rotUpToGroundNormal.Apply(toCamera);
-	//m_mulRotUpToGroundNormal.Apply(toCamera);
 
 	////注視点を自身に設定
 	//m_gameCamera.SetTargetPosition(m_position);
@@ -248,19 +263,13 @@ void Player_new::Update()
 	// カメラの上方向目標をプレイヤーの上方向に設定。
 	m_gameCamera.SetUpVectorTarget(m_up);
 
-	//カメラのを少しずつ補間していく
+	//カメラの上を少しずつ補間していく
 	m_gameCamera.LerpUpVector(m_cameraUpFraction, m_cameraUp);
-	//カメラの上でカメラの上を更新
+	//補間したカメラの上でカメラの上を更新
 	m_gameCamera.SetUp(m_cameraUp);
-
 	//カメラの更新
 	m_gameCamera.UpdateCamera();
-
 	
-	////それぞれ正規化
-	//toCameraTmp.Normalize();
-	//upVectorTmp.Normalize();
-
 	//現フレームの上を記録
 	m_upPrev = m_up;
 }

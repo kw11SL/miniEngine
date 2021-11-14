@@ -261,6 +261,8 @@ Vector3& GameCamera::CalcSpringVector(
 	Vector3 afterDir = targetPos - newPos;
 	afterDir.Normalize();
 
+	float moveSpeedLength = moveSpeed.Length();
+
 	//Å‚‘¬“x‚ð’´‚¦‚½ê‡
 	if (moveSpeed.LengthSq() > maxMoveSpeed * maxMoveSpeed) {
 		//ˆÚ“®‘¬“x‚ðÅ‚‘¬“x‚É‚·‚é

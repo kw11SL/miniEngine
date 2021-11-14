@@ -7,7 +7,7 @@ namespace {
 
 	const wchar_t* SCORE_TEXT = L"SCORE : ";
 
-	const int DIGITS = 4;
+	const int DIGITS = 16;
 }
 
 Score::~Score()

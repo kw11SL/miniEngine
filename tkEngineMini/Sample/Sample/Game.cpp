@@ -7,6 +7,7 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "UI.h"
+#include "EnemyGenerator.h"
 
 Game::~Game()
 {
@@ -17,6 +18,7 @@ Game::~Game()
 	DeleteGO(m_pointLight);
 	DeleteGO(m_spotLight);
 	DeleteGO(m_ui);
+	DeleteGO(m_enemyGenerator);
 
 	//テスト
 	DeleteGO(m_sprite);
@@ -50,9 +52,13 @@ void Game::Init(RenderingEngine& renderingEngine)
 	m_player = NewGO<Player_new>(0, "player");
 	m_player->Init(renderingEngine);
 
-	//エネミーの初期化
-	m_enemy = NewGO<Enemy>(0, "enemy");
-	m_enemy->Init(renderingEngine, { 0.0f,700.0f,-300.0f });
+	////エネミーの初期化
+	//m_enemy = NewGO<Enemy>(0, "enemy");
+	//m_enemy->Init(renderingEngine, { 0.0f,700.0f,-300.0f },enCommon);
+	
+	//エネミー生成器の初期化
+	m_enemyGenerator = NewGO<EnemyGenerator>(0, "enemygenerator");
+	m_enemyGenerator->Init({ 0.0f,700.0f,-300.0f }, Quaternion::Identity, enBomb);
 
 	//背景の初期化
 	m_bg = NewGO<BG>(0, "bg");
@@ -61,6 +67,7 @@ void Game::Init(RenderingEngine& renderingEngine)
 	//UIの初期化
 	m_ui = NewGO<UI>(0, "ui");
 	m_ui->Init();
+
 
 
 	//プレイヤーにライトを渡す処理
@@ -72,14 +79,14 @@ void Game::Init(RenderingEngine& renderingEngine)
 		m_player->InitModelFromInitData();
 	}
 
-	//エネミーにライトを渡す処理
-	if (m_enemy->GetSkinModelRender() != nullptr) {
-		m_enemy->RecieveDirectionLight(m_directionLight);
-		m_enemy->RecievePointLight(m_pointLight);
-		m_enemy->RecieveSpotLight(m_spotLight);
+	////エネミーにライトを渡す処理
+	//if (m_enemy->GetSkinModelRender() != nullptr) {
+	//	m_enemy->RecieveDirectionLight(m_directionLight);
+	//	m_enemy->RecievePointLight(m_pointLight);
+	//	m_enemy->RecieveSpotLight(m_spotLight);
 
-		m_enemy->InitModelFromInitData();
-	}
+	//	m_enemy->InitModelFromInitData();
+	//}
 
 	//背景にライトを渡す処理
 	if (m_bg->GetSkinModelRender() != nullptr) {

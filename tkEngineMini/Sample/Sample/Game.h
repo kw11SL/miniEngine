@@ -8,6 +8,7 @@ class DirectionLight;
 class PointLight;
 class SpotLight;
 class UI;
+class EnemyGenerator;
 
 class Game : public IGameObject
 {
@@ -37,6 +38,7 @@ private:
 	SpotLight* m_spotLight = nullptr;				//スポットライト
 	
 	UI* m_ui = nullptr;								//UI
+	EnemyGenerator* m_enemyGenerator = nullptr;		//エネミー生成器
 
 	
 

@@ -27,6 +27,14 @@ public:
 	/// この関数を呼び出すとエフェクトの再生が開始されます。
 	/// </remark>
 	void Play();
+
+	/// @brief エフェクトを再生
+	/// @param isStop エフェクトを停止して再生するかどうか
+	void Play(bool isStop);
+
+	/// @brief エフェクトの再生を停止
+	void Stop();
+
 	/*!
 	*@brief	座標を設定。
 	*/
@@ -79,6 +87,7 @@ public:
 	{
 		return EffectEngine::GetInstance()->IsPlay(m_handle);
 	}
+
 	/*!
 	 *@brief	更新。
 	 */

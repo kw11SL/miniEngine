@@ -56,23 +56,23 @@ namespace {
 }
 
 
-void MyCharacterController::Init(float radius, float height, Vector3& pos)
+void MyCharacterController::Init(Vector3& pos)
 {
 	//座標をm_positionに設定する
 	//座標はモデルの原点
 	SetPosition(pos);
 
 	////////////////////////////////////////////////////////////////////////////////////////
-	//カプセルコライダーの初期化
-	m_radius = radius;
-	m_height = height;
+	////カプセルコライダーの初期化
+	//m_radius = radius;
+	//m_height = height;
 
 	//初期化終了
 	m_isInit = true;
 }
 
 
-const Vector3& MyCharacterController::Execute(Vector3& moveSpeed,Vector3& downVector)
+const Vector3& MyCharacterController::Execute(Vector3& moveSpeed,Vector3& downVector,float upperOffset)
 {
 	// 次の移動先となる座標を計算する。
 	Vector3 nextPos = m_position + moveSpeed;
@@ -114,10 +114,13 @@ const Vector3& MyCharacterController::Execute(Vector3& moveSpeed,Vector3& downVe
 		//下方向ベクトルの更新
 		//下方向を引っ張ってきた法線と逆方向にする
 		downVector = callBack.hitNormal * -1.0f;
+
 	}
 
 	//移動先の座標が確定したのでm_positionに代入
 	m_position = nextPos;
+
+	m_position = nextPos + downVector * upperOffset * -1.0f;
 
 	//処理後の座標を返す
 	return m_position;

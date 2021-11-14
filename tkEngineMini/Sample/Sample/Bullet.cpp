@@ -6,6 +6,8 @@ namespace{
 	const char* MODELPATH_PLAYER_NORMAL = "Assets/modelData/bullet/bullet.tkm";
 	const char* MODELPATH_ENEMY_NORMAL = "Assets/modelData/bullet/bullet.tkm";
 
+	const float UPPER_OFFSET = 5.0f;
+
 	//弾の耐久値
 	const float LIFE_PLAYER_NORMAL = 1.0f;
 	const float LIFE_ENEMY_NORMAL = 1.0f;
@@ -40,6 +42,7 @@ namespace{
 Bullet::~Bullet()
 {
 	DeleteGO(m_skinModelRender);
+	m_normalShotEffect.Stop();
 }
 
 bool Bullet::Start()
@@ -49,7 +52,7 @@ bool Bullet::Start()
 
 void Bullet::Init(RenderingEngine& renderingEngine, const Vector3& initPoint,const Vector3& direction)
 {
-	m_skinModelRender = NewGO<SkinModelRender>(0);
+	//m_skinModelRender = NewGO<SkinModelRender>(0);
 
 	const char* modelPath = "hoge";
 
@@ -73,36 +76,34 @@ void Bullet::Init(RenderingEngine& renderingEngine, const Vector3& initPoint,con
 		break;
 	}
 
-	m_skinModelRender->Init(
+	/*m_skinModelRender->Init(
 		modelPath,
 		enModelUpAxisZ,
 		renderingEngine,
 		true,
 		false
-	);
+	);*/
 
 	//初期位置を決定
 	m_position = initPoint;
 
-	m_skinModelRender->SetPosition(m_position);
-	m_skinModelRender->SetScale(m_scale * 3.0f);
+	//m_skinModelRender->SetPosition(m_position);
+	//m_skinModelRender->SetScale(m_scale * 3.0f);
 
-	//ライトを検索して受け取り
-	m_directionLight = FindGO<DirectionLight>("directionlight");
-	m_pointLight = FindGO<PointLight>("pointlight");
-	m_spotLight = FindGO<SpotLight>("spotlight");
-	
-	RecieveDirectionLight(m_directionLight);
-	RecievePointLight(m_pointLight);
-	RecieveSpotLight(m_spotLight);
+	////ライトを検索して受け取り
+	//m_directionLight = FindGO<DirectionLight>("directionlight");
+	//m_pointLight = FindGO<PointLight>("pointlight");
+	//m_spotLight = FindGO<SpotLight>("spotlight");
+	//
+	//RecieveDirectionLight(m_directionLight);
+	//RecievePointLight(m_pointLight);
+	//RecieveSpotLight(m_spotLight);
 
-	//モデルを更新
-	InitModelFromInitData();
+	////モデルを更新
+	//InitModelFromInitData();
 
 	//自作キャラコンの初期化
 	m_myCharaCon.Init(
-		CHARACON_RADIUS,
-		CHARACON_HEIGHT,
 		m_position
 	);
 
@@ -115,6 +116,8 @@ void Bullet::Init(RenderingEngine& renderingEngine, const Vector3& initPoint,con
 	//進行方向を指定
 	m_direction = direction;
 	m_direction.Normalize();
+
+	m_normalShotEffect.Init(u"Assets/effect/shot_pl1.efk");
 }
 
 void Bullet::Move()
@@ -133,7 +136,7 @@ void Bullet::Move()
 	m_moveSpeed = m_forward * m_speed;
 
 	//キャラコンによる座標更新
-	m_position = m_myCharaCon.Execute(m_moveSpeed, m_downVector);
+	m_position = m_myCharaCon.Execute(m_moveSpeed, m_downVector,UPPER_OFFSET);
 	
 	//更新前の前方ベクトルを記録
 	m_oldForward = m_forward;
@@ -141,8 +144,8 @@ void Bullet::Move()
 	//上方向を球面の法線で更新し、右と前方を更新
 	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
 
-	//モデルの座標を更新
-	m_skinModelRender->SetPosition(m_position);
+	////モデルの座標を更新
+	//m_skinModelRender->SetPosition(m_position);
 }
 
 void Bullet::Rotation()
@@ -156,8 +159,8 @@ void Bullet::Rotation()
 	Quaternion mulRot;
 	//クォータニオンを乗算
 	mulRot.Multiply(m_rot, rot);
-	//乗算したクォータニオンでモデルを回転
-	m_skinModelRender->SetRotation(mulRot);
+	////乗算したクォータニオンでモデルを回転
+	//m_skinModelRender->SetRotation(mulRot);
 
 
 	m_sphericalMove.Rotation(m_forward, m_right, m_up, m_rot);
@@ -178,6 +181,16 @@ void Bullet::Update()
 	Rotation();
 	DecLifeTime();
 
-	m_skinModelRender->SetRotation(m_rot);
+	//m_skinModelRender->SetRotation(m_rot);
+
+	m_normalShotEffect.SetPosition(m_position);
+	m_normalShotEffect.SetRotation(m_rot);
+	m_normalShotEffect.SetScale({ 15.0f,15.0f,15.0f });
+
+	if (m_normalShotEffect.IsPlay() != true) {
+		m_normalShotEffect.Play(false);
+	}
+
+	m_normalShotEffect.Update();
 
 }

@@ -7,24 +7,30 @@ namespace {
 	const char* MODELPATH_COMMON = "Assets/modelData/enemy/enemy_common.tkm";
 	const char* MODELPATH_POWERED = "Assets/modelData/enemy/enemy_common.tkm";
 	const char* MODELPATH_CHASER = "Assets/modelData/enemy/enemy_common.tkm";
-	const char* MODELPATH_BOMB = "Assets/modelData/enemy/enemy_common.tkm";
+	const char* MODELPATH_SHOT = "Assets/modelData/enemy/enemy_shot.tkm";
+	const char* MODELPATH_BOMB = "Assets/modelData/enemy/enemy_bomb.tkm";
+
+	const float UPPER_OFFSET = 10.0f;
 	
 	//エネミーのタイプ毎の移動速度
 	const float MOVE_SPEED_COMMON = 3.0f;
 	const float MOVE_SPEED_POWERED = 5.0f;
 	const float MOVE_SPEED_CHASER = 10.0f;
+	const float MOVE_SPEED_SHOT = 2.0f;
 	const float MOVE_SPEED_BOMB = 2.0f;
 
 	//エネミーのタイプ毎の耐久値
 	const float LIFE_COMMON = 1.0f;
 	const float LIFE_POWERED = 1.0f;
 	const float LIFE_CHASER = 1.0f;
+	const float LIFE_SHOT = 1.0f;
 	const float LIFE_BOMB = 1.0f;
 
 	//エネミーのタイプ別スコア
 	const float SCORE_COMMON = 100;
 	const float SCORE_POWERED = 500;
 	const float SCORE_CHASER = 300;
+	const float SCORE_SHOT = 300;
 	const float SCORE_BOMB = 200;
 
 	//シェーダーのファイルパス
@@ -41,8 +47,14 @@ namespace {
 
 }
 
+Enemy::Enemy()
+{
+	GameDirector::GetInstance()->AddEnemyCount();
+}
+
 Enemy::~Enemy()
 {
+	GameDirector::GetInstance()->DecEnemyCount();
 	DeleteGO(m_skinModelRender);
 }
 
@@ -51,12 +63,14 @@ bool Enemy::Start()
 	return true;
 }
 
-void Enemy::Init(RenderingEngine& renderingEngine,const Vector3& initPoint)
+void Enemy::Init(RenderingEngine& renderingEngine,const Vector3& initPoint,const EnEnemyType& enemyType)
 {
 	m_skinModelRender = NewGO<SkinModelRender>(0);
 
 	const char* modelPath = "hoge";
 	
+	m_enEnemyType = enemyType;
+
 	switch (m_enEnemyType) {
 	case enCommon:
 		modelPath = MODELPATH_COMMON;
@@ -76,6 +90,12 @@ void Enemy::Init(RenderingEngine& renderingEngine,const Vector3& initPoint)
 		m_speed = MOVE_SPEED_CHASER;
 		m_score = SCORE_CHASER;
 		break;
+	case enShot:
+		modelPath = MODELPATH_SHOT;
+		m_life = LIFE_SHOT;
+		m_speed = MOVE_SPEED_SHOT;
+		m_score = SCORE_SHOT;
+		break;
 	case enBomb:
 		modelPath = MODELPATH_BOMB;
 		m_life = LIFE_BOMB;
@@ -93,21 +113,34 @@ void Enemy::Init(RenderingEngine& renderingEngine,const Vector3& initPoint)
 	m_skinModelRender->SetPosition(m_position);
 	m_skinModelRender->SetScale(m_scale);
 
+	//各種ライトの受け取り
+	//ライトを検索して受け取り
+	m_directionLight = FindGO<DirectionLight>("directionlight");
+	m_pointLight = FindGO<PointLight>("pointlight");
+	m_spotLight = FindGO<SpotLight>("spotlight");
+	
+	RecieveDirectionLight(m_directionLight);
+	RecievePointLight(m_pointLight);
+	RecieveSpotLight(m_spotLight);
+
+	//モデルを更新
+	InitModelFromInitData();
+
 	//自作キャラコンの初期化
 	m_myCharaCon.Init(
-		CHARACON_RADIUS,
-		CHARACON_HEIGHT,
 		m_position
 	);
 
 	//下方向ベクトルを正規化
-	m_downVector.Normalize();
-
+	//m_downVector.Normalize();
 	//前方、右、上の各ベクトルを各軸で初期化
 	m_sphericalMove.Init(m_forward, m_right, m_up);
-
 	//生存フラグをオン
 	m_exist = true;
+
+	//エフェクトの初期化
+	m_destroyEffect.Init(u"Assets/effect/destroy.efk");
+
 
 }
 
@@ -154,7 +187,7 @@ void Enemy::Move()
 	m_moveSpeed += m_forward * m_speed;*/
 
 	//キャラコンによる座標更新
-	m_position = m_myCharaCon.Execute(m_moveSpeed, m_downVector);
+	m_position = m_myCharaCon.Execute(m_moveSpeed, m_downVector,UPPER_OFFSET);
 	//上方向を球面の法線で更新し、右と前方を更新
 	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
 
@@ -205,6 +238,11 @@ void Enemy::Destroy()
 	}
 
 	if (m_exist == false) {
+		m_destroyEffect.SetPosition(m_position);
+		m_destroyEffect.SetRotation(m_rot);
+		m_destroyEffect.SetScale({ 20.0f,20.0f,20.0f });
+		m_destroyEffect.Play(false);
+		
 		DeleteGO(this);
 	}
 }
@@ -215,6 +253,8 @@ void Enemy::Update()
 	Rotation();
 	Hit();
 	Destroy();
+
+	m_destroyEffect.Update();
 
 	m_skinModelRender->SetRotation(m_rot);
 

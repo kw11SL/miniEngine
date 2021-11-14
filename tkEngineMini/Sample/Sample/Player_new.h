@@ -131,7 +131,6 @@ private:
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
 	SphericalMove m_sphericalMove;						//球面移動用クラス
 	GameCamera m_gameCamera;							//ゲームカメラ
-	//Vector3 m_cameraPoint = Vector3::Zero;				//カメラが追いかけるポイント
 	Bullet* m_bullet = nullptr;							//弾クラス
 
 	Vector3 m_position = Vector3::Zero;					//座標
@@ -144,15 +143,11 @@ private:
 	Vector3 m_cameraUp = Vector3::Zero;					//カメラの上(カメラに反映する上方向)
 	Vector3 m_scale = Vector3::One;						//拡大率
 	Quaternion m_rot = Quaternion::Identity;			//回転
-
-	Quaternion m_rotUpToGroundNormalBegin = Quaternion::Identity;
-	Quaternion m_rotUpToGroundNormal = Quaternion::Identity;					//プレイヤーの上ベクトルを地面の法線に向かせる回転クォータニオン
-	Quaternion m_mulRotUpToGroundNormal = Quaternion::Identity;
+	Quaternion m_rotUpToGroundNormal = Quaternion::Identity;
 	
 	float m_rotFraction = 1.0f;
 
-	float m_cameraUpFraction = 0.0f;
-
+	float m_cameraUpFraction = 0.0f;					//カメラ上方向を回転させる補間率
 	float m_angle = 0.0f;								//回転角度
 
 	float m_fireCounter = 0.0f;							//発射間隔カウンタ

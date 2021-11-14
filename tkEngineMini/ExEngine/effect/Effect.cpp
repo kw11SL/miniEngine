@@ -28,6 +28,24 @@ void Effect::Play()
 	//新しく再生。
 	m_handle = EffectEngine::GetInstance()->Play(m_effect);
 }
+
+void Effect::Play(bool isPlay)
+{
+
+	if (isPlay) {
+		//再生中のエフェクトを停止する。
+		EffectEngine::GetInstance()->Stop(m_handle);
+	}
+	
+	//再生。
+	m_handle = EffectEngine::GetInstance()->Play(m_effect);
+}
+
+void Effect::Stop()
+{
+	EffectEngine::GetInstance()->Stop(m_handle);
+}
+
 void Effect::Update()
 {
 	EffectEngine::GetInstance()->UpdateEffectWorldMatrix(
