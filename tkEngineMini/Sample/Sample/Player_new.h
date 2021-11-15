@@ -1,5 +1,11 @@
 #pragma once
 
+enum EnUseWeapon {
+	enNormalShot,
+	enSpreadBomb,
+	enUseWeaponNum
+};
+
 class Player_new : public IGameObject
 {
 public:
@@ -125,6 +131,8 @@ private:
 	/// @brief 弾を発射
 	void FireBullet();
 
+	void ChangeWeapon();
+
 private:
 
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
@@ -152,6 +160,8 @@ private:
 
 	float m_fireCounter = 0.0f;							//発射間隔カウンタ
 	Vector3 m_shotDirection = Vector3::Zero;			//ショットを撃つ方向
-
+	
+	EnUseWeapon m_enUseWeapon = enNormalShot;				//現在使用しているショット
+	EnBulletType m_enBulletType = enPlayerNormal;			//弾に渡す弾のタイプ情報
 };
 

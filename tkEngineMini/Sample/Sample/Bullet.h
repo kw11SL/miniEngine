@@ -1,15 +1,16 @@
 #pragma once
+
+/// @brief 弾の種類
+enum EnBulletType
+{
+	enPlayerNormal,
+	enPlayerSpreadBomb,
+	enEnemyNormal,
+	enBulletTypeNum
+};
+
 class Bullet : public IGameObject
 {
-private:
-	/// @brief 弾の種類
-	enum EnBulletType
-	{
-		enPlayerNormal,
-		enEnemyNormal,
-		enTypeNum
-	};
-
 public:
 	Bullet() {}
 	~Bullet();
@@ -18,7 +19,7 @@ public:
 	/// @param renderingEngine 
 	/// @param initPoint 
 	/// @param direction 
-	void Init(RenderingEngine& renderingEngine, const Vector3& initPoint,const Vector3& direction);
+	void Init(RenderingEngine& renderingEngine, const Vector3& initPoint,const Vector3& direction,const EnBulletType& bulletType);
 
 	//ゲッター
 	/// @brief	座標を取得 
@@ -154,6 +155,13 @@ private:
 	/// @brief 生存時間を減少し、0以下で破棄
 	void DecLifeTime();
 
+	/// @brief 削除処理
+	void Destroy();
+
+	/// @brief エフェクトの初期化
+	/// @param bulletType 弾のタイプ
+	void InitEffect(const EnBulletType& bulletType);
+
 private:
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
@@ -166,7 +174,7 @@ private:
 	float m_speed = 0.0f;							//移動速度
 	float m_lifeTime = 0.0f;						//時間寿命
 	float m_power = 0.0f;							//弾が与えるダメージ
-	bool m_isExist = false;							//存在フラグ
+	bool m_isExist = true;							//存在フラグ
 
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル
@@ -186,8 +194,8 @@ private:
 	Vector3 m_direction = Vector3::Zero;				//最初の発射方向
 	bool m_isDecideDirection = false;					//発射方向を前方ベクトルにしたかどうか
 
-	//テスト　通常ショットエフェクト
-	Effect m_normalShotEffect;
-
+	//テスト　ショットエフェクト
+	Effect m_shotEffect;
+	Effect m_spreadBurstEffect;
 };
 

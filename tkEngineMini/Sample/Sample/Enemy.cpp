@@ -10,7 +10,7 @@ namespace {
 	const char* MODELPATH_SHOT = "Assets/modelData/enemy/enemy_shot.tkm";
 	const char* MODELPATH_BOMB = "Assets/modelData/enemy/enemy_bomb.tkm";
 
-	const float UPPER_OFFSET = 10.0f;
+	const float UPPER_OFFSET = 0.0f;
 	
 	//エネミーのタイプ毎の移動速度
 	const float MOVE_SPEED_COMMON = 3.0f;
@@ -236,7 +236,7 @@ void Enemy::Destroy()
 		//生存フラグをオフ
 		m_exist = false;
 	}
-
+	//生存フラグがオフならエフェクトを出して削除処理
 	if (m_exist == false) {
 		m_destroyEffect.SetPosition(m_position);
 		m_destroyEffect.SetRotation(m_rot);

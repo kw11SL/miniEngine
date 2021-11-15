@@ -10,7 +10,7 @@ enum EnEnemyType
 	enChaser,
 	enBomb,
 	enShot,
-	enTypeNum
+	enEnemyTypeNum
 };
 
 class Enemy : public IGameObject
@@ -132,6 +132,12 @@ public:
 		return m_score;
 	}
 
+	//無敵時間を設定
+	void SetInvincibleTime(const float invTime)
+	{
+		m_invTime = invTime;
+	}
+
 private:
 	bool Start() override;
 
@@ -175,6 +181,8 @@ private:
 	DirectionLight* m_directionLight = nullptr;
 	PointLight* m_pointLight = nullptr;
 	SpotLight* m_spotLight = nullptr;
+
+	float m_invTime = 0.0f;								//無敵時間
 
 	//テスト　撃破エフェクト
 	Effect m_destroyEffect;

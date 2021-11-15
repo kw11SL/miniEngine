@@ -16,7 +16,7 @@ namespace{
 	const float CHARACON_RADIUS = 50.0f;
 	const float CHARACON_HEIGHT = 120.0f;
 	const float PL_MOVE_SPEED = -12.0f;
-	const float FIRECOUNTER = 0.20f;
+	const float FIRECOUNTER = 0.15f;
 	
 	const float CAMERA_ROTATE_FRACTION_ADD_RATE = 0.005f;		//ƒJƒƒ‰‚Ì‰ñ“]‚ÉŽg‚¤•âŠÔŒW”‚É‰ÁŽZ‚·‚é’è”
 	const float CAMERA_ROTATE_FRACTION_ADD_RATE_MIN = 0.003f;		//ƒJƒƒ‰‚Ì‰ñ“]‚ÉŽg‚¤•âŠÔŒW”‚É‰ÁŽZ‚·‚é’è”
@@ -177,7 +177,8 @@ void Player_new::FireBullet()
 			m_bullet->Init(
 				*RenderingEngine::GetInstance(),
 				m_position,
-				m_shotDirection
+				m_shotDirection,
+				m_enBulletType
 			);
 
 			//”­ŽËŒãAƒJƒEƒ“ƒ^[‚ð0‚ÉƒŠƒZƒbƒg
@@ -193,6 +194,24 @@ void Player_new::FireBullet()
 		m_fireCounter = 0.0f;
 	}
 
+}
+
+void Player_new::ChangeWeapon()
+{
+	if (g_pad[0]->IsTrigger(enButtonLB1)) {
+		switch (m_enUseWeapon)
+		{
+		case enNormalShot:
+			m_enUseWeapon = enSpreadBomb;
+			m_enBulletType = enPlayerSpreadBomb;
+			break;
+		case enSpreadBomb:
+			m_enUseWeapon = enNormalShot;
+			m_enBulletType = enPlayerNormal;
+		default:
+			break;
+		}
+	}
 }
 
 void Player_new::Update()
@@ -223,6 +242,7 @@ void Player_new::Update()
 	Move();
 	Rotation();
 	RotateShotDirection();
+	ChangeWeapon();
 	FireBullet();
 	
 	if (m_skinModelRender != nullptr) {

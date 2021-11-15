@@ -308,7 +308,9 @@
     <ClCompile Include="Hello2D.cpp" />
     <ClCompile Include="HelloFont.cpp" />
     <ClCompile Include="HelloLevel2D.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MapChip.cpp" />
     <ClCompile Include="MyCharacterController.cpp" />
     <ClCompile Include="PhysicsBall.cpp" />
     <ClCompile Include="Player_new.cpp" />
@@ -330,6 +332,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="TklFile.cpp" />
     <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -414,6 +417,8 @@
     <ClInclude Include="Hello2D.h" />
     <ClInclude Include="HelloFont.h" />
     <ClInclude Include="HelloLevel2D.h" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="MapChip.h" />
     <ClInclude Include="MyCharacterController.h" />
     <ClInclude Include="PhysicsBall.h" />
     <ClInclude Include="Player_new.h" />
@@ -428,6 +433,7 @@
     <ClInclude Include="SpriteRender.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
+    <ClInclude Include="TklFile.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

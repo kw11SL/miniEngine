@@ -4,25 +4,47 @@
 namespace{
 	//モデル毎のファイルパス
 	const char* MODELPATH_PLAYER_NORMAL = "Assets/modelData/bullet/bullet.tkm";
-	const char* MODELPATH_ENEMY_NORMAL = "Assets/modelData/bullet/bullet.tkm";
+	const char* MODELPATH_PLAYER_SPREAD_BOMB = "Assets/modelData/bullet/bullet.tkm";
 
-	const float UPPER_OFFSET = 5.0f;
+	const char* MODELPATH_ENEMY_NORMAL = "Assets/modelData/bullet/bullet.tkm";
+	
+	//地形からどれくらい浮かせるか
+	const float UPPER_OFFSET = 0.0f;
 
 	//弾の耐久値
 	const float LIFE_PLAYER_NORMAL = 1.0f;
+	const float LIFE_PLAYER_SPREAD_BOMB = 1.0f;
+	
 	const float LIFE_ENEMY_NORMAL = 1.0f;
 	
 	//弾ごとの弾速
-	const float MOVE_SPEED_PLAYER_NORMAL = 20.0f;
+	const float MOVE_SPEED_PLAYER_NORMAL = 25.0f;
+	const float MOVE_SPEED_PLAYER_SPREAD_BOMB = 10.0f;
+	
 	const float MOVE_SPEED_ENEMY_NORMAL = 3.0f;
+
+	//スプレッドボムの速度減衰
+	const float SPREAD_BOMB_DEC_RATE = 0.15f;
 
 	//弾の残存時間
 	const float LIFETIME_PLAYER_NORMAL = 1.0f;
+	const float LIFETIME_PLAYER_SPREAD_BOMB = 1.5f;
+	
 	const float LIFETIME_ENEMY_NORMAL = 6.0f;
 
 	//弾の威力
 	const float POWER_PLAYER_NORMAL = 5.0f;
+	const float POWER_PLAYER_SPREAD_BOMB = 1.0f;
+	
 	const float POWER_ENEMY_NORMAL = 1.0f;
+
+	//エフェクトのファイルパス
+	const char16_t* EFFECT_FILEPATH_PLAYER_NORMAL = u"Assets/effect/shot_pl1.efk";
+	const char16_t* EFFECT_FILEPATH_PLAYER_SPREAD_BOMB = u"Assets/effect/shot_pl_spread.efk";
+	const char16_t* EFFECT_FILEPATH_PLAYER_SPREAD_BOMB_BURST = u"Assets/effect/shot_spread_burst.efk";
+
+	
+	const char16_t* EFFECT_FILEPATH_ENEMY_NORMAL = u"Assets/effect/shot_pl1.efk";
 
 	//シェーダーのファイルパス
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
@@ -32,7 +54,7 @@ namespace{
 	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
 	
 	//初期座標
-	const Vector3 INIT_POINT = { 0.0f,700.0f,0.0f };
+	const Vector3 INIT_POINT = { 0.0f,0.0f,0.0f };
 
 	const float CHARACON_RADIUS = 50.0f;
 	const float CHARACON_HEIGHT = 120.0f;
@@ -41,8 +63,16 @@ namespace{
 
 Bullet::~Bullet()
 {
+	m_shotEffect.Stop();
+	
+	/*if (m_enBulletType == enPlayerSpreadBomb) {
+		m_spreadBurstEffect.SetPosition(m_position);
+		m_spreadBurstEffect.SetRotation(m_rot);
+		m_spreadBurstEffect.SetScale({ 10.0f,10.0f,10.0f });
+		m_spreadBurstEffect.Play(false);
+	}*/
+
 	DeleteGO(m_skinModelRender);
-	m_normalShotEffect.Stop();
 }
 
 bool Bullet::Start()
@@ -50,11 +80,14 @@ bool Bullet::Start()
 	return true;
 }
 
-void Bullet::Init(RenderingEngine& renderingEngine, const Vector3& initPoint,const Vector3& direction)
+void Bullet::Init(RenderingEngine& renderingEngine, const Vector3& initPoint,const Vector3& direction, const EnBulletType& bulletType)
 {
 	//m_skinModelRender = NewGO<SkinModelRender>(0);
 
 	const char* modelPath = "hoge";
+	
+	//弾のタイプを設定
+	m_enBulletType = bulletType;
 
 	switch (m_enBulletType) {
 	case enPlayerNormal:
@@ -64,6 +97,15 @@ void Bullet::Init(RenderingEngine& renderingEngine, const Vector3& initPoint,con
 		m_power = POWER_PLAYER_NORMAL;
 		m_speed = MOVE_SPEED_PLAYER_NORMAL;
 		break;
+
+	case enPlayerSpreadBomb:
+		modelPath = MODELPATH_PLAYER_SPREAD_BOMB;
+		m_life = LIFE_PLAYER_SPREAD_BOMB;
+		m_lifeTime = LIFETIME_PLAYER_SPREAD_BOMB;
+		m_power = POWER_PLAYER_SPREAD_BOMB;
+		m_speed = MOVE_SPEED_PLAYER_SPREAD_BOMB;
+		break;
+
 	case enEnemyNormal:
 		modelPath = MODELPATH_ENEMY_NORMAL;
 		m_life = LIFETIME_ENEMY_NORMAL;
@@ -117,7 +159,8 @@ void Bullet::Init(RenderingEngine& renderingEngine, const Vector3& initPoint,con
 	m_direction = direction;
 	m_direction.Normalize();
 
-	m_normalShotEffect.Init(u"Assets/effect/shot_pl1.efk");
+	//エフェクトの初期化
+	InitEffect(bulletType);
 }
 
 void Bullet::Move()
@@ -146,6 +189,15 @@ void Bullet::Move()
 
 	////モデルの座標を更新
 	//m_skinModelRender->SetPosition(m_position);
+
+	//スプレッドボムの速度減衰処理
+	if (m_enBulletType = enPlayerSpreadBomb) {
+		m_speed -= SPREAD_BOMB_DEC_RATE;
+	}
+	if (m_speed < 0.0f) {
+		m_speed = 0.0f;
+	}
+
 }
 
 void Bullet::Rotation()
@@ -171,7 +223,46 @@ void Bullet::DecLifeTime()
 	m_life -= g_gameTime->GetFrameDeltaTime();
 	
 	if (m_life < 0.0f) {
+		m_isExist = false;
+		//DeleteGO(this);
+	}
+	if (m_speed < 0.0f) {
+		m_isExist = false;
+		//DeleteGO(this);
+	}
+}
+
+void Bullet::Destroy()
+{
+	if (m_isExist == false) {
+		
+		if (m_enBulletType == enPlayerSpreadBomb) {
+			m_spreadBurstEffect.SetPosition(m_position);
+			m_spreadBurstEffect.SetRotation(m_rot);
+			m_spreadBurstEffect.SetScale({ 10.0f,10.0f,10.0f });
+			m_spreadBurstEffect.Play(false);
+		}
+
 		DeleteGO(this);
+	}
+}
+
+void Bullet::InitEffect(const EnBulletType& bulletType)
+{
+	switch(bulletType)
+	{
+	case enPlayerNormal:
+		m_shotEffect.Init(EFFECT_FILEPATH_PLAYER_NORMAL);
+		break;
+	case enPlayerSpreadBomb:
+		m_shotEffect.Init(EFFECT_FILEPATH_PLAYER_SPREAD_BOMB);
+		m_spreadBurstEffect.Init(EFFECT_FILEPATH_PLAYER_SPREAD_BOMB_BURST);
+		break;
+	case enEnemyNormal:
+		m_shotEffect.Init(EFFECT_FILEPATH_ENEMY_NORMAL);
+		break;
+	default:
+		break;
 	}
 }
 
@@ -180,17 +271,20 @@ void Bullet::Update()
 	Move();
 	Rotation();
 	DecLifeTime();
+	Destroy();
 
 	//m_skinModelRender->SetRotation(m_rot);
 
-	m_normalShotEffect.SetPosition(m_position);
-	m_normalShotEffect.SetRotation(m_rot);
-	m_normalShotEffect.SetScale({ 15.0f,15.0f,15.0f });
+	m_shotEffect.SetPosition(m_position);
+	m_shotEffect.SetRotation(m_rot);
+	m_shotEffect.SetScale({ 15.0f,15.0f,15.0f });
 
-	if (m_normalShotEffect.IsPlay() != true) {
-		m_normalShotEffect.Play(false);
+	if (m_shotEffect.IsPlay() != true) {
+		m_shotEffect.Play(false);
 	}
 
-	m_normalShotEffect.Update();
+	//エフェクトの更新
+	m_shotEffect.Update();
+	m_spreadBurstEffect.Update();
 
 }
