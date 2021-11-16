@@ -173,6 +173,7 @@ void Player_new::FireBullet()
 		
 		//カウンターが0のときとカウンターが一定値を超えると発射
 		if (m_fireCounter > FIRECOUNTER || m_fireCounter == 0.0f) {
+			
 			m_bullet = NewGO<Bullet>(0, "bullet");
 			
 			m_bullet->Init(
@@ -182,6 +183,13 @@ void Player_new::FireBullet()
 				m_shotDirection,
 				m_enBulletType
 			);
+
+			/*m_explosion = NewGO<Explosion>(0, "explosion");
+			m_explosion->Init(
+				m_position,
+				10.0f,
+				enPlayer_Spread_Bomb
+			);*/
 
 			//発射後、カウンターを0にリセット
 			m_fireCounter = 0.0f;

@@ -16,6 +16,7 @@
 #include "MyCharacterController.h"
 #include "SphericalMove.h"
 #include "Bullet.h"
+#include "Explosion.h"
 #include "GameDirector.h"
 
 

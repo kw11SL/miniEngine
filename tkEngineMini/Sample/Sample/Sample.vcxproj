@@ -300,6 +300,8 @@
     <ClCompile Include="DirectionLight.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyGenerator.cpp" />
+    <ClCompile Include="Explosion.cpp" />
+    <ClCompile Include="ExplosionBase.cpp" />
     <ClCompile Include="FontRender.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
@@ -322,6 +324,7 @@
     <ClCompile Include="SkinModelRender.cpp" />
     <ClCompile Include="SphericalMove.cpp" />
     <ClCompile Include="SpotLight.cpp" />
+    <ClCompile Include="SpreadBombExplosion.cpp" />
     <ClCompile Include="SpriteRender.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -409,6 +412,8 @@
     <ClInclude Include="DirectionLight.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyGenerator.h" />
+    <ClInclude Include="Explosion.h" />
+    <ClInclude Include="ExplosionBase.h" />
     <ClInclude Include="FontRender.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
@@ -430,6 +435,7 @@
     <ClInclude Include="SkinModelRender.h" />
     <ClInclude Include="SphericalMove.h" />
     <ClInclude Include="SpotLight.h" />
+    <ClInclude Include="SpreadBombExplosion.h" />
     <ClInclude Include="SpriteRender.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />

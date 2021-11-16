@@ -147,6 +147,13 @@ public:
 		return m_power;
 	}
 
+	/// @brief ダメージ間隔を取得
+	/// @return 
+	float GetDamageInterval()
+	{
+		return m_damageInterval;
+	}
+
 private:
 	//内部で使う関数
 	bool Start() override;
@@ -182,6 +189,7 @@ private:
 	float m_lifeTime = 0.0f;						//時間寿命
 	float m_power = 0.0f;							//弾が与えるダメージ
 	bool m_isExist = true;							//存在フラグ
+	float m_damageInterval = 0.5f;					//ダメージを与える間隔。この数値だけエネミーに無敵時間を設定する。
 
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル

@@ -140,6 +140,8 @@ private:
 	SphericalMove m_sphericalMove;						//球面移動用クラス
 	GameCamera m_gameCamera;							//ゲームカメラ
 	Bullet* m_bullet = nullptr;							//弾クラス
+	
+	Explosion* m_explosion = nullptr;
 
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル

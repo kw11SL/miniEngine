@@ -146,8 +146,12 @@ void Enemy::Init(
 
 	//前方、右、上の各ベクトルを各軸で初期化
 	m_sphericalMove.Init(m_forward, m_right, m_up);
+	
 	//生存フラグをオン
 	m_exist = true;
+
+	//無敵状態フラグをオフ
+	m_isInvincible = false;
 
 	//エフェクトの初期化
 	m_destroyEffect.Init(u"Assets/effect/destroy.efk");
@@ -220,14 +224,18 @@ void Enemy::Hit()
 		
 		//距離が一定値以下のとき
 		if (length < 50.0f) {
-			//耐久値を弾の威力分減算
-			m_life -= bullet->GetPower();
+			
+			//無敵状態でなければ
+			if (m_isInvincible == false) {
+				//耐久力を減らす
+				m_life -= bullet->GetPower();
+				//エネミーに無敵時間を設定
+				SetInvincibleTime(bullet->GetDamageInterval());
+			}
+			
 			
 			//現状、削除処理とする
 			DeleteGO(bullet);
-			
-			//点数を加点
-			GameDirector::GetInstance()->AddScore(m_score);
 			
 			//問い合わせ終了
 			return false;
@@ -255,7 +263,28 @@ void Enemy::Destroy()
 		m_destroyEffect.Play(false);
 		
 		DeleteGO(this);
+
+		//点数を加点
+		GameDirector::GetInstance()->AddScore(m_score);
 	}
+
+}
+
+void Enemy::DecInvTime()
+{
+	//無敵時間を減少
+	m_invTime -= g_gameTime->GetFrameDeltaTime();
+
+	//無敵時間が0より上なら無敵状態
+	if (m_invTime > 0.0f) {
+		m_isInvincible = true;
+	}
+	//0以下なら無敵状態をオフ
+	else if(m_invTime <= 0.0f){
+		m_invTime = 0.0f;
+		m_isInvincible = false;
+	}
+
 }
 
 void Enemy::Update()
@@ -263,6 +292,7 @@ void Enemy::Update()
 	Move();
 	Rotation();
 	Hit();
+	DecInvTime();
 	Destroy();
 
 	m_destroyEffect.Update();

@@ -139,6 +139,13 @@ public:
 		return m_score;
 	}
 
+	/// @brief 無敵状態かどうか？
+	/// @return 
+	bool IsInvincible()
+	{
+		return m_isInvincible;
+	}
+
 	//無敵時間を設定
 	void SetInvincibleTime(const float invTime)
 	{
@@ -162,6 +169,9 @@ private:
 	/// @brief 撃破処理
 	void Destroy();
 
+	/// @brief 無敵時間を減らし、無敵時間が切れたら無敵状態をオフにする
+	void DecInvTime();
+
 private:
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
@@ -174,6 +184,7 @@ private:
 	float m_speed = 0.0f;								//移動速度
 	int m_score = 0;									//エネミーの撃破スコア
 	bool m_exist = false;								//存在フラグ
+	bool m_isInvincible = false;						//無敵状態かどうか
 
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル

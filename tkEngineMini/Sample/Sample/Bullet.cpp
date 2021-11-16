@@ -38,6 +38,9 @@ namespace{
 	
 	const float POWER_ENEMY_NORMAL = 1.0f;
 
+	//ダメージを与える間隔
+	const float DAMAGE_INTERVAL_PLAYER_NORMAL = 0.15f;
+
 	//エフェクトのファイルパス
 	const char16_t* EFFECT_FILEPATH_PLAYER_NORMAL = u"Assets/effect/shot_pl1.efk";
 	const char16_t* EFFECT_FILEPATH_PLAYER_SPREAD_BOMB = u"Assets/effect/shot_pl_spread.efk";
@@ -101,6 +104,9 @@ void Bullet::Init(
 		m_lifeTime = LIFETIME_PLAYER_NORMAL;
 		m_power = POWER_PLAYER_NORMAL;
 		m_speed = MOVE_SPEED_PLAYER_NORMAL;
+
+		//テスト：ダメージ間隔
+		m_damageInterval = DAMAGE_INTERVAL_PLAYER_NORMAL;
 		break;
 
 	case enPlayerSpreadBomb:
@@ -109,6 +115,8 @@ void Bullet::Init(
 		m_lifeTime = LIFETIME_PLAYER_SPREAD_BOMB;
 		m_power = POWER_PLAYER_SPREAD_BOMB;
 		m_speed = MOVE_SPEED_PLAYER_SPREAD_BOMB;
+
+		m_damageInterval = DAMAGE_INTERVAL_PLAYER_NORMAL;
 		break;
 
 	case enEnemyNormal:
@@ -117,6 +125,8 @@ void Bullet::Init(
 		m_lifeTime = LIFETIME_ENEMY_NORMAL;
 		m_power = POWER_ENEMY_NORMAL;
 		m_speed = MOVE_SPEED_ENEMY_NORMAL;
+
+		m_damageInterval = DAMAGE_INTERVAL_PLAYER_NORMAL;
 		break;
 
 	default:
