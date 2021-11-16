@@ -27,9 +27,11 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 
 		if (m_spawnCounter > ENEMY_SPAWN_TIME) {
 			m_enemy = NewGO<Enemy>(0, "enemy");
+			
 			m_enemy->Init(
 				*RenderingEngine::GetInstance(),
 				m_position,
+				m_up,
 				enemyType);
 
 			m_spawnCounter = 0.0f;

@@ -123,7 +123,6 @@ private:
 private:
 	RenderingEngine* m_renderingEngine = nullptr;
 	SFontData m_fontData;						//フォントデータの構造体
-
 	Font m_font;								//フォント
 	const wchar_t* m_text = L"";				//テキスト
 	Vector2 m_position = Vector2::Zero;			//座標

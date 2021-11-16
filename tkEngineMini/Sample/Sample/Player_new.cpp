@@ -105,8 +105,8 @@ void Player_new::Move()
 	forward.Normalize();
 
 	//プレイヤーの左右方向への移動
-	//m_moveSpeed = g_camera3D->GetRight() * -x * PL_MOVE_SPEED;
-	m_moveSpeed = m_right * x * PL_MOVE_SPEED;
+	m_moveSpeed = g_camera3D->GetRight() * -x * PL_MOVE_SPEED;
+	//m_moveSpeed = m_right * x * PL_MOVE_SPEED;
 	//プレイヤーの前後(奥、手前)方向への移動
 	m_moveSpeed += forward * y * PL_MOVE_SPEED;
 
@@ -174,9 +174,11 @@ void Player_new::FireBullet()
 		//カウンターが0のときとカウンターが一定値を超えると発射
 		if (m_fireCounter > FIRECOUNTER || m_fireCounter == 0.0f) {
 			m_bullet = NewGO<Bullet>(0, "bullet");
+			
 			m_bullet->Init(
 				*RenderingEngine::GetInstance(),
 				m_position,
+				m_up,
 				m_shotDirection,
 				m_enBulletType
 			);

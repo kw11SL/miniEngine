@@ -22,9 +22,16 @@ public:
 	Enemy();
 	~Enemy();
 	
-	/// @brief 初期化処理
-	/// @param renderingEngine　レンダリングエンジン 
-	void Init(RenderingEngine& renderingEngine,  const Vector3& initPoint ,const EnEnemyType& enemyType);
+	/// @brief 
+	/// @param renderingEngine 
+	/// @param initPoint 
+	/// @param initUp 
+	/// @param enemyType 
+	void Init(
+		RenderingEngine& renderingEngine,
+		const Vector3& initPoint,
+		const Vector3& initUp,
+		const EnEnemyType& enemyType);
 
 	//ゲッター
 	/// @brief	座標を取得 

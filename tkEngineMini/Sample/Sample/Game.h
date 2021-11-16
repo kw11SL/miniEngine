@@ -29,19 +29,13 @@ public:
 
 private:
 	Player_new* m_player = nullptr;					//プレイヤー
-	
 	Enemy* m_enemy = nullptr;						//エネミー
-
 	BG* m_bg = nullptr;								//背景
 	DirectionLight* m_directionLight = nullptr;		//ディレクションライト
 	PointLight* m_pointLight = nullptr;				//ポイントライト
 	SpotLight* m_spotLight = nullptr;				//スポットライト
-	
 	UI* m_ui = nullptr;								//UI
 	EnemyGenerator* m_enemyGenerator = nullptr;		//エネミー生成器
-
-	
-
 	//テスト
 	SpriteRender* m_sprite = nullptr;				//テスト表示スプライト
 };

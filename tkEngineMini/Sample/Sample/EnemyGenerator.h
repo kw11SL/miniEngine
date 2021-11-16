@@ -54,17 +54,14 @@ private:
 
 	MyCharacterController m_myCharaCon;
 	SphericalMove m_sphericalMove;
-	
 	Vector3 m_position = Vector3::Zero;
 	Quaternion m_rotation = Quaternion::Identity;
-
 	Vector3 m_forward = Vector3::Zero;
 	Vector3 m_right = Vector3::Zero;
 	Vector3 m_up = Vector3::Zero;
 	Vector3 m_moveSpeed = Vector3::Zero;
 	Vector3 m_downVector = { 0.0f,-10.0f,0.0f };
 	EnEnemyType m_spawnEnemyType = enCommon;
-
 	float m_spawnCounter = 0.0f;
 };
 

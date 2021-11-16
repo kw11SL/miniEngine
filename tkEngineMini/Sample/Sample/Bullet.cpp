@@ -9,7 +9,7 @@ namespace{
 	const char* MODELPATH_ENEMY_NORMAL = "Assets/modelData/bullet/bullet.tkm";
 	
 	//地形からどれくらい浮かせるか
-	const float UPPER_OFFSET = 0.0f;
+	const float UPPER_OFFSET = 50.0f;
 
 	//弾の耐久値
 	const float LIFE_PLAYER_NORMAL = 1.0f;
@@ -80,7 +80,12 @@ bool Bullet::Start()
 	return true;
 }
 
-void Bullet::Init(RenderingEngine& renderingEngine, const Vector3& initPoint,const Vector3& direction, const EnBulletType& bulletType)
+void Bullet::Init(
+	RenderingEngine& renderingEngine,
+	const Vector3& initPoint, 
+	const Vector3& initUp,
+	const Vector3& direction, 
+	const EnBulletType& bulletType)
 {
 	//m_skinModelRender = NewGO<SkinModelRender>(0);
 
@@ -149,18 +154,27 @@ void Bullet::Init(RenderingEngine& renderingEngine, const Vector3& initPoint,con
 		m_position
 	);
 
+	//上方向を設定
+	m_up = initUp;
+
+	//下方向ベクトルは上方向の反対
+	m_downVector = m_up * -1.0f;
 	//下方向ベクトルを正規化
 	m_downVector.Normalize();
-
-	//前方、右、上の各ベクトルを各軸で初期化
-	m_sphericalMove.Init(m_forward, m_right, m_up);
 
 	//進行方向を指定
 	m_direction = direction;
 	m_direction.Normalize();
 
+	////回転を指定
+	//m_rot = initRot;
+
 	//エフェクトの初期化
 	InitEffect(bulletType);
+
+	//前方、右、上の各ベクトルを各軸で初期化
+	m_sphericalMove.Init(m_forward, m_right, m_up);
+	
 }
 
 void Bullet::Move()
@@ -214,7 +228,6 @@ void Bullet::Rotation()
 	////乗算したクォータニオンでモデルを回転
 	//m_skinModelRender->SetRotation(mulRot);
 
-
 	m_sphericalMove.Rotation(m_forward, m_right, m_up, m_rot);
 }
 
@@ -264,6 +277,12 @@ void Bullet::InitEffect(const EnBulletType& bulletType)
 	default:
 		break;
 	}
+
+	//位置、回転、拡大率を設定
+	m_shotEffect.SetPosition(m_position);
+	m_shotEffect.SetRotation(m_rot);
+	m_shotEffect.SetScale({ 15.0f,15.0f,15.0f });
+
 }
 
 void Bullet::Update()

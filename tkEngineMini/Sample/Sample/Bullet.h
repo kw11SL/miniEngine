@@ -16,10 +16,17 @@ public:
 	~Bullet();
 
 	/// @brief 初期化処理
-	/// @param renderingEngine 
-	/// @param initPoint 
-	/// @param direction 
-	void Init(RenderingEngine& renderingEngine, const Vector3& initPoint,const Vector3& direction,const EnBulletType& bulletType);
+	/// @param renderingEngine レンダリングエンジン
+	/// @param initPoint 初期位置
+	/// @param initUp 初期位置の上ベクトル
+	/// @param direction 方向
+	/// @param bulletType 弾の種類
+	void Init(
+		RenderingEngine& renderingEngine,
+		const Vector3& initPoint,
+		const Vector3& initUp,
+		const Vector3& direction,
+		const EnBulletType& bulletType);
 
 	//ゲッター
 	/// @brief	座標を取得 

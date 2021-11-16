@@ -10,7 +10,7 @@ namespace {
 	const char* MODELPATH_SHOT = "Assets/modelData/enemy/enemy_shot.tkm";
 	const char* MODELPATH_BOMB = "Assets/modelData/enemy/enemy_bomb.tkm";
 
-	const float UPPER_OFFSET = 0.0f;
+	const float UPPER_OFFSET = 50.0f;
 	
 	//エネミーのタイプ毎の移動速度
 	const float MOVE_SPEED_COMMON = 3.0f;
@@ -63,7 +63,11 @@ bool Enemy::Start()
 	return true;
 }
 
-void Enemy::Init(RenderingEngine& renderingEngine,const Vector3& initPoint,const EnEnemyType& enemyType)
+void Enemy::Init(
+	RenderingEngine& renderingEngine,
+	const Vector3& initPoint,
+	const Vector3& initUp,
+	const EnEnemyType& enemyType)
 {
 	m_skinModelRender = NewGO<SkinModelRender>(0);
 
@@ -126,13 +130,20 @@ void Enemy::Init(RenderingEngine& renderingEngine,const Vector3& initPoint,const
 	//モデルを更新
 	InitModelFromInitData();
 
+	//上方向を設定
+	m_up = initUp;
+
 	//自作キャラコンの初期化
 	m_myCharaCon.Init(
 		m_position
 	);
 
+	//下方向ベクトルは上方向の反対
+	m_downVector = m_up * -1.0f;
 	//下方向ベクトルを正規化
-	//m_downVector.Normalize();
+	m_downVector.Normalize();
+
+
 	//前方、右、上の各ベクトルを各軸で初期化
 	m_sphericalMove.Init(m_forward, m_right, m_up);
 	//生存フラグをオン
