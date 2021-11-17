@@ -215,7 +215,7 @@ void Bullet::Move()
 	//m_skinModelRender->SetPosition(m_position);
 
 	//スプレッドボムの速度減衰処理
-	if (m_enBulletType = enPlayerSpreadBomb) {
+	if (m_enBulletType == enPlayerSpreadBomb) {
 		m_speed -= SPREAD_BOMB_DEC_RATE;
 	}
 	if (m_speed < 0.0f) {
@@ -260,10 +260,13 @@ void Bullet::Destroy()
 	if (m_isExist == false) {
 		
 		if (m_enBulletType == enPlayerSpreadBomb) {
-			m_spreadBurstEffect.SetPosition(m_position);
-			m_spreadBurstEffect.SetRotation(m_rot);
-			m_spreadBurstEffect.SetScale({ 10.0f,10.0f,10.0f });
-			m_spreadBurstEffect.Play(false);
+
+			m_spreadExplosion = NewGO<Explosion>(0, "explosion");
+			m_spreadExplosion->Init(
+				m_position,
+				10.0f,
+				enPlayer_Spread_Bomb
+			);
 		}
 
 		DeleteGO(this);
@@ -302,8 +305,6 @@ void Bullet::Update()
 	DecLifeTime();
 	Destroy();
 
-	//m_skinModelRender->SetRotation(m_rot);
-
 	m_shotEffect.SetPosition(m_position);
 	m_shotEffect.SetRotation(m_rot);
 	m_shotEffect.SetScale({ 15.0f,15.0f,15.0f });
@@ -314,6 +315,5 @@ void Bullet::Update()
 
 	//エフェクトの更新
 	m_shotEffect.Update();
-	m_spreadBurstEffect.Update();
 
 }

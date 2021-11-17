@@ -131,6 +131,8 @@ public:
 		return m_damageInterval;
 	}
 
+	/// @brief ‘¶İƒtƒ‰ƒO‚ğæ“¾
+	/// @return 
 	const bool GetIsExist() const
 	{
 		return m_isExist;

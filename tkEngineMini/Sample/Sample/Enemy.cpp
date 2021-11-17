@@ -24,7 +24,7 @@ namespace {
 	const float LIFE_POWERED = 1.0f;
 	const float LIFE_CHASER = 1.0f;
 	const float LIFE_SHOT = 1.0f;
-	const float LIFE_BOMB = 1.0f;
+	const float LIFE_BOMB = 50.0f;
 
 	//エネミーのタイプ別スコア
 	const float SCORE_COMMON = 100;
@@ -231,6 +231,7 @@ void Enemy::Hit()
 				m_life -= bullet->GetPower();
 				//エネミーに無敵時間を設定
 				SetInvincibleTime(bullet->GetDamageInterval());
+				m_isInvincible = true;
 			}
 			
 			
@@ -241,6 +242,31 @@ void Enemy::Hit()
 			return false;
 		}
 		
+		//問い合わせ続行
+		return true;
+	});
+
+	//爆発を検索
+	QueryGOs<Explosion>("explosion", [&](Explosion* explosion) {
+		Vector3 diff = explosion->GetPosition() - m_position;
+		float length = diff.Length();
+
+		//爆発の範囲内のとき
+		if (length < explosion->GetDamageArea()) {
+
+			//無敵状態でなければ
+			if (m_isInvincible == false) {
+				//耐久力を減らす
+				m_life -= explosion->GetPower();
+				//エネミーに無敵時間を設定
+				SetInvincibleTime(explosion->GetDamageInterval());
+				m_isInvincible = true;
+			}
+
+			//問い合わせ終了
+			return false;
+		}
+
 		//問い合わせ続行
 		return true;
 	});
@@ -275,12 +301,9 @@ void Enemy::DecInvTime()
 	//無敵時間を減少
 	m_invTime -= g_gameTime->GetFrameDeltaTime();
 
-	//無敵時間が0より上なら無敵状態
-	if (m_invTime > 0.0f) {
-		m_isInvincible = true;
-	}
+	
 	//0以下なら無敵状態をオフ
-	else if(m_invTime <= 0.0f){
+	if(m_invTime <= 0.0f){
 		m_invTime = 0.0f;
 		m_isInvincible = false;
 	}

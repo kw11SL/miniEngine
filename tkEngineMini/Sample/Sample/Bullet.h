@@ -1,4 +1,5 @@
 #pragma once
+#include "Explosion.h"
 
 /// @brief ’e‚ÌŽí—Þ
 enum EnBulletType
@@ -183,6 +184,7 @@ private:
 	EnBulletType m_enBulletType = enPlayerNormal;		//’e‚Ìƒ^ƒCƒv
 
 	Player_new* m_player = nullptr;
+	Explosion* m_spreadExplosion = nullptr;
 
 	float m_life = 0.0f;							//‘Ï‹v’l
 	float m_speed = 0.0f;							//ˆÚ“®‘¬“x
