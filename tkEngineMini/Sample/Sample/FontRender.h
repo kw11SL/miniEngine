@@ -4,7 +4,7 @@ class RenderingEngine;
 
 struct SFontData {
 	Font font;								//フォント
-	const wchar_t* text;					//テキスト
+	const wchar_t* text = L"hoge";				//テキスト
 	Vector2 position = Vector2::Zero;		//座標
 	Vector2 pivot = { 0.5f,0.5f };			//ピボット
 	Vector4 color = Vector4::White;			//カラー

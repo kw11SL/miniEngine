@@ -26,12 +26,19 @@ namespace {
 	const float LIFE_SHOT = 1.0f;
 	const float LIFE_BOMB = 50.0f;
 
+	//エネミーのタイプ毎の弾への影響値
+	const float DURABILITY_COMMON = 1.0f;
+	const float DURABILITY_POWERED = 1.0f;
+	const float DURABILITY_CHASER = 1.0f;
+	const float DURABILITY_SHOT = 1.0f;
+	const float DURABILITY_BOMB = 1.0f;
+
 	//エネミーのタイプ別スコア
-	const float SCORE_COMMON = 100;
-	const float SCORE_POWERED = 500;
-	const float SCORE_CHASER = 300;
-	const float SCORE_SHOT = 300;
-	const float SCORE_BOMB = 200;
+	const int SCORE_COMMON = 100;
+	const int SCORE_POWERED = 500;
+	const int SCORE_CHASER = 300;
+	const int SCORE_SHOT = 300;
+	const int SCORE_BOMB = 200;
 
 	//シェーダーのファイルパス
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
@@ -81,30 +88,37 @@ void Enemy::Init(
 		m_life = LIFE_COMMON;
 		m_speed = MOVE_SPEED_COMMON;
 		m_score = SCORE_COMMON;
+		m_durability = DURABILITY_COMMON;
+
 		break;
 	case enPowered:
 		modelPath = MODELPATH_POWERED;
 		m_life = LIFE_POWERED;
 		m_speed = MOVE_SPEED_POWERED;
 		m_score = SCORE_POWERED;
+		m_durability = DURABILITY_POWERED;
 		break;
 	case enChaser:
 		modelPath = MODELPATH_CHASER;
 		m_life = LIFE_CHASER;
 		m_speed = MOVE_SPEED_CHASER;
 		m_score = SCORE_CHASER;
+		m_durability = DURABILITY_CHASER;
 		break;
 	case enShot:
 		modelPath = MODELPATH_SHOT;
 		m_life = LIFE_SHOT;
 		m_speed = MOVE_SPEED_SHOT;
 		m_score = SCORE_SHOT;
+		m_durability = DURABILITY_SHOT;
 		break;
 	case enBomb:
 		modelPath = MODELPATH_BOMB;
 		m_life = LIFE_BOMB;
 		m_speed = MOVE_SPEED_BOMB;
 		m_score = SCORE_BOMB;
+		m_durability = DURABILITY_COMMON;
+		m_durability = DURABILITY_BOMB;
 		break;
 	default:
 		break;
@@ -234,9 +248,8 @@ void Enemy::Hit()
 				m_isInvincible = true;
 			}
 			
-			
-			//現状、削除処理とする
-			DeleteGO(bullet);
+			//弾の耐久値を減らす
+			bullet->DecLife(m_durability);
 			
 			//問い合わせ終了
 			return false;

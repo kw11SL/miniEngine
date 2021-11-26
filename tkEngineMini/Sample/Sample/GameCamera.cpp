@@ -82,6 +82,8 @@ float& GameCamera::CalcDampingRate(
 	float& moveSpeed
 )
 {
+	m_dampingRateTargetTmp = dampingRateTarget;
+
 	//1フレームあたりの経過時間を取得
 	float deltaTime = g_gameTime->GetFrameDeltaTime();
 
@@ -94,7 +96,8 @@ float& GameCamera::CalcDampingRate(
 	if (fabsf(distance) < FLT_EPSILON) {
 		//現在の減衰率の変化量を0にし、目標値を返す
 		moveSpeed = 0.0f;
-		return dampingRateTarget;
+		//return dampingRateTarget;
+		return m_dampingRateTargetTmp;
 	}
 
 	/////////////////////////////////////////////////////////////////////////
@@ -137,7 +140,7 @@ float& GameCamera::CalcDampingRate(
 	vt *= DAMPING_CONST;
 
 	//-Ksx - Kdv
-	springAcceleration - vt;
+	springAcceleration -= vt;
 
 	//加速度に経過時間を掛ける
 	springAcceleration *= deltaTime;
@@ -191,7 +194,10 @@ float& GameCamera::CalcDampingRate(
 
 
 	//更新された減衰率を返す
-	return newDampingRate;
+	//return newDampingRate;
+	m_newDampringRateTmp = newDampingRate;
+
+	return m_newDampringRateTmp;
 }
 
 Vector3& GameCamera::CalcSpringVector(
@@ -287,7 +293,10 @@ Vector3& GameCamera::CalcSpringVector(
 	/////////////////////////////////////////////////////////////////////////
 
 	//更新後の位置を返す
-	return newPos;
+	//return newPos;
+
+	m_newPosTmp = newPos;
+	return m_newPosTmp;
 }
 
 void GameCamera::UpdateSpringCamera()

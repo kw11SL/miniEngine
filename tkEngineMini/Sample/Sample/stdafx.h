@@ -18,6 +18,7 @@
 #include "Bullet.h"
 #include "Explosion.h"
 #include "GameDirector.h"
+#include "BulletManager.h"
 
 
 

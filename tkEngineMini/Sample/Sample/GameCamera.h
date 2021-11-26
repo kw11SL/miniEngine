@@ -141,5 +141,10 @@ private:
 	float m_dampingRate = 1.0f;						//ばねの減衰率。座標が移動する速度を決定するために使用
 	float m_dampingRateTarget = 10.0f;				//ばねの減衰率の目標値
 	float m_dampingRateVel = 0.0f;					//ばね減衰率が目標値に近づく速度
+
+	//返り値保持用のテンポラリ
+	float m_dampingRateTargetTmp = 0.0f;
+	float m_newDampringRateTmp = 0.0f;
+	Vector3 m_newPosTmp = Vector3::Zero;
 };
 

@@ -127,6 +127,13 @@ public:
 		return m_isExist;
 	}
 
+	/// @brief モデルが削除されたかどうか
+	/// @return 
+	bool GetIsModelDeleted()
+	{
+		return m_isModelDeleted;
+	}
+
 	/// @brief 弾のタイプを設定
 	/// @param type 
 	void SetType(const EnBulletType& type)
@@ -148,11 +155,28 @@ public:
 		return m_power;
 	}
 
+	float GetLifeTime()
+	{
+		return m_lifeTime;
+	}
+
 	/// @brief ダメージ間隔を取得
 	/// @return 
 	float GetDamageInterval()
 	{
 		return m_damageInterval;
+	}
+
+	/// @brief スキンモデルを削除
+	void DeleteSkinModel()
+	{
+		DeleteGO(m_skinModelRender);
+		m_isModelDeleted = true;
+	}
+
+	void DecLife(float decVal)
+	{
+		m_life -= decVal;
 	}
 
 private:
@@ -178,6 +202,8 @@ private:
 	void InitEffect(const EnBulletType& bulletType);
 
 private:
+	//BulletManager* m_bulletManager = nullptr;
+	
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
 	SphericalMove m_sphericalMove;						//球面移動用クラス
@@ -214,5 +240,8 @@ private:
 	//テスト　ショットエフェクト
 	Effect m_shotEffect;
 	Effect m_spreadBurstEffect;
+
+	//スキンモデルレンダーの削除フラグ
+	bool m_isModelDeleted = false;
 };
 

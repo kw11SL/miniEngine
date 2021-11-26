@@ -9,6 +9,7 @@ class PointLight;
 class SpotLight;
 class UI;
 class EnemyGenerator;
+class Bullet;
 
 class Game : public IGameObject
 {
@@ -28,6 +29,8 @@ public:
 	void Init(RenderingEngine& renderingEngine);
 
 private:
+	RenderingEngine* m_renderingEngine = nullptr;
+	
 	Player_new* m_player = nullptr;					//プレイヤー
 	Enemy* m_enemy = nullptr;						//エネミー
 	BG* m_bg = nullptr;								//背景
@@ -38,5 +41,9 @@ private:
 	EnemyGenerator* m_enemyGenerator = nullptr;		//エネミー生成器
 	//テスト
 	SpriteRender* m_sprite = nullptr;				//テスト表示スプライト
+	
+	
+
+	float m_counter = 10.0f;
 };
 

@@ -50,18 +50,18 @@ public:
 	}
 
 private:
-	Enemy* m_enemy = nullptr;
+	Enemy* m_enemy = nullptr;							//エネミー
 
-	MyCharacterController m_myCharaCon;
-	SphericalMove m_sphericalMove;
-	Vector3 m_position = Vector3::Zero;
-	Quaternion m_rotation = Quaternion::Identity;
-	Vector3 m_forward = Vector3::Zero;
-	Vector3 m_right = Vector3::Zero;
-	Vector3 m_up = Vector3::Zero;
-	Vector3 m_moveSpeed = Vector3::Zero;
-	Vector3 m_downVector = { 0.0f,-10.0f,0.0f };
-	EnEnemyType m_spawnEnemyType = enCommon;
-	float m_spawnCounter = 0.0f;
+	MyCharacterController m_myCharaCon;					//球面移動用キャラコン
+	SphericalMove m_sphericalMove;						//球面移動用クラス
+	Vector3 m_position = Vector3::Zero;					//座標
+	Quaternion m_rotation = Quaternion::Identity;		//回転クォータニオン
+	Vector3 m_forward = Vector3::Zero;					//前方
+	Vector3 m_right = Vector3::Zero;					//右
+	Vector3 m_up = Vector3::Zero;						//上
+	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル
+	Vector3 m_downVector = { 0.0f,-10.0f,0.0f };		//レイを飛ばす下方向ベクトル
+	EnEnemyType m_spawnEnemyType = enCommon;			//スポーンさせるエネミータイプ
+	float m_spawnCounter = 0.0f;						//スポーン間隔用カウンター
 };
 

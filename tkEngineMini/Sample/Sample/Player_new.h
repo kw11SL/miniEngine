@@ -131,6 +131,11 @@ private:
 	/// @brief 弾を発射
 	void FireBullet();
 
+	/*void AddBullet(Bullet& bullet)
+	{
+		m_bullet.push_back(&bullet);
+	}*/
+
 	void ChangeWeapon();
 
 private:
@@ -139,7 +144,9 @@ private:
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
 	SphericalMove m_sphericalMove;						//球面移動用クラス
 	GameCamera m_gameCamera;							//ゲームカメラ
-	Bullet* m_bullet = nullptr;							//弾クラス
+	
+	//Bullet* m_bullet = nullptr;
+	std::vector<Bullet*> m_bullet;							//弾クラスの可変長配列
 	
 	Explosion* m_explosion = nullptr;
 
@@ -165,5 +172,7 @@ private:
 	
 	EnUseWeapon m_enUseWeapon = enNormalShot;				//現在使用しているショット
 	EnBulletType m_enBulletType = enPlayerNormal;			//弾に渡す弾のタイプ情報
+
+	BulletManager* m_bulletManager = nullptr;
 };
 

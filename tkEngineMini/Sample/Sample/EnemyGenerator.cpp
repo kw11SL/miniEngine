@@ -25,6 +25,7 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 {
 	if (GameDirector::GetInstance()->GetEnemyCount() <= GameDirector::GetInstance()->GetMaxEnemyNum()) {
 
+		//エネミーを生成
 		if (m_spawnCounter > ENEMY_SPAWN_TIME) {
 			m_enemy = NewGO<Enemy>(0, "enemy");
 			
@@ -34,6 +35,7 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 				m_up,
 				enemyType);
 
+			//カウンターを0にリセット
 			m_spawnCounter = 0.0f;
 		}
 	}

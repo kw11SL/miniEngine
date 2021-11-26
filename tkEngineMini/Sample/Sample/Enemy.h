@@ -183,6 +183,7 @@ private:
 	float m_life = 0.0f;								//耐久値
 	float m_speed = 0.0f;								//移動速度
 	int m_score = 0;									//エネミーの撃破スコア
+	float m_durability = 0.0f;							//弾への影響値
 	bool m_exist = false;								//存在フラグ
 	bool m_isInvincible = false;						//無敵状態かどうか
 

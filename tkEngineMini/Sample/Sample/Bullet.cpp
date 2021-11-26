@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Bullet.h"
+#include "BulletManager.h"
 
 namespace{
 	//モデル毎のファイルパス
@@ -66,15 +67,8 @@ namespace{
 
 Bullet::~Bullet()
 {
+	//エフェクトを停止
 	m_shotEffect.Stop();
-	
-	/*if (m_enBulletType == enPlayerSpreadBomb) {
-		m_spreadBurstEffect.SetPosition(m_position);
-		m_spreadBurstEffect.SetRotation(m_rot);
-		m_spreadBurstEffect.SetScale({ 10.0f,10.0f,10.0f });
-		m_spreadBurstEffect.Play(false);
-	}*/
-
 	DeleteGO(m_skinModelRender);
 }
 
@@ -90,7 +84,8 @@ void Bullet::Init(
 	const Vector3& direction, 
 	const EnBulletType& bulletType)
 {
-	//m_skinModelRender = NewGO<SkinModelRender>(0);
+	
+	m_skinModelRender = NewGO<SkinModelRender>(0);
 
 	const char* modelPath = "hoge";
 	
@@ -133,31 +128,31 @@ void Bullet::Init(
 		break;
 	}
 
-	/*m_skinModelRender->Init(
+	m_skinModelRender->Init(
 		modelPath,
 		enModelUpAxisZ,
 		renderingEngine,
 		true,
 		false
-	);*/
+	);
 
 	//初期位置を決定
 	m_position = initPoint;
 
-	//m_skinModelRender->SetPosition(m_position);
-	//m_skinModelRender->SetScale(m_scale * 3.0f);
+	m_skinModelRender->SetPosition(m_position);
+	m_skinModelRender->SetScale(m_scale * 3.0f);
 
-	////ライトを検索して受け取り
-	//m_directionLight = FindGO<DirectionLight>("directionlight");
-	//m_pointLight = FindGO<PointLight>("pointlight");
-	//m_spotLight = FindGO<SpotLight>("spotlight");
-	//
-	//RecieveDirectionLight(m_directionLight);
-	//RecievePointLight(m_pointLight);
-	//RecieveSpotLight(m_spotLight);
+	//ライトを検索して受け取り
+	m_directionLight = FindGO<DirectionLight>("directionlight");
+	m_pointLight = FindGO<PointLight>("pointlight");
+	m_spotLight = FindGO<SpotLight>("spotlight");
+	
+	RecieveDirectionLight(m_directionLight);
+	RecievePointLight(m_pointLight);
+	RecieveSpotLight(m_spotLight);
 
-	////モデルを更新
-	//InitModelFromInitData();
+	//モデルを更新
+	InitModelFromInitData();
 
 	//自作キャラコンの初期化
 	m_myCharaCon.Init(
@@ -175,9 +170,6 @@ void Bullet::Init(
 	//進行方向を指定
 	m_direction = direction;
 	m_direction.Normalize();
-
-	////回転を指定
-	//m_rot = initRot;
 
 	//エフェクトの初期化
 	InitEffect(bulletType);
@@ -211,8 +203,8 @@ void Bullet::Move()
 	//上方向を球面の法線で更新し、右と前方を更新
 	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
 
-	////モデルの座標を更新
-	//m_skinModelRender->SetPosition(m_position);
+	//モデルの座標を更新
+	m_skinModelRender->SetPosition(m_position);
 
 	//スプレッドボムの速度減衰処理
 	if (m_enBulletType == enPlayerSpreadBomb) {
@@ -235,30 +227,31 @@ void Bullet::Rotation()
 	Quaternion mulRot;
 	//クォータニオンを乗算
 	mulRot.Multiply(m_rot, rot);
-	////乗算したクォータニオンでモデルを回転
-	//m_skinModelRender->SetRotation(mulRot);
+	//乗算したクォータニオンでモデルを回転
+	m_skinModelRender->SetRotation(mulRot);
 
 	m_sphericalMove.Rotation(m_forward, m_right, m_up, m_rot);
 }
 
 void Bullet::DecLifeTime()
 {
-	m_life -= g_gameTime->GetFrameDeltaTime();
+	m_lifeTime -= g_gameTime->GetFrameDeltaTime();
 	
-	if (m_life < 0.0f) {
+
+	if (m_life < 0.0f 
+		||m_lifeTime < 0.0f
+		||m_speed < 0.0f) {
+		
 		m_isExist = false;
-		//DeleteGO(this);
-	}
-	if (m_speed < 0.0f) {
-		m_isExist = false;
-		//DeleteGO(this);
 	}
 }
 
 void Bullet::Destroy()
 {
+	//存在フラグがオフになったとき
 	if (m_isExist == false) {
-		
+
+		//自身がスプレッドボムのとき
 		if (m_enBulletType == enPlayerSpreadBomb) {
 
 			m_spreadExplosion = NewGO<Explosion>(0, "explosion");
@@ -268,8 +261,7 @@ void Bullet::Destroy()
 				enPlayer_Spread_Bomb
 			);
 		}
-
-		DeleteGO(this);
+		
 	}
 }
 
@@ -300,6 +292,8 @@ void Bullet::InitEffect(const EnBulletType& bulletType)
 
 void Bullet::Update()
 {
+
+
 	Move();
 	Rotation();
 	DecLifeTime();

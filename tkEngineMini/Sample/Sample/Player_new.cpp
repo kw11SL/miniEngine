@@ -33,6 +33,7 @@ Player_new::~Player_new()
 
 void Player_new::Init(RenderingEngine& renderingEngine)
 {
+	m_bulletManager = BulletManager::GetInstance();
 
 	m_skinModelRender = NewGO<SkinModelRender>(0);
 	
@@ -174,25 +175,36 @@ void Player_new::FireBullet()
 		//カウンターが0のときとカウンターが一定値を超えると発射
 		if (m_fireCounter > FIRECOUNTER || m_fireCounter == 0.0f) {
 			
-			m_bullet = NewGO<Bullet>(0, "bullet");
+			m_bulletManager->InitBullets(
+				m_position,
+				m_up,
+				m_shotDirection,
+				m_enBulletType
+			);
 			
+			/*m_bullet.push_back(NewGO<Bullet>(0, "bullet"));
+			
+			m_bullet[m_bullet.size()-1]->Init(
+				*RenderingEngine::GetInstance(),
+				m_position,
+				m_up,
+				m_shotDirection,
+				m_enBulletType
+			);*/
+
+			/*m_bullet = NewGO<Bullet>(0, "bullet");
+
 			m_bullet->Init(
 				*RenderingEngine::GetInstance(),
 				m_position,
 				m_up,
 				m_shotDirection,
 				m_enBulletType
-			);
-
-			/*m_explosion = NewGO<Explosion>(0, "explosion");
-			m_explosion->Init(
-				m_position,
-				10.0f,
-				enPlayer_Spread_Bomb
-			);*/
+			); */
 
 			//発射後、カウンターを0にリセット
 			m_fireCounter = 0.0f;
+
 		}
 	}
 
@@ -226,6 +238,7 @@ void Player_new::ChangeWeapon()
 
 void Player_new::Update()
 {
+
 	float addRate = 0.0f;
 	float maxAddRate = CAMERA_ROTATE_FRACTION_ADD_RATE_MAX;
 	float minAddRate = CAMERA_ROTATE_FRACTION_ADD_RATE_MIN;
@@ -302,4 +315,28 @@ void Player_new::Update()
 	
 	//現フレームの上を記録
 	m_upPrev = m_up;
+
+	
+	
+	//テスト　モデルの削除
+	if (g_pad[0]->IsTrigger(enButtonY)) {
+		DeleteGO(m_skinModelRender);
+	}
+
+	if (g_pad[0]->IsTrigger(enButtonUp)) {
+		m_skinModelRender = NewGO<SkinModelRender>(0);
+		
+		m_skinModelRender->Init(
+			MODELPATH_UTC,
+			enModelUpAxisZ,
+			*RenderingEngine::GetInstance(),
+			true,
+			false,
+			SKELETON_PATH_UTC
+		);
+
+		m_skinModelRender->SetPosition(m_position);
+		m_skinModelRender->SetScale(m_scale);
+	}
+
 }

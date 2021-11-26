@@ -60,6 +60,6 @@ private:
 
 	Vector2 m_scoreTextPos = Vector2::Zero;	//スコアのテキスト部分の座標
 
-	std::wstring m_scoreNumWs;				//ポインタ保持用のメンバ
+	std::wstring m_scoreNumWs = L"hoge";				//ポインタ保持用のメンバ
 };
 

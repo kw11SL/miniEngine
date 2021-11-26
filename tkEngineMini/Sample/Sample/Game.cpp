@@ -8,6 +8,8 @@
 #include "SpotLight.h"
 #include "UI.h"
 #include "EnemyGenerator.h"
+#include "Bullet.h"
+#include "RenderingEngine.h"
 
 Game::~Game()
 {
@@ -32,6 +34,8 @@ bool Game::Start()
 
 void Game::Init(RenderingEngine& renderingEngine)
 {
+	m_renderingEngine = &renderingEngine;
+
 	//ディレクションライトの初期化
 	m_directionLight = NewGO<DirectionLight>(0, "directionlight");
 	m_directionLight->Init({ 1.0f,0.0f,1.0f }, { 0.5f,0.5f,0.5f }, { 0.3f,0.3f,0.3f });
@@ -67,8 +71,6 @@ void Game::Init(RenderingEngine& renderingEngine)
 	//UIの初期化
 	m_ui = NewGO<UI>(0, "ui");
 	m_ui->Init();
-
-
 
 	//プレイヤーにライトを渡す処理
 	if (m_player->GetSkinModelRender() != nullptr) {
@@ -110,29 +112,10 @@ void Game::Update()
 	//テスト：プレイヤーの削除
 	if (g_pad[0]->IsTrigger(enButtonX)) {
 		DeleteGO(m_player);
-		m_player = nullptr;
 	}
 
-	//if (m_player != nullptr) {
-	//	//テスト：ライトの受け渡し
-	//	if ((g_pad[0]->IsTrigger(enButtonA))) {
-	//		m_player->RecieveDirectionLight(m_directionLight);
-	//		m_player->RecievePointLight(m_pointLight);
-	//		m_player->RecieveSpotLight(m_spotLight);
 
-	//		m_player->InitModelFromInitData();
-	//	}
-	//}
-
-	/*if (g_pad[0]->IsTrigger(enButtonB)) {
-		m_font->SetScale(scale);
-	}*/
-
-	
-
-
-	/*scale += 0.002f;
-
-	m_font->SetScale(scale);*/
-
+	if (g_pad[0]->IsTrigger(enButtonSelect)) {
+		DeleteGO(this);
+	}
 }

@@ -131,8 +131,8 @@ private:
 	int						m_currentKeyFrameNo = 0;			//現在再生中のキーフレーム番号。
 	float					m_time = 0.0f;
 	std::vector<Matrix>		m_boneMatrix;						//!<このコントローラで再生中のアニメーションのボーン行列。
-	float					m_interpolateTime;					//!<補完時間
-	float					m_interpolateEndTime;				//!<補完終了時間
+	float					m_interpolateTime = 0.0f;					//!<補完時間
+	float					m_interpolateEndTime = 0.0f;				//!<補完終了時間
 	bool					m_isPlaying = false;				//!<再生中？
 	Skeleton*				m_skeleton = nullptr;				//!<スケルトン。
 	Vector3					m_footstepDeltaValue = g_vec3Zero;	//フットステップの移動ベクトル。

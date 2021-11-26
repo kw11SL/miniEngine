@@ -29,7 +29,7 @@ void Score::Init()
 	m_scoreText->SetPosition(m_scoreTextPos);
 	
 	//ゲームディレクターからスコアを取得
-	float point = GameDirector::GetInstance()->GetScore();
+	int point = GameDirector::GetInstance()->GetScore();
 
 	//入出力ストリームを作成
 	std::wstringstream wss;
@@ -54,7 +54,7 @@ void Score::Init()
 void Score::UpdateScore()
 {
 	//ゲームディレクターからスコアを取得
-	float plScore = GameDirector::GetInstance()->GetScore();
+	int plScore = GameDirector::GetInstance()->GetScore();
 
 	//入出力ストリームを作成
 	std::wstringstream wss;
