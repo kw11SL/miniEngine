@@ -24,7 +24,7 @@ namespace {
 	const float LIFE_POWERED = 1.0f;
 	const float LIFE_CHASER = 1.0f;
 	const float LIFE_SHOT = 1.0f;
-	const float LIFE_BOMB = 50.0f;
+	const float LIFE_BOMB = 10.0f;
 
 	//エネミーのタイプ毎の弾への影響値
 	const float DURABILITY_COMMON = 1.0f;

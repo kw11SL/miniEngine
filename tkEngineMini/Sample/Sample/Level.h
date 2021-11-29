@@ -9,16 +9,46 @@ struct ObjectData
 	Vector3 Scale;
 	Quaternion Rot;
 	const wchar_t* name;
-	int number;
+	int number = 0;
+
+	/// @brief 引数で渡したオブジェクト名のオブジェクトか調べる
+	/// @param objName 調べる名前
+	/// @return 名前が一致した場合trueを返す
+	bool EqualObjectName(const wchar_t* objName)
+	{
+		return wcscmp(objName, name) == 0;
+	}
+
+	/// @brief 名前の前方一致を調べる
+	/// @param n 比較する名前 
+	/// @return 一致していたらtrueを返す
+	bool ForwardMatchName(const wchar_t* n)
+	{
+		auto len = wcslen(n);
+		auto nameLen = wcslen(name);
+
+		if (len > nameLen)
+		{
+			//名前が長いので不一致
+			return false;
+		}
+		return wcsncmp(n, name, len) == 0;
+
+	}
 };
 
 class Level : public IGameObject
 {
 public:
+	~Level(){}
+
 	/// <summary>
 	/// function<戻り値型（引数）> 関数の名前
 	/// </summary>
 	void Init(const char* name, std::function<bool(ObjectData& objectData) > Hookfunc);
+
+	/// @brief 更新処理
+	void Update();
 
 	/// <summary>
 	/// マップチップの数分for文を回してマップチップを描画

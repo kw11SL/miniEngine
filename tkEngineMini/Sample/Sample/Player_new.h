@@ -112,6 +112,12 @@ public:
 		m_skinModelRender->InitModel();
 	}
 
+	/// @brief キャラコンの初期化
+	void InitCharaCon()
+	{
+		m_myCharaCon.Init(m_position);
+	}
+
 private:
 	//内部で使う処理
 
@@ -153,9 +159,9 @@ private:
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル
 	Vector3 m_downVector = { 0.0f,-10.0f,0.0f };		//レイを飛ばす方向ベクトル
-	Vector3 m_forward = Vector3::Zero;					//前方
-	Vector3 m_right	= Vector3::Zero;					//右
-	Vector3 m_up = Vector3::Zero;						//上
+	Vector3 m_forward = Vector3::Front;					//前方
+	Vector3 m_right	= Vector3::Right;					//右
+	Vector3 m_up = Vector3::Up;						//上
 	Vector3 m_upPrev = Vector3::Zero;					//前フレームの上
 	Vector3 m_cameraUp = Vector3::Zero;					//カメラの上(カメラに反映する上方向)
 	Vector3 m_scale = Vector3::One;						//拡大率

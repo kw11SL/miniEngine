@@ -85,7 +85,7 @@ void Bullet::Init(
 	const EnBulletType& bulletType)
 {
 	
-	m_skinModelRender = NewGO<SkinModelRender>(0);
+	//m_skinModelRender = NewGO<SkinModelRender>(0);
 
 	const char* modelPath = "hoge";
 	
@@ -128,36 +128,39 @@ void Bullet::Init(
 		break;
 	}
 
-	m_skinModelRender->Init(
+	/*m_skinModelRender->Init(
 		modelPath,
 		enModelUpAxisZ,
 		renderingEngine,
 		true,
 		false
-	);
+	);*/
 
 	//初期位置を決定
 	m_position = initPoint;
 
-	m_skinModelRender->SetPosition(m_position);
-	m_skinModelRender->SetScale(m_scale * 3.0f);
+	//m_skinModelRender->SetPosition(m_position);
+	//m_skinModelRender->SetScale(m_scale * 3.0f);
 
-	//ライトを検索して受け取り
-	m_directionLight = FindGO<DirectionLight>("directionlight");
-	m_pointLight = FindGO<PointLight>("pointlight");
-	m_spotLight = FindGO<SpotLight>("spotlight");
-	
-	RecieveDirectionLight(m_directionLight);
-	RecievePointLight(m_pointLight);
-	RecieveSpotLight(m_spotLight);
+	////ライトを検索して受け取り
+	//m_directionLight = FindGO<DirectionLight>("directionlight");
+	//m_pointLight = FindGO<PointLight>("pointlight");
+	//m_spotLight = FindGO<SpotLight>("spotlight");
+	//
+	//RecieveDirectionLight(m_directionLight);
+	//RecievePointLight(m_pointLight);
+	//RecieveSpotLight(m_spotLight);
 
-	//モデルを更新
-	InitModelFromInitData();
+	////モデルを更新
+	//InitModelFromInitData();
 
 	//自作キャラコンの初期化
 	m_myCharaCon.Init(
 		m_position
 	);
+
+	//前方、右、上の各ベクトルを各軸で初期化
+	m_sphericalMove.Init(m_forward, m_right, m_up);
 
 	//上方向を設定
 	m_up = initUp;
@@ -173,9 +176,6 @@ void Bullet::Init(
 
 	//エフェクトの初期化
 	InitEffect(bulletType);
-
-	//前方、右、上の各ベクトルを各軸で初期化
-	m_sphericalMove.Init(m_forward, m_right, m_up);
 	
 }
 
@@ -186,7 +186,7 @@ void Bullet::Move()
 	
 	//正面を発射方向で更新(初回のみ)
 	if (m_isDecideDirection == false) {
-		m_forward += m_direction;
+		m_forward = m_direction;
 		//発射方向が決まったのでフラグをtrue
 		m_isDecideDirection = true;
 	}
@@ -203,8 +203,8 @@ void Bullet::Move()
 	//上方向を球面の法線で更新し、右と前方を更新
 	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
 
-	//モデルの座標を更新
-	m_skinModelRender->SetPosition(m_position);
+	////モデルの座標を更新
+	//m_skinModelRender->SetPosition(m_position);
 
 	//スプレッドボムの速度減衰処理
 	if (m_enBulletType == enPlayerSpreadBomb) {
@@ -227,8 +227,7 @@ void Bullet::Rotation()
 	Quaternion mulRot;
 	//クォータニオンを乗算
 	mulRot.Multiply(m_rot, rot);
-	//乗算したクォータニオンでモデルを回転
-	m_skinModelRender->SetRotation(mulRot);
+	//               
 
 	m_sphericalMove.Rotation(m_forward, m_right, m_up, m_rot);
 }

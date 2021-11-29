@@ -56,6 +56,8 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 		m_position
 	);
 
+	//‰º•ûŒü‚Íã•ûŒü‚Ì”½‘Î
+	m_downVector = m_up * -1.0f;
 	//‰º•ûŒüƒxƒNƒgƒ‹‚ğ³‹K‰»
 	m_downVector.Normalize();
 

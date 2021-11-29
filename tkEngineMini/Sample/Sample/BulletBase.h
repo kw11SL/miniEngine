@@ -1,33 +1,27 @@
 #pragma once
-#include "Explosion.h"
-
-/// @brief 弾の種類
-enum EnBulletType
-{
-	enPlayerNormal,
-	enPlayerSpreadBomb,
-	enEnemyNormal,
-	enBulletTypeNum
-};
-
-class Bullet : public IGameObject
+class BulletBase : public IGameObject
 {
 public:
-	Bullet() {}
-	~Bullet();
+	BulletBase(){}
+	virtual ~BulletBase();
 
 	/// @brief 初期化処理
 	/// @param renderingEngine レンダリングエンジン
 	/// @param initPoint 初期位置
 	/// @param initUp 初期位置の上ベクトル
 	/// @param direction 方向
-	/// @param bulletType 弾の種類
 	void Init(
 		RenderingEngine& renderingEngine,
 		const Vector3& initPoint,
 		const Vector3& initUp,
-		const Vector3& direction,
-		const EnBulletType& bulletType);
+		const Vector3& direction
+		);
+
+	/// @brief 初期化処理に付随する処理
+	virtual void InitSub();
+
+	/// @brief 更新処理に付随する処理
+	virtual void UpdateSub();
 
 	//ゲッター
 	/// @brief	座標を取得 
@@ -86,7 +80,6 @@ public:
 	}
 
 	//ライトを渡すための関数
-
 	/// @brief ディレクションライトを受けとる
 	/// @param dirLight ディレクションライト
 	void RecieveDirectionLight(DirectionLight* dirLight)
@@ -134,20 +127,6 @@ public:
 		return m_isModelDeleted;
 	}
 
-	/// @brief 弾のタイプを設定
-	/// @param type 
-	void SetType(const EnBulletType& type)
-	{
-		m_enBulletType = type;
-	}
-
-	/// @brief 弾のタイプを取得
-	/// @return 
-	EnBulletType GetType()
-	{
-		return m_enBulletType;
-	}
-
 	/// @brief 弾のダメージを取得
 	/// @return 
 	float GetPower()
@@ -155,6 +134,8 @@ public:
 		return m_power;
 	}
 
+	/// @brief 残り存在時間を取得
+	/// @return 
 	float GetLifeTime()
 	{
 		return m_lifeTime;
@@ -181,10 +162,13 @@ public:
 		m_life -= decVal;
 	}
 
-private:
 	//内部で使う関数
-	bool Start() override;
+	bool Start() override
+	{
+		return true;
+	}
 
+	/// @brief 更新処理
 	void Update() override;
 
 	/// @brief 移動処理
@@ -199,27 +183,21 @@ private:
 	/// @brief 削除処理
 	void Destroy();
 
-	/// @brief エフェクトの初期化
-	/// @param bulletType 弾のタイプ
-	void InitEffect(const EnBulletType& bulletType);
+	/// @brief 弾エフェクトの初期化処理
+	/// @param filePath ファイルパス
+	void InitEffect(const char16_t* filePath);
 
-private:
-	//BulletManager* m_bulletManager = nullptr;
-	
+protected:
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
 	SphericalMove m_sphericalMove;						//球面移動用クラス
-	EnBulletType m_enBulletType = enPlayerNormal;		//弾のタイプ
 
-	Player_new* m_player = nullptr;
-	Explosion* m_spreadExplosion = nullptr;
-
-	float m_life = 0.0f;							//耐久値
-	float m_speed = 0.0f;							//移動速度
-	float m_lifeTime = 0.0f;						//時間寿命
-	float m_power = 0.0f;							//弾が与えるダメージ
-	bool m_isExist = true;							//存在フラグ
-	float m_damageInterval = 0.5f;					//ダメージを与える間隔。この数値だけエネミーに無敵時間を設定する。
+	float m_life = 0.0f;								//耐久値
+	float m_lifeTime = 0.0f;							//時間寿命
+	float m_speed = 0.0f;								//移動速度
+	float m_power = 0.0f;								//弾が与えるダメージ
+	bool m_isExist = true;								//存在フラグ
+	float m_damageInterval = 0.5f;						//ダメージを与える間隔。この数値だけエネミーに無敵時間を設定する。
 
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル
@@ -232,6 +210,7 @@ private:
 	Quaternion m_rot = Quaternion::Identity;			//回転
 	float m_angle = 0.0f;								//角度
 
+	//ライト保持用のメンバ
 	DirectionLight* m_directionLight = nullptr;
 	PointLight* m_pointLight = nullptr;
 	SpotLight* m_spotLight = nullptr;
@@ -239,9 +218,7 @@ private:
 	Vector3 m_direction = Vector3::Zero;				//最初の発射方向
 	bool m_isDecideDirection = false;					//発射方向を前方ベクトルにしたかどうか
 
-	//テスト　ショットエフェクト
-	Effect m_shotEffect;
-	Effect m_spreadBurstEffect;
+	Effect m_shotEffect;								//弾に付随するエフェクト
 
 	//スキンモデルレンダーの削除フラグ
 	bool m_isModelDeleted = false;

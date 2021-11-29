@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "TklFile.h"
+#include "Level_New.h"
 
 void TklFile::Load(const char* filepath)
 {

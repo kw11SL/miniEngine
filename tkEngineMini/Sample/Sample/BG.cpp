@@ -26,16 +26,17 @@ bool BG::Start()
 	return true;
 }
 
-void BG::Init(RenderingEngine& renderingEngine)
+void BG::Init(RenderingEngine& renderingEngine,const Vector3& pos, const Quaternion& rot,const Vector3& scale)
 {
 	m_skinModelRender = NewGO<SkinModelRender>(0);
 	//背景には影を落としたいのでシャドウレシーバーフラグをオンにする
-	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisZ,renderingEngine , false ,true);
+	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisY,renderingEngine , false ,true);
 
 	//モデル拡大
 	//m_scale *= MODEL_INIT_SCALE_RATIO;
 
-	m_skinModelRender->SetPosition(INIT_POINT);
+	m_skinModelRender->SetPosition(pos);
+	m_skinModelRender->SetRotation(rot);
 	m_skinModelRender->SetScale(m_scale);
 
 	//ワールド行列の更新

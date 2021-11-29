@@ -297,6 +297,7 @@
     <ClCompile Include="BG.cpp" />
     <ClCompile Include="Bloom.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="BulletBase.cpp" />
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="DirectionLight.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -311,9 +312,9 @@
     <ClCompile Include="Hello2D.cpp" />
     <ClCompile Include="HelloFont.cpp" />
     <ClCompile Include="HelloLevel2D.cpp" />
-    <ClCompile Include="Level.cpp" />
+    <ClCompile Include="Level_New.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MapChip.cpp" />
+    <ClCompile Include="MapChip_New.cpp" />
     <ClCompile Include="MyCharacterController.cpp" />
     <ClCompile Include="PhysicsBall.cpp" />
     <ClCompile Include="Player_new.cpp" />
@@ -410,6 +411,7 @@
     <ClInclude Include="BG.h" />
     <ClInclude Include="Bloom.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="BulletBase.h" />
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="DirectionLight.h" />
     <ClInclude Include="Enemy.h" />
@@ -424,8 +426,8 @@
     <ClInclude Include="Hello2D.h" />
     <ClInclude Include="HelloFont.h" />
     <ClInclude Include="HelloLevel2D.h" />
-    <ClInclude Include="Level.h" />
-    <ClInclude Include="MapChip.h" />
+    <ClInclude Include="Level_New.h" />
+    <ClInclude Include="MapChip_New.h" />
     <ClInclude Include="MyCharacterController.h" />
     <ClInclude Include="PhysicsBall.h" />
     <ClInclude Include="Player_new.h" />

@@ -99,7 +99,7 @@ private:
 	int m_enemyNum = 0;							//現在のエネミー数
 	float m_time = 30.0f;						//時間
 
-	const int MAX_ENEMY_NUM = 10;				//エネミーの最大数
+	const int MAX_ENEMY_NUM = 15;				//エネミーの最大数
 
 	EnGameState m_enGameState = enGame;			//ゲーム状態
 };

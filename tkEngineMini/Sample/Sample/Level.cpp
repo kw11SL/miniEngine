@@ -32,7 +32,17 @@ void Level::Init(const char* name, std::function<bool(ObjectData& objectData)> h
 			//Zup⇔Yup　終わり。
 
 			objData.name = m_bonelist[i]->GetName();
+			std::wstring name = objData.name;
 			objData.number = m_bonelist[i]->GetNo();
+
+			//名前の中に@があるかを検索
+			int pos = static_cast<int>(name.find('@'));
+
+			if (pos != std::wstring::npos) {
+				std::wstring number = name.substr(static_cast<size_t>(pos) + 1);
+				//wchar型をint型に変換している
+				objData.number = std::stoi(number.c_str());
+			}
 
 			//パスの作成
 			wchar_t filePath[256];
