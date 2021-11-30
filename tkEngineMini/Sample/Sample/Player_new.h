@@ -48,6 +48,20 @@ public:
 		return m_skinModelRender;
 	}
 
+	/// @brief 無敵状態を取得
+	/// @return 
+	bool GetIsInvincible()
+	{
+		return m_isInvincible;
+	}
+
+	/// @brief 存在フラグを取得
+	/// @return 
+	bool GetIsExist()
+	{
+		return m_isExist;
+	}
+
 	//セッター
 	/// @brief	座標を設定 
 	/// @param pos 座標
@@ -74,9 +88,30 @@ public:
 	
 	/// @brief 角度を設定
 	/// @param angle 角度
-	void SetAngle(const float& angle)
+	void SetAngle(const float angle)
 	{
 		m_angle = angle;
+	}
+
+	/// @brief 無敵状態フラグをセット
+	/// @param flag 
+	void SetIsInvFlag(const bool invFlag)
+	{
+		m_isInvincible = invFlag;
+	}
+
+	/// @brief 生存フラグをセット
+	/// @param existFlag 
+	void SetIsExist(const bool existFlag)
+	{
+		m_isExist = existFlag;
+	}
+
+	/// @brief 無敵時間を設定
+	/// @param invTime 
+	void SetInvincibleTime(const float invTime)
+	{
+		m_invincebleTime = invTime;
 	}
 	
 	/// @brief 初期化処理
@@ -118,6 +153,9 @@ public:
 		m_myCharaCon.Init(m_position);
 	}
 
+	/// @brief モデル復活処理
+	void Revive();
+
 private:
 	//内部で使う処理
 
@@ -137,12 +175,23 @@ private:
 	/// @brief 弾を発射
 	void FireBullet();
 
+	/// @brief 無敵時間を減少し、0以下なら無敵フラグを解除
+	void DecInvTime();
+
+	/// @brief 被弾から復活までのカウンターを増加
+	void AddReviveCouter();
+
 	/*void AddBullet(Bullet& bullet)
 	{
 		m_bullet.push_back(&bullet);
 	}*/
 
+	/// @brief 武器の切り替え機能
 	void ChangeWeapon();
+
+	/// @brief 敵や敵弾との当たり判定処理
+	void Hit();
+	
 
 private:
 
@@ -168,14 +217,25 @@ private:
 	Quaternion m_rot = Quaternion::Identity;			//回転
 	Quaternion m_rotUpToGroundNormal = Quaternion::Identity;
 	
-	float m_rotFraction = 1.0f;
+	DirectionLight* m_directionLight = nullptr;
+	PointLight* m_pointLight = nullptr;
+	SpotLight* m_spotLight = nullptr;
 
+	float m_rotFraction = 1.0f;
 	float m_cameraUpFraction = 0.0f;					//カメラ上方向を回転させる補間率
 	float m_angle = 0.0f;								//回転角度
 
+	int m_life = 0;										//プレイヤーのライフ
+	bool m_isInvincible = false;						//無敵状態フラグ
+	bool m_isInvinciblePrev = false;					//前フレームの無敵状態フラグ
+	float m_reviveCounter = 0.0f;						//被弾から復活までのカウンター
+	bool m_isExist = true;								//生存フラグ
+	bool m_isExistPrev = true;							//前フレームの生存フラグ
+
+	float m_invincebleTime = 0.0f;						//無敵時間
 	float m_fireCounter = 0.0f;							//発射間隔カウンタ
 	Vector3 m_shotDirection = Vector3::Zero;			//ショットを撃つ方向
-	
+
 	EnUseWeapon m_enUseWeapon = enNormalShot;				//現在使用しているショット
 	EnBulletType m_enBulletType = enPlayerNormal;			//弾に渡す弾のタイプ情報
 

@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Player_new.h"
+#include "Enemy.h"
+
 
 namespace{
 	const char* MODELPATH_UTC = "Assets/modelData/unityChan.tkm";
@@ -13,17 +15,17 @@ namespace{
 	const Vector3 INIT_POINT = {0.0f,700.0f,0.0f};
 	const float UPPER_OFFSET = 0.0f;
 
-	const float CHARACON_RADIUS = 50.0f;
-	const float CHARACON_HEIGHT = 120.0f;
-	const float PL_MOVE_SPEED = -12.0f;
-	const float FIRECOUNTER = 0.15f;
+	const float PL_MOVE_SPEED = -12.0f;			//移動速度
+	const float FIRECOUNTER_NORMAL = 0.15f;		//通常弾の発射間隔
+	const int INIT_LIFE = 3;					//初期残機
+	const float INVINCIBLE_TIME_REVIVE = 7.0f;	//復活時に設定される無敵時間
+	const float REVIVE_TIME = 3.0f;				//被弾から復活までの時間
+
 	
-	const float CAMERA_ROTATE_FRACTION_ADD_RATE = 0.005f;		//カメラの回転に使う補間係数に加算する定数
+	const float CAMERA_ROTATE_FRACTION_ADD_RATE = 0.005f;			//カメラの回転に使う補間係数に加算する定数
 	const float CAMERA_ROTATE_FRACTION_ADD_RATE_MIN = 0.003f;		//カメラの回転に使う補間係数に加算する定数
 	const float CAMERA_ROTATE_FRACTION_ADD_RATE_MAX = 0.03f;		//カメラの回転に使う補間係数に加算する定数
-
-
-	const float CAMERA_MOVESPEED_MAX = 1000.0f;					//カメラ、注視点の追従最高速度 
+	const float CAMERA_MOVESPEED_MAX = 1000.0f;						//カメラ、注視点の追従最高速度 
 }
 
 Player_new::~Player_new()
@@ -33,6 +35,11 @@ Player_new::~Player_new()
 
 void Player_new::Init(RenderingEngine& renderingEngine)
 {
+	//ライトを検索
+	m_directionLight = FindGO<DirectionLight>("directionlight");
+	m_pointLight = FindGO<PointLight>("pointlight");
+	m_spotLight = FindGO<SpotLight>("spotlight");
+
 	m_bulletManager = BulletManager::GetInstance();
 
 	m_skinModelRender = NewGO<SkinModelRender>(0);
@@ -50,6 +57,15 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 
 	m_skinModelRender->SetPosition(m_position);
 	m_skinModelRender->SetScale(m_scale);
+
+	//////////////////////////////
+	//自機ライフの初期化
+	m_life = INIT_LIFE;
+	//無敵フラグの初期化
+	m_isInvincible = false;
+	//生存フラグの初期化
+	m_isExist = true;
+	//////////////////////////////
 
 	//自作キャラコンの初期化
 	m_myCharaCon.Init(
@@ -96,6 +112,11 @@ bool Player_new::Start()
 
 void Player_new::Move()
 {
+	//存在フラグがオフならreturn
+	if (m_isExist == false) {
+		return;
+	}
+
 	//テスト：移動
 	//パッドのスティックからx成分とy成分を受け取る
 	float x = g_pad[0]->GetLStickXF();
@@ -145,6 +166,7 @@ void Player_new::Rotation()
 
 void Player_new::RotateShotDirection()
 {
+
 	//発射方向を上方向とカメラの右の外積にしておく
 	m_shotDirection = Cross(m_up, g_camera3D->GetRight());
 	m_shotDirection.Normalize();
@@ -171,11 +193,16 @@ void Player_new::RotateShotDirection()
 
 void Player_new::FireBullet()
 {
+	//存在フラグがオフならreturn
+	if (m_isExist == false) {
+		return;
+	}
+
 	//R1ボタンを押すと発射、押しっぱなしで連射
 	if (g_pad[0]->IsPress(enButtonRB1)) {
 		
 		//カウンターが0のときとカウンターが一定値を超えると発射
-		if (m_fireCounter > FIRECOUNTER || m_fireCounter == 0.0f) {
+		if (m_fireCounter > FIRECOUNTER_NORMAL || m_fireCounter == 0.0f) {
 			
 			m_bulletManager->InitBullets(
 				m_position,
@@ -238,6 +265,96 @@ void Player_new::ChangeWeapon()
 	}
 }
 
+void Player_new::Hit()
+{
+	//被弾判定
+	//エネミーを検索
+	QueryGOs<Enemy>("enemy", [&](Enemy* enemy) {
+		//距離を計算
+		Vector3 diff = enemy->GetPosition() - m_position;
+		float length = diff.Length();
+
+		if (length < 60.0f) {
+			//自身が無敵状態でなければ
+			if (m_isInvincible == false) {
+				//1機減らす
+				m_life -= 1;
+				
+				//モデルを消す
+				DeleteGO(m_skinModelRender);
+
+				//生存フラグをオフ
+				SetIsExist(false);
+
+				//無敵状態にする
+				SetInvincibleTime(INVINCIBLE_TIME_REVIVE);
+				SetIsInvFlag(true);
+
+				return false;
+			}
+		}
+		return true;
+	});
+
+
+}
+
+void Player_new::DecInvTime()
+{
+	//無敵時間を減少
+	m_invincebleTime -= g_gameTime->GetFrameDeltaTime();
+	//無敵時間が切れたら無敵フラグをオフにする
+	if (m_invincebleTime <= 0.0f) {
+		m_isInvincible = false;
+	}
+}
+
+void Player_new::AddReviveCouter()
+{
+	//被弾していたら復活までのカウンターを加算
+	if (m_isExist == false) {
+		m_reviveCounter += g_gameTime->GetFrameDeltaTime();
+	}
+	
+	if (m_reviveCounter >= REVIVE_TIME) {
+		//存在フラグをオン
+		m_isExist = true;
+		//カウンターをリセット
+		m_reviveCounter = 0.0f;
+	}
+
+}
+
+void Player_new::Revive()
+{
+
+	if (m_isExist == true
+		&& m_isExistPrev == false) {
+
+		m_skinModelRender = NewGO<SkinModelRender>(0);
+		
+		m_skinModelRender->Init(
+					MODELPATH_UTC,
+					enModelUpAxisZ,
+					*RenderingEngine::GetInstance(),
+					true,
+					false,
+					SKELETON_PATH_UTC
+				);
+
+		m_skinModelRender->SetPosition(m_position);
+		m_skinModelRender->SetScale(m_scale);
+
+		//ライトの受け取り処理
+		RecieveDirectionLight(m_directionLight);
+		RecievePointLight(m_pointLight);
+		RecieveSpotLight(m_spotLight);
+
+		InitModelFromInitData();
+
+	}
+}
+
 void Player_new::Update()
 {
 
@@ -269,6 +386,11 @@ void Player_new::Update()
 	RotateShotDirection();
 	ChangeWeapon();
 	FireBullet();
+	Hit();
+	AddReviveCouter();
+	Revive();
+	DecInvTime();
+
 	
 	if (m_skinModelRender != nullptr) {
 		m_skinModelRender->SetRotation(m_rot);
@@ -315,9 +437,42 @@ void Player_new::Update()
 	//カメラの更新
 	m_gameCamera.UpdateCamera();
 	
+
+	//自機のリスポーン処理
+	//if (m_isInvincible == false 
+	//	&& m_isInvinciblePrev == true) {
+	//	m_skinModelRender = NewGO<SkinModelRender>(0);
+
+	//	m_skinModelRender->Init(
+	//		MODELPATH_UTC,
+	//		enModelUpAxisZ,
+	//		*RenderingEngine::GetInstance(),
+	//		true,
+	//		false,
+	//		SKELETON_PATH_UTC
+	//	);
+
+	//	m_skinModelRender->SetPosition(m_position);
+	//	m_skinModelRender->SetScale(m_scale);
+
+	//	//ライトの受け取り処理
+	//	RecieveDirectionLight(m_directionLight);
+	//	RecievePointLight(m_pointLight);
+	//	RecieveSpotLight(m_spotLight);
+
+	//	InitModelFromInitData();
+
+	//}
+
+
+	//////////////////////////////////
 	//現フレームの上を記録
 	m_upPrev = m_up;
-
+	//現フレームの無敵フラグを記録
+	m_isInvinciblePrev = m_isInvincible;
+	//現フレームの存在フラグを記録
+	m_isExistPrev = m_isExist;
+	//////////////////////////////////
 	
 	
 	//テスト　モデルの削除
@@ -325,20 +480,6 @@ void Player_new::Update()
 		DeleteGO(m_skinModelRender);
 	}
 
-	if (g_pad[0]->IsTrigger(enButtonUp)) {
-		m_skinModelRender = NewGO<SkinModelRender>(0);
-		
-		m_skinModelRender->Init(
-			MODELPATH_UTC,
-			enModelUpAxisZ,
-			*RenderingEngine::GetInstance(),
-			true,
-			false,
-			SKELETON_PATH_UTC
-		);
-
-		m_skinModelRender->SetPosition(m_position);
-		m_skinModelRender->SetScale(m_scale);
-	}
+	
 
 }

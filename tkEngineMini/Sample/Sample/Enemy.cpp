@@ -231,7 +231,7 @@ void Enemy::Rotation()
 
 void Enemy::Hit()
 {
-	//’e‚ğŒŸõ
+	//©‹@’e‚ğŒŸõ
 	QueryGOs<Bullet>("bullet", [&](Bullet* bullet) {
 		Vector3 diff = bullet->GetPosition() - m_position;
 		float length = diff.Length();

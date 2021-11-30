@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "EnemyGenerator.h"
+#include<random>
 
 namespace {
 	const float ENEMY_SPAWN_TIME = 2.0f;
@@ -25,8 +26,15 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 {
 	if (GameDirector::GetInstance()->GetEnemyCount() <= GameDirector::GetInstance()->GetMaxEnemyNum()) {
 
+		std::random_device rnd;
+		std::mt19937 mt(rnd());
+		std::uniform_real_distribution<float> randFloat(0.0f, 0.5f);
+
+		float interval = ENEMY_SPAWN_TIME;
+		interval += randFloat(mt);
+
 		//エネミーを生成
-		if (m_spawnCounter > ENEMY_SPAWN_TIME) {
+		if (m_spawnCounter > interval) {
 			m_enemy = NewGO<Enemy>(0, "enemy");
 			
 			m_enemy->Init(
