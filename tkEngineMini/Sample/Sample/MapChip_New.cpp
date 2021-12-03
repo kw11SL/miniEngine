@@ -12,6 +12,7 @@ MapChip_New::MapChip_New(const LevelObjectData& objData, const char* filePath)
 	initData.m_fxFilePath = "Assets/shader/model.fx";
 	//ノンスキンメッシュ用の頂点シェーダーのエントリーポイントを指定する。
 	initData.m_vsEntryPointFunc = "VSMain";
+
 	//モデルを読み込む。
 	m_model.Init(initData);
 
@@ -19,7 +20,7 @@ MapChip_New::MapChip_New(const LevelObjectData& objData, const char* filePath)
 	m_model.UpdateWorldMatrix(objData.position, objData.rotation, objData.scale);
 
 	//静的物理オブジェクトを作成。
-	m_physicsStaticObject.CreateFromModel(m_model, m_model.GetWorldMatrix());
+	//m_physicsStaticObject.CreateFromModel(m_model, m_model.GetWorldMatrix());
 }
 
 void MapChip_New::Draw(RenderContext& rc)

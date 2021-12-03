@@ -60,10 +60,11 @@ void Level_New::Init(
 			//	//wchar型をint型に変換している。
 			//	levelObjData.number = std::stoi(number.c_str());
 			//}
-			//パスの作成
 			
+			//パスの作成
 			wchar_t filePath[256];
-			swprintf_s(filePath, L"Assets/modelData/%s.tkm", levelObjData.name);
+			//swprintf_s(filePath, L"Assets/modelData/%s.tkm", levelObjData.name);
+			swprintf_s(filePath, L"Assets/modelData/staticObject/%s.tkm", levelObjData.name);
 			//マルチバイトに変換 wchar→ char
 			//ベースの文字列。
 			size_t origsize = wcslen(filePath) + 1;

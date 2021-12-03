@@ -83,5 +83,14 @@ void DirectionLight::SetEyePos(const Vector3& pos)
 
 void DirectionLight::Update()
 {
+	//Ž‹“_‚ðÝ’è
+	m_eyePos = g_camera3D->GetPosition();
+	SetEyePos(m_eyePos);
+
+	m_direction = g_camera3D->GetPosition() - g_camera3D->GetTarget();
+	//m_direction = g_camera3D->GetTarget() - g_camera3D->GetPosition();
+	SetDirection(m_direction);
+
+
 	//Rotation();
 }

@@ -328,6 +328,7 @@
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="SpreadBombExplosion.cpp" />
     <ClCompile Include="SpriteRender.cpp" />
+    <ClCompile Include="StageBackGround.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -441,6 +442,7 @@
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="SpreadBombExplosion.h" />
     <ClInclude Include="SpriteRender.h" />
+    <ClInclude Include="StageBackGround.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="TklFile.h" />

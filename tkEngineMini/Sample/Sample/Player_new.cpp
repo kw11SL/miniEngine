@@ -26,6 +26,9 @@ namespace{
 	const float CAMERA_ROTATE_FRACTION_ADD_RATE_MIN = 0.003f;		//カメラの回転に使う補間係数に加算する定数
 	const float CAMERA_ROTATE_FRACTION_ADD_RATE_MAX = 0.03f;		//カメラの回転に使う補間係数に加算する定数
 	const float CAMERA_MOVESPEED_MAX = 1000.0f;						//カメラ、注視点の追従最高速度 
+
+	const char16_t* EXPLOSION_EFFECT_FILEPATH = u"Assets/effect/justguard.efk";
+	const Vector3 EXPLOSION_EFFECT_SCALE = { 30.0f,30.0f,30.0f };
 }
 
 Player_new::~Player_new()
@@ -112,10 +115,7 @@ bool Player_new::Start()
 
 void Player_new::Move()
 {
-	//存在フラグがオフならreturn
-	if (m_isExist == false) {
-		return;
-	}
+	
 
 	//テスト：移動
 	//パッドのスティックからx成分とy成分を受け取る
@@ -133,6 +133,11 @@ void Player_new::Move()
 	//m_moveSpeed = m_right * x * PL_MOVE_SPEED;
 	//プレイヤーの前後(奥、手前)方向への移動
 	m_moveSpeed += forward * y * PL_MOVE_SPEED;
+
+	//存在フラグがオフなら移動速度を0に
+	if (m_isExist == false) {
+		m_moveSpeed *= 0.0f;
+	}
 
 	//自作キャラコンに移動速度を渡す
 	m_position = m_myCharaCon.Execute(m_moveSpeed,m_downVector,UPPER_OFFSET);
@@ -290,6 +295,12 @@ void Player_new::Hit()
 				SetInvincibleTime(INVINCIBLE_TIME_REVIVE);
 				SetIsInvFlag(true);
 
+				m_explosionEffect.Init(EXPLOSION_EFFECT_FILEPATH);
+				m_explosionEffect.SetPosition(m_position);
+				m_explosionEffect.SetRotation(m_rot);
+				m_explosionEffect.SetScale(EXPLOSION_EFFECT_SCALE);
+				m_explosionEffect.Play();
+
 				return false;
 			}
 		}
@@ -421,11 +432,6 @@ void Player_new::Update()
 	//m_gameCamera.SetCameraPosition(m_position + toCamera);
 	//カメラ目標を設定
 	m_gameCamera.SetCameraPositionTarget(m_position + toCamera);
-	
-	////カメラ目標を追いかける処理
-	//m_gameCamera.ChaseCameraPosition();
-	////注視点目標を追いかける処理
-	//m_gameCamera.ChaseTargetPosition();
 
 	// カメラの上方向目標をプレイヤーの上方向に設定。
 	m_gameCamera.SetUpVectorTarget(m_up);
@@ -436,34 +442,6 @@ void Player_new::Update()
 	m_gameCamera.SetUp(m_cameraUp);
 	//カメラの更新
 	m_gameCamera.UpdateCamera();
-	
-
-	//自機のリスポーン処理
-	//if (m_isInvincible == false 
-	//	&& m_isInvinciblePrev == true) {
-	//	m_skinModelRender = NewGO<SkinModelRender>(0);
-
-	//	m_skinModelRender->Init(
-	//		MODELPATH_UTC,
-	//		enModelUpAxisZ,
-	//		*RenderingEngine::GetInstance(),
-	//		true,
-	//		false,
-	//		SKELETON_PATH_UTC
-	//	);
-
-	//	m_skinModelRender->SetPosition(m_position);
-	//	m_skinModelRender->SetScale(m_scale);
-
-	//	//ライトの受け取り処理
-	//	RecieveDirectionLight(m_directionLight);
-	//	RecievePointLight(m_pointLight);
-	//	RecieveSpotLight(m_spotLight);
-
-	//	InitModelFromInitData();
-
-	//}
-
 
 	//////////////////////////////////
 	//現フレームの上を記録
@@ -480,6 +458,6 @@ void Player_new::Update()
 		DeleteGO(m_skinModelRender);
 	}
 
-	
+	m_explosionEffect.Update();
 
 }

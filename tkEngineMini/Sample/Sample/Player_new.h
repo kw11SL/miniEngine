@@ -236,9 +236,11 @@ private:
 	float m_fireCounter = 0.0f;							//発射間隔カウンタ
 	Vector3 m_shotDirection = Vector3::Zero;			//ショットを撃つ方向
 
-	EnUseWeapon m_enUseWeapon = enNormalShot;				//現在使用しているショット
-	EnBulletType m_enBulletType = enPlayerNormal;			//弾に渡す弾のタイプ情報
+	EnUseWeapon m_enUseWeapon = enNormalShot;			//現在使用しているショット
+	EnBulletType m_enBulletType = enPlayerNormal;		//弾に渡す弾のタイプ情報
 
 	BulletManager* m_bulletManager = nullptr;
+
+	Effect m_explosionEffect;									//被弾時のエフェクト
 };
 

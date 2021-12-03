@@ -280,7 +280,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	specSpot *= affectSp;
 
 	//リムの強さを求める///////////////////////////////
-	
+
 	//ディレクションライトによるリムライト
 	//サーフェスの法線とディレクションライトの入射方向に依存するリムの強さを求める
 	//max関数:受け取った引数のうち、値が大きい方を返す(if分より速いことがある)
@@ -289,7 +289,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	float power2 = 1.0f - max(0.0f, psIn.normalInView.z * -1.0f);
 	//最終的なリムの強さを求める
 	float limPower = power1 * power2;
-	limPower = pow(limPower, 1.3f);
+	limPower = pow(limPower, 2.0f);
 
 	//ディレクションライトにリムライトの反射光を合算
 	float3 limColorDir = limPower * directionLight.color;
@@ -299,11 +299,13 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	
 	//それぞれの拡散反射光を足す
 	float3 diffuseLig = diffDirection + diffPoint + diffSpot;
+	
 	//それぞれの鏡面反射光を足す
 	float3 specularLig = specDirection + specPoint + specSpot;
+	
 	//拡散反射光と鏡面反射光、環境光、リムライトを足す
 	float3 lig = diffuseLig + specularLig + ambientLig + limColorDir;
-
+	
 	//アルベドカラーをサンプルして最終出力カラーのベースを作成
 	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
 	

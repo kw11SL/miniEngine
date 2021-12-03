@@ -12,6 +12,7 @@ class SpotLight;
 class UI;
 class EnemyGenerator;
 class Bullet;
+class StageBackGround;
 
 class Game : public IGameObject
 {
@@ -35,7 +36,8 @@ private:
 	
 	Player_new* m_player = nullptr;					//プレイヤー
 	Enemy* m_enemy[3] = { nullptr };						//エネミー
-	BG* m_bg = nullptr;								//背景
+	BG* m_bg = nullptr;								//ステージ
+	StageBackGround* m_stageBackGround = nullptr;				//背景
 	DirectionLight* m_directionLight = nullptr;		//ディレクションライト
 	PointLight* m_pointLight = nullptr;				//ポイントライト
 	SpotLight* m_spotLight = nullptr;				//スポットライト
@@ -43,6 +45,7 @@ private:
 	EnemyGenerator* m_enemyGenerator[10] = {nullptr};		//エネミー生成器
 	//テスト
 	SpriteRender* m_sprite = nullptr;				//テスト表示スプライト
+	
 	
 	Level_New m_level;
 
