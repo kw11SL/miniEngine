@@ -4,6 +4,7 @@
 
 namespace {
 	const float ENEMY_SPAWN_TIME = 2.0f;
+	const float GENERATOR_AVTIVE_COUNT = 45.0f;
 }
 
 EnemyGenerator::~EnemyGenerator()
@@ -11,11 +12,14 @@ EnemyGenerator::~EnemyGenerator()
 	DeleteGO(m_enemy);
 }
 
-void EnemyGenerator::Init(const Vector3& pos, const Quaternion& rot,const EnEnemyType& enemyType)
+void EnemyGenerator::Init(const Vector3& pos, const Quaternion& rot, const bool isActive ,const EnEnemyType& enemyType)
 {
 	m_position = pos;
 	m_rotation = rot;
 	m_spawnEnemyType = enemyType;
+
+	//初期化時にアクティブにするかどうかを選択
+	SetActive(isActive);
 
 	m_myCharaCon.Init(m_position);
 	m_sphericalMove.Init(m_forward, m_right, m_up);
@@ -34,7 +38,7 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 		interval += randFloat(mt);
 
 		//エネミーを生成
-		if (m_spawnCounter > interval) {
+		if (m_spawnCounter > interval && m_isActive == true) {
 			m_enemy = NewGO<Enemy>(0, "enemy");
 			
 			m_enemy->Init(
@@ -76,4 +80,11 @@ void EnemyGenerator::Update()
 	Rotation();
 	AddCounter();
 	GenerateEnemy(m_spawnEnemyType);
+
+	//生成器がボムのとき
+	if (m_spawnEnemyType == enBomb && 
+		GameDirector::GetInstance()->GetTime() <= GENERATOR_AVTIVE_COUNT) {
+		SetActive(true);
+	}
+
 }

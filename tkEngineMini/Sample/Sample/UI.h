@@ -1,5 +1,6 @@
 #pragma once
 #include "Score.h"
+#include "Timer.h"
 
 class UI : public IGameObject
 {
@@ -17,6 +18,6 @@ private:
 
 private:
 	Score m_score;		//スコア表示用
-
+	Timer m_timer;		//時間表示用
 };
 

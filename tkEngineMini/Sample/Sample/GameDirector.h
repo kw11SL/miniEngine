@@ -11,7 +11,7 @@ private:
 	};
 
 public:
-	/// @brief ゲームディレクターの作成
+	/// @brief インスタンスの作成
 	static void CreateInstance()
 	{
 		if (m_gameDirector == nullptr) {
@@ -26,7 +26,7 @@ public:
 		return m_gameDirector;
 	}
 
-	/// @brief ゲームディレクターの削除
+	/// @brief インスタンスの削除
 	static void DeleteInstance()
 	{
 		delete m_gameDirector;
@@ -35,7 +35,7 @@ public:
 
 	/// @brief スコアを取得
 	/// @return 
-	int GetScore()
+	const int& GetScore() const
 	{
 		return m_score;
 	}
@@ -59,9 +59,24 @@ public:
 		m_enemyNum--;
 	}
 
+	/// @brief 残時間を減らす
+	void DecTime()
+	{
+		if (m_time <= 0.0f) {
+			return;
+		}
+
+		m_time -= g_gameTime->GetFrameDeltaTime();
+
+		//0を下回ったら0にする
+		if (m_time < 0.0f){
+			m_time = 0.0f;
+		}
+	}
+
 	/// @brief 存在しているエネミーの数を取得
 	/// @return 
-	const int& GetEnemyCount()
+	const int& GetEnemyCount() const
 	{
 		return m_enemyNum;
 	}
@@ -87,6 +102,14 @@ public:
 		return m_enGameState;
 	}
 
+	/// @brief ステージの残時間を取得
+	/// @return 
+	const float& GetTime() const
+	{
+		return m_time;
+	}
+
+
 private:
 	GameDirector() {}
 	~GameDirector() {}
@@ -96,10 +119,14 @@ private:
 	static GameDirector* m_gameDirector;		//唯一のインスタンス
 	
 	int m_score = 0;							//スコア
+	int m_waveNumber = 1;						//現在のwave。1から開始する
 	int m_enemyNum = 0;							//現在のエネミー数
-	float m_time = 30.0f;						//時間
+	float m_time = 60.0f;						//ステージの残時間
 
+	//定数
 	const int MAX_ENEMY_NUM = 15;				//エネミーの最大数
+
+
 
 	EnGameState m_enGameState = enGame;			//ゲーム状態
 };

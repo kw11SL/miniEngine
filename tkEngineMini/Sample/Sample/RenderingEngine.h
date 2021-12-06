@@ -59,6 +59,8 @@ public:
 	/// @param rc レンダリングコンテキスト
 	void FontRendering(RenderContext& rc);
 
+	/// @brief ライトカメラの更新
+	void UpdateLightCamera();
 
 	/// @brief レンダリングターゲットを取得
 	/// @return レンダリングターゲット

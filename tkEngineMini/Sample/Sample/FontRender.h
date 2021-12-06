@@ -4,7 +4,7 @@ class RenderingEngine;
 
 struct SFontData {
 	Font font;								//フォント
-	const wchar_t* text = L"hoge";				//テキスト
+	const wchar_t* text = L"hoge";			//テキスト
 	Vector2 position = Vector2::Zero;		//座標
 	Vector2 pivot = { 0.5f,0.5f };			//ピボット
 	Vector4 color = Vector4::White;			//カラー
@@ -43,7 +43,7 @@ public:
 	void SetPosition(const Vector2& pos)
 	{
 		m_position = pos;
-		//m_fontData.position = m_position;
+		m_fontData.position = m_position;
 	}
 
 	/// @brief 座標を取得
@@ -58,7 +58,7 @@ public:
 	void SetPivot(const Vector2& pivot)
 	{
 		m_pivot = pivot;
-		//m_fontData.pivot = m_pivot;
+		m_fontData.pivot = m_pivot;
 	}
 
 	/// @brief ピボットを取得
@@ -73,7 +73,7 @@ public:
 	void SetColor(const Vector4& color)
 	{
 		m_color = color;
-		//m_fontData.color = m_color;
+		m_fontData.color = m_color;
 	}
 
 	/// @brief カラーを取得
@@ -88,7 +88,7 @@ public:
 	void SetScale(float scale)
 	{
 		m_scale = scale;
-		//m_fontData.scale = m_scale;
+		m_fontData.scale = m_scale;
 	}
 
 	/// @brief 拡大率を取得
@@ -103,7 +103,7 @@ public:
 	void SetAngle(const float angle)
 	{
 		m_rotation = angle;
-		//m_fontData.rotation = m_rotation;
+		m_fontData.rotation = m_rotation;
 	}
 
 	/// @brief 角度を取得

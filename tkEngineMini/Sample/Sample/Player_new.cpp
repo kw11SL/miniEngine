@@ -273,15 +273,17 @@ void Player_new::ChangeWeapon()
 void Player_new::Hit()
 {
 	//被弾判定
-	//エネミーを検索
+	//エネミーとの判定
 	QueryGOs<Enemy>("enemy", [&](Enemy* enemy) {
 		//距離を計算
 		Vector3 diff = enemy->GetPosition() - m_position;
 		float length = diff.Length();
 
+		//エネミーに接触したとき
 		if (length < 60.0f) {
-			//自身が無敵状態でなければ
-			if (m_isInvincible == false) {
+			
+			//自身が無敵状態でなく、敵の当たり判定が有効であれば
+			if (m_isInvincible == false && enemy->GetIsActive() == true) {
 				//1機減らす
 				m_life -= 1;
 				
@@ -307,6 +309,42 @@ void Player_new::Hit()
 		return true;
 	});
 
+	//敵の爆発との判定
+	QueryGOs<Explosion>("enemyExplosion", [&](Explosion* enemyExplosion) {
+		//距離を計算
+		Vector3 diff = enemyExplosion->GetPosition() - m_position;
+		float length = diff.Length();
+
+		//爆風に接触したとき
+		if (length < enemyExplosion->GetDamageArea()) {
+
+			//自身が無敵状態でなければ
+			if (m_isInvincible == false) {
+				//1機減らす
+				m_life -= 1;
+
+				//モデルを消す
+				DeleteGO(m_skinModelRender);
+
+				//生存フラグをオフ
+				SetIsExist(false);
+
+				//無敵状態にする
+				SetInvincibleTime(INVINCIBLE_TIME_REVIVE);
+				SetIsInvFlag(true);
+
+				//爆散エフェクトを発生
+				m_explosionEffect.Init(EXPLOSION_EFFECT_FILEPATH);
+				m_explosionEffect.SetPosition(m_position);
+				m_explosionEffect.SetRotation(m_rot);
+				m_explosionEffect.SetScale(EXPLOSION_EFFECT_SCALE);
+				m_explosionEffect.Play();
+
+				return false;
+			}
+		}
+		return true;
+		});
 
 }
 

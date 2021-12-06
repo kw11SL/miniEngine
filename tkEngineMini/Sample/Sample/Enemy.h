@@ -1,4 +1,5 @@
 #pragma once
+#include"Explosion.h"
 
 class Player_new;
 
@@ -36,19 +37,19 @@ public:
 	//ゲッター
 	/// @brief	座標を取得 
 	/// @return 座標
-	Vector3 GetPosition() { return m_position; }
+	const Vector3& GetPosition() const { return m_position; }
 
 	/// @brief 拡大率を取得
 	/// @return 拡大率
-	Vector3 GetScale() { return m_scale; }
+	const Vector3& GetScale() const { return m_scale; }
 
 	/// @brief 回転を取得
 	/// @return 回転
-	Quaternion GetRotation() { return m_rot; }
+	const Quaternion& GetRotation() const { return m_rot; }
 
 	/// @brief 回転角度を取得
 	/// @return 回転角度
-	float GetAngle() { return m_angle; }
+	const float GetAngle() const { return m_angle; }
 
 	/// @brief スキンモデルレンダーを取得
 	/// @return スキンモデルレンダー
@@ -84,10 +85,11 @@ public:
 
 	/// @brief 角度を設定
 	/// @param angle 角度
-	void SetAngle(const float& angle) 
-	{
-		m_angle = angle;
-	}
+	void SetAngle(const float angle) { m_angle = angle;}
+
+	/// @brief プレイヤーに対する当たり判定を有効にするかどうか
+	/// @param isActive 
+	void SetActive(const bool isActive) { m_isActive = isActive; }
 
 	//ライトを渡すための関数
 
@@ -139,6 +141,13 @@ public:
 		return m_score;
 	}
 
+	/// @brief プレイヤーに対する当たり判定が有効かどうか
+	/// @return 
+	const bool GetIsActive()
+	{
+		return m_isActive;
+	}
+
 	/// @brief 無敵状態かどうか？
 	/// @return 
 	bool IsInvincible()
@@ -146,11 +155,15 @@ public:
 		return m_isInvincible;
 	}
 
-	//無敵時間を設定
+	/// @brief 無敵時間を設定
+	/// @param invTime 
 	void SetInvincibleTime(const float invTime)
 	{
 		m_invTime = invTime;
 	}
+
+	/// @brief プレイヤーに点数を加点せず即座に自滅させる
+	void SelfDestroy();
 
 private:
 	bool Start() override;
@@ -172,6 +185,12 @@ private:
 	/// @brief 無敵時間を減らし、無敵時間が切れたら無敵状態をオフにする
 	void DecInvTime();
 
+	/// @brief エネミーの生存時間を減らす
+	void DecLifeTime();
+
+	/// @brief 当たり判定が有効になるまでのカウンターを減らす
+	void DecToActivateTime();
+
 private:
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
@@ -179,13 +198,16 @@ private:
 	EnEnemyType m_enEnemyType = enCommon;				//エネミーのタイプ
 
 	Player_new* m_player = nullptr;
+	Explosion* m_explosion = nullptr;
 
 	float m_life = 0.0f;								//耐久値
+	float m_lifeTime = 1.0f;							//時間寿命
 	float m_speed = 0.0f;								//移動速度
 	int m_score = 0;									//エネミーの撃破スコア
 	float m_durability = 0.0f;							//弾への影響値
 	bool m_exist = false;								//存在フラグ
 	bool m_isInvincible = false;						//無敵状態かどうか
+	bool m_isActive = false;							//プレイヤーに対する当たり判定が有効かどうか
 
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル
@@ -202,8 +224,9 @@ private:
 	SpotLight* m_spotLight = nullptr;
 
 	float m_invTime = 0.0f;								//無敵時間
+	float m_toActivateCounter = 0.0f;					//出現してから当たり判定が有効になるまでのカウンター
 
-	//テスト　撃破エフェクト
+	//撃破エフェクト
 	Effect m_destroyEffect;
 
 };

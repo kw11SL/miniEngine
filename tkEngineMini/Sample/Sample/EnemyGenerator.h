@@ -11,7 +11,7 @@ public:
 	void Update()override;
 
 
-	void Init(const Vector3& pos,const Quaternion& rot , const EnEnemyType& enemyType);
+	void Init(const Vector3& pos,const Quaternion& rot ,const bool isActive, const EnEnemyType& enemyType);
 
 	void GenerateEnemy(const EnEnemyType& enemyType);
 
@@ -35,18 +35,30 @@ public:
 		m_rotation = rot;
 	}
 
+	/// @brief アクティブフラグを設定
+	/// @param isActive 
+	void SetActive(const bool isActive)
+	{
+		m_isActive = isActive;
+	}
+
 	/// @brief 座標を取得
 	/// @return 
-	Vector3& GetPosition()
+	const Vector3& GetPosition() const
 	{
 		return m_position;
 	}
 
 	/// @brief クォータニオンを取得
 	/// @return 
-	Quaternion& GetRotation()
+	const Quaternion& GetRotation() const
 	{
 		return m_rotation;
+	}
+
+	const bool GetIsActive() const
+	{
+		return m_isActive;
 	}
 
 private:
@@ -63,5 +75,6 @@ private:
 	Vector3 m_downVector = { 0.0f,-10.0f,0.0f };		//レイを飛ばす下方向ベクトル
 	EnEnemyType m_spawnEnemyType = enCommon;			//スポーンさせるエネミータイプ
 	float m_spawnCounter = 0.0f;						//スポーン間隔用カウンター
+	bool m_isActive = false;							//生成器がアクティブかどうか
 };
 

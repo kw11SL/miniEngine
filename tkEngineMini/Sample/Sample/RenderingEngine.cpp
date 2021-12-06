@@ -19,6 +19,9 @@ void RenderingEngine::Init()
 
 void RenderingEngine::Execute(RenderContext& rc)
 {
+	//ライトカメラの更新
+	UpdateLightCamera();
+
 	//通常描画
 	CommonRendering(rc);
 
@@ -103,6 +106,15 @@ void RenderingEngine::InitLightCamera()
 	m_lightCamera.SetUp({ 1.0f,0.0f,0.0f });
 	m_lightCamera.SetViewAngle(Math::DegToRad(60.0f));
 	m_lightCamera.Update();
+}
+
+void RenderingEngine::UpdateLightCamera()
+{
+	m_lightCamera.SetPosition(g_camera3D->GetPosition());
+	m_lightCamera.SetTarget(g_camera3D->GetTarget());
+	m_lightCamera.SetUp(g_camera3D->GetUp());
+	m_lightCamera.Update();
+
 }
 
 void RenderingEngine::InitMainRenderTarget()

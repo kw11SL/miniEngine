@@ -301,6 +301,7 @@
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="DirectionLight.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyExplosion.cpp" />
     <ClCompile Include="EnemyGenerator.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="ExplosionBase.cpp" />
@@ -338,6 +339,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TklFile.cpp" />
     <ClCompile Include="UI.cpp" />
   </ItemGroup>
@@ -416,6 +418,7 @@
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="DirectionLight.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyExplosion.h" />
     <ClInclude Include="EnemyGenerator.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="ExplosionBase.h" />
@@ -445,6 +448,7 @@
     <ClInclude Include="StageBackGround.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
+    <ClInclude Include="Timer.h" />
     <ClInclude Include="TklFile.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>

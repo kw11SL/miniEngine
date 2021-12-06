@@ -13,11 +13,11 @@ namespace {
 	const float UPPER_OFFSET = 50.0f;
 	
 	//エネミーのタイプ毎の移動速度
-	const float MOVE_SPEED_COMMON = 3.0f;
+	const float MOVE_SPEED_COMMON = 5.0f;
 	const float MOVE_SPEED_POWERED = 5.0f;
 	const float MOVE_SPEED_CHASER = 10.0f;
 	const float MOVE_SPEED_SHOT = 2.0f;
-	const float MOVE_SPEED_BOMB = 2.0f;
+	const float MOVE_SPEED_BOMB = 3.0f;
 
 	//エネミーのタイプ毎の耐久値
 	const float LIFE_COMMON = 1.0f;
@@ -40,6 +40,9 @@ namespace {
 	const int SCORE_SHOT = 300;
 	const int SCORE_BOMB = 200;
 
+	const float LIFE_TIME_BOMB = 5.0f;
+	const float ACTIVATE_COUNT = 2.0f;		//当たり判定が有効になるまでのカウンター
+
 	//シェーダーのファイルパス
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
 	//シェーダーのエントリーポイント名
@@ -56,11 +59,13 @@ namespace {
 
 Enemy::Enemy()
 {
+	//発生したらエネミー数に+1
 	GameDirector::GetInstance()->AddEnemyCount();
 }
 
 Enemy::~Enemy()
 {
+	//撃破されたらエネミー数に-1
 	GameDirector::GetInstance()->DecEnemyCount();
 	DeleteGO(m_skinModelRender);
 }
@@ -119,6 +124,7 @@ void Enemy::Init(
 		m_score = SCORE_BOMB;
 		m_durability = DURABILITY_COMMON;
 		m_durability = DURABILITY_BOMB;
+		m_lifeTime = LIFE_TIME_BOMB;
 		break;
 	default:
 		break;
@@ -157,6 +163,8 @@ void Enemy::Init(
 	//下方向ベクトルを正規化
 	m_downVector.Normalize();
 
+	m_myCharaCon.Execute(m_moveSpeed, m_downVector, UPPER_OFFSET);
+
 
 	//前方、右、上の各ベクトルを各軸で初期化
 	m_sphericalMove.Init(m_forward, m_right, m_up);
@@ -166,6 +174,9 @@ void Enemy::Init(
 
 	//無敵状態フラグをオフ
 	m_isInvincible = false;
+
+	//当たり判定が有効になるまでの時間をセット
+	m_toActivateCounter = ACTIVATE_COUNT;
 
 	//エフェクトの初期化
 	m_destroyEffect.Init(u"Assets/effect/destroy.efk");
@@ -186,7 +197,6 @@ void Enemy::Move()
 
 	//プレイヤーへのベクトルを取り、その方向を移動方向にする
 	if(m_player != nullptr) {
-
 		toPlayer = m_player->GetPosition() - m_position;
 		toPlayerLength = toPlayer.Length();
 		toPlayer.Normalize();
@@ -197,10 +207,10 @@ void Enemy::Move()
 	Vector3 playerToMe = m_position - m_player->GetPosition();
 	
 	//プレイヤーの位置までのベクトルを取り、一定距離まで近づくと速度を0にする
-	if (toPlayerLength < 300.0f){
+	if (toPlayerLength < 60.0f){
 		m_speed = 0.0f;
 	}
-	else if (toPlayerLength >= 300.0f && m_enEnemyType == enCommon) {
+	else if (toPlayerLength >= 70.0f && m_enEnemyType == enCommon) {
 		m_speed = MOVE_SPEED_COMMON;
 	}
 
@@ -286,6 +296,26 @@ void Enemy::Hit()
 
 }
 
+void Enemy::SelfDestroy()
+{
+	m_destroyEffect.SetPosition(m_position);
+	m_destroyEffect.SetRotation(m_rot);
+	m_destroyEffect.SetScale({ 20.0f,20.0f,20.0f });
+	m_destroyEffect.Play(false);
+
+	if (m_enEnemyType == enBomb) {
+		m_explosion = NewGO<Explosion>(0, "enemyExplosion");
+		m_explosion->Init(
+			m_position,
+			10.0f,
+			enEnemy_Explosion
+		);
+	}
+
+	DeleteGO(this);
+}
+
+
 void Enemy::Destroy()
 {
 	if (m_life <= 0.0f) {
@@ -313,14 +343,32 @@ void Enemy::DecInvTime()
 {
 	//無敵時間を減少
 	m_invTime -= g_gameTime->GetFrameDeltaTime();
-
 	
 	//0以下なら無敵状態をオフ
 	if(m_invTime <= 0.0f){
 		m_invTime = 0.0f;
 		m_isInvincible = false;
 	}
+}
 
+void Enemy::DecToActivateTime()
+{
+	m_toActivateCounter -= g_gameTime->GetFrameDeltaTime();
+
+	if (m_toActivateCounter <= 0.0f) {
+		m_toActivateCounter = 0.0f;
+		m_isActive = true;
+	}
+}
+
+void Enemy::DecLifeTime()
+{
+	m_lifeTime -= g_gameTime->GetFrameDeltaTime();
+
+	if (m_lifeTime <= 0.0f) {
+		m_lifeTime = 0.0f;
+		SelfDestroy();
+	}
 }
 
 void Enemy::Update()
@@ -329,10 +377,14 @@ void Enemy::Update()
 	Rotation();
 	Hit();
 	DecInvTime();
+	DecToActivateTime();
 	Destroy();
 
-	m_destroyEffect.Update();
+	if (m_enEnemyType == enBomb) {
+		DecLifeTime();
+	}
 
+	m_destroyEffect.Update();
 	m_skinModelRender->SetRotation(m_rot);
 
 }

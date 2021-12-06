@@ -20,7 +20,6 @@ void Score::Init()
 {
 	m_scoreText = NewGO<FontRender>(0);
 	m_scoreNumber = NewGO<FontRender>(0);
-
 	m_scoreTextPos = SCORE_TEXT_POS;
 
 	//スコアテキストを決定

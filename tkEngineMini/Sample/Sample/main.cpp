@@ -43,7 +43,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//ゲームディレクターを作成
 	GameDirector::CreateInstance();
-
 	//バレットマネージャを作成
 	BulletManager::CreateInstance();
 
@@ -116,8 +115,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//登録されているゲームオブジェクトの描画関数を呼び出す。
 		//GameObjectManager::GetInstance()->ExecuteRender(renderContext);
 		//////////////////////////////
-		
-		
+
 		//テスト：レンダリングエンジンの処理
 		RenderingEngine::GetInstance()->Execute(renderContext);
 

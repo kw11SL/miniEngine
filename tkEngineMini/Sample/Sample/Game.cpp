@@ -46,7 +46,7 @@ void Game::Init(RenderingEngine& renderingEngine)
 
 	//ディレクションライトの初期化
 	m_directionLight = NewGO<DirectionLight>(0, "directionlight");
-	m_directionLight->Init({ 1.0f,0.0f,1.0f }, { 0.4f,0.4f,0.4f }, { 0.5f,0.5f,0.5f });
+	m_directionLight->Init({ 1.0f,0.0f,1.0f }, { 0.4f,0.4f,0.4f }, { 0.7f,0.7f,0.7f });
 	m_directionLight->SetEyePos(g_camera3D->GetPosition());
 
 	//ポイントライトの初期化
@@ -64,8 +64,6 @@ void Game::Init(RenderingEngine& renderingEngine)
 	//UIの初期化
 	m_ui = NewGO<UI>(0, "ui");
 	m_ui->Init();
-
-	
 
 
 	//レベル構築
@@ -93,55 +91,27 @@ void Game::Init(RenderingEngine& renderingEngine)
 			return true;
 		}
 
-		//エネミー1
+		//エネミー1の生成器
 		if (objData.EqualObjectName(L"enemy_01") == true) {
-			//m_enemy[0] = NewGO<Enemy>(0, "enemy_01");
-			//m_enemy[0]->Init(renderingEngine, objData.position, Vector3::Up, enCommon);
-
-			//m_enemy[0]->SetPostion(objData.position);
-			//m_enemy[0]->SetRotation(objData.rotation);
-
-
-			////エネミーにライトを渡す処理
-			//if (m_enemy[0]->GetSkinModelRender() != nullptr) {
-			//	m_enemy[0]->RecieveDirectionLight(m_directionLight);
-			//	m_enemy[0]->RecievePointLight(m_pointLight);
-			//	m_enemy[0]->RecieveSpotLight(m_spotLight);
-	
-			//	m_enemy[0]->InitModelFromInitData();
-			//}
+			
 			m_enemyGenerator[0] = NewGO<EnemyGenerator>(0, "enemyGenerator01");
 			m_enemyGenerator[0]->Init(
 				objData.position,
 				objData.rotation,
+				true,
 				enCommon
 			);
 
 			return true;
 		}
 
-		//エネミー2
+		//エネミー2の生成器
 		if (objData.EqualObjectName(L"enemy_02") == true) {
-			//m_enemy[1] = NewGO<Enemy>(0, "enemy_02");
-			//m_enemy[1]->Init(renderingEngine, objData.position, Vector3::Up, enShot);
-
-			//m_enemy[1]->SetPostion(objData.position);
-			//m_enemy[1]->SetRotation(objData.rotation);
-
-
-			////エネミーにライトを渡す処理
-			//if (m_enemy[1]->GetSkinModelRender() != nullptr) {
-			//	m_enemy[1]->RecieveDirectionLight(m_directionLight);
-			//	m_enemy[1]->RecievePointLight(m_pointLight);
-			//	m_enemy[1]->RecieveSpotLight(m_spotLight);
-
-			//	m_enemy[1]->InitModelFromInitData();
-			//}
-
 			m_enemyGenerator[1] = NewGO<EnemyGenerator>(0, "enemyGenerator02");
 			m_enemyGenerator[1]->Init(
 				objData.position,
 				objData.rotation,
+				true,
 				enShot
 			);
 			return true;
@@ -149,25 +119,11 @@ void Game::Init(RenderingEngine& renderingEngine)
 
 		//エネミー3
 		if (objData.EqualObjectName(L"enemy_03") == true) {
-			//m_enemy[2] = NewGO<Enemy>(0, "enemy_03");
-			//m_enemy[2]->Init(renderingEngine, objData.position, Vector3::Up, enBomb);
-
-			//m_enemy[2]->SetPostion(objData.position);
-			//m_enemy[2]->SetRotation(objData.rotation);
-
-
-			////エネミーにライトを渡す処理
-			//if (m_enemy[2]->GetSkinModelRender() != nullptr) {
-			//	m_enemy[2]->RecieveDirectionLight(m_directionLight);
-			//	m_enemy[2]->RecievePointLight(m_pointLight);
-			//	m_enemy[2]->RecieveSpotLight(m_spotLight);
-
-			//	m_enemy[2]->InitModelFromInitData();
-			//}
 			m_enemyGenerator[2] = NewGO<EnemyGenerator>(0, "enemyGenerator03");
 			m_enemyGenerator[2]->Init(
 				objData.position,
 				objData.rotation,
+				false,
 				enBomb
 			);
 
@@ -229,4 +185,6 @@ void Game::Update()
 	if (g_pad[0]->IsTrigger(enButtonSelect)) {
 		DeleteGO(this);
 	}
+
+
 }

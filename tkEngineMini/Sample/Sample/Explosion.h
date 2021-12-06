@@ -1,12 +1,14 @@
 #pragma once
 #include "ExplosionBase.h"
 #include "SpreadBombExplosion.h"
+#include "EnemyExplosion.h"
 
 /// @brief 爆発クラスの基底クラスを使うクラス
 
 /// @brief 爆発のタイプ
 enum EnExplosionType {
 	enPlayer_Spread_Bomb,
+	enEnemy_Explosion,
 	enExplosion_Type_Num
 };
 
@@ -89,6 +91,7 @@ private:
 
 	//基底クラスに渡す派生クラスのオブジェクト
 	SpreadBombExplosion m_sBomb;
+	EnemyExplosion m_enemyExplosion;
 
 };
 

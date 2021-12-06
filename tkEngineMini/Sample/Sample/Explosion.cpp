@@ -12,9 +12,13 @@ void Explosion::Init(
 	case enPlayer_Spread_Bomb:
 		m_explosionBase = &m_sBomb;
 		break;
+	case enEnemy_Explosion:
+		m_explosionBase = &m_enemyExplosion;
+		break;
 	default:
 		break;
 	}
+
 
 	//À•WAŠg‘å—¦‚ðÝ’è‚µA‰Šú‰»
 	m_explosionBase->Init(
@@ -32,7 +36,6 @@ void Explosion::Update()
 {
 	m_explosionBase->Update();
 
-	//
 	if (m_explosionBase->GetIsExist() == false) {
 		DeleteGO(this);
 	}
