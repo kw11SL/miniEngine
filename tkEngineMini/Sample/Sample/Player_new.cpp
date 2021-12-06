@@ -27,8 +27,11 @@ namespace{
 	const float CAMERA_ROTATE_FRACTION_ADD_RATE_MAX = 0.03f;		//カメラの回転に使う補間係数に加算する定数
 	const float CAMERA_MOVESPEED_MAX = 1000.0f;						//カメラ、注視点の追従最高速度 
 
-	const char16_t* EXPLOSION_EFFECT_FILEPATH = u"Assets/effect/justguard.efk";
-	const Vector3 EXPLOSION_EFFECT_SCALE = { 30.0f,30.0f,30.0f };
+	const char16_t* EFFECT_FILEPATH_EXPLOSION = u"Assets/effect/justguard.efk";
+	const Vector3 EFFECT_SCALE_EXPLOSION = { 30.0f,30.0f,30.0f };
+
+	const char16_t* EFFECT_FILEPATH_REVIVE = u"Assets/effect/revive_a.efk";
+	const Vector3 EFFECT_SCALE_REVIVE = { 20.0f,20.0f,20.0f };
 }
 
 Player_new::~Player_new()
@@ -38,6 +41,9 @@ Player_new::~Player_new()
 
 void Player_new::Init(RenderingEngine& renderingEngine)
 {
+	//エフェクトを初期化
+	InitEffect();
+
 	//ライトを検索
 	m_directionLight = FindGO<DirectionLight>("directionlight");
 	m_pointLight = FindGO<PointLight>("pointlight");
@@ -105,6 +111,12 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 
 	//発射方向を前方にしておく
 	//m_shotDirection = m_forward;
+}
+
+void Player_new::InitEffect()
+{
+	m_explosionEffect.Init(EFFECT_FILEPATH_EXPLOSION);
+	m_reviveEffect.Init(EFFECT_FILEPATH_REVIVE);
 }
 
 bool Player_new::Start()
@@ -297,10 +309,11 @@ void Player_new::Hit()
 				SetInvincibleTime(INVINCIBLE_TIME_REVIVE);
 				SetIsInvFlag(true);
 
-				m_explosionEffect.Init(EXPLOSION_EFFECT_FILEPATH);
+				//爆散エフェクトを発生
+				m_explosionEffect.Init(EFFECT_FILEPATH_EXPLOSION);
 				m_explosionEffect.SetPosition(m_position);
 				m_explosionEffect.SetRotation(m_rot);
-				m_explosionEffect.SetScale(EXPLOSION_EFFECT_SCALE);
+				m_explosionEffect.SetScale(EFFECT_SCALE_EXPLOSION);
 				m_explosionEffect.Play();
 
 				return false;
@@ -334,10 +347,9 @@ void Player_new::Hit()
 				SetIsInvFlag(true);
 
 				//爆散エフェクトを発生
-				m_explosionEffect.Init(EXPLOSION_EFFECT_FILEPATH);
 				m_explosionEffect.SetPosition(m_position);
 				m_explosionEffect.SetRotation(m_rot);
-				m_explosionEffect.SetScale(EXPLOSION_EFFECT_SCALE);
+				m_explosionEffect.SetScale(EFFECT_SCALE_EXPLOSION);
 				m_explosionEffect.Play();
 
 				return false;
@@ -380,6 +392,9 @@ void Player_new::Revive()
 	if (m_isExist == true
 		&& m_isExistPrev == false) {
 
+		//復活準備はすでに完了しているのでフラグをオフ
+		m_isReviveReady = false;
+
 		m_skinModelRender = NewGO<SkinModelRender>(0);
 		
 		m_skinModelRender->Init(
@@ -400,7 +415,25 @@ void Player_new::Revive()
 		RecieveSpotLight(m_spotLight);
 
 		InitModelFromInitData();
+	}
+}
 
+void Player_new::ReviveReady()
+{
+	if (m_invincebleTime < 5.0f
+		&& m_isExist == false) {
+		//復活準備フラグをオン
+		m_isReviveReady = true;
+	}
+
+	if (m_isReviveReadyPrev == false
+		&& m_isReviveReady == true) {
+		
+		//復活エフェクトを再生
+		m_reviveEffect.SetPosition(m_position);
+		m_reviveEffect.SetRotation(m_rot);
+		m_reviveEffect.SetScale(EFFECT_SCALE_REVIVE);
+		m_reviveEffect.Play();
 	}
 }
 
@@ -437,6 +470,7 @@ void Player_new::Update()
 	FireBullet();
 	Hit();
 	AddReviveCouter();
+	ReviveReady();
 	Revive();
 	DecInvTime();
 
@@ -481,6 +515,10 @@ void Player_new::Update()
 	//カメラの更新
 	m_gameCamera.UpdateCamera();
 
+
+
+	
+	//各種フラグの記録
 	//////////////////////////////////
 	//現フレームの上を記録
 	m_upPrev = m_up;
@@ -488,6 +526,8 @@ void Player_new::Update()
 	m_isInvinciblePrev = m_isInvincible;
 	//現フレームの存在フラグを記録
 	m_isExistPrev = m_isExist;
+
+	m_isReviveReadyPrev = m_isReviveReady;
 	//////////////////////////////////
 	
 	
@@ -496,6 +536,8 @@ void Player_new::Update()
 		DeleteGO(m_skinModelRender);
 	}
 
+	//エフェクトの更新
 	m_explosionEffect.Update();
+	m_reviveEffect.Update();
 
 }

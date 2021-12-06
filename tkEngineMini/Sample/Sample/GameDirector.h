@@ -125,7 +125,7 @@ private:
 
 	//定数
 	const int MAX_ENEMY_NUM = 15;				//エネミーの最大数
-
+	const int MAX_ENEMY_NUM_NEAR_TIMEUP = 25;	//エネミーの最大数(タイムアップ前)
 
 
 	EnGameState m_enGameState = enGame;			//ゲーム状態

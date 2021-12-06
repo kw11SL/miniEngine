@@ -156,6 +156,9 @@ public:
 	/// @brief モデル復活処理
 	void Revive();
 
+	/// @brief 復活準備処理とエフェクト再生処理
+	void ReviveReady();
+
 private:
 	//内部で使う処理
 
@@ -191,6 +194,9 @@ private:
 
 	/// @brief 敵や敵弾との当たり判定処理
 	void Hit();
+
+	/// @brief エフェクトの初期化
+	void InitEffect();
 	
 
 private:
@@ -231,6 +237,8 @@ private:
 	float m_reviveCounter = 0.0f;						//被弾から復活までのカウンター
 	bool m_isExist = true;								//生存フラグ
 	bool m_isExistPrev = true;							//前フレームの生存フラグ
+	bool m_isReviveReady = false;						//復活準備フラグ(エフェクト再生用)
+	bool m_isReviveReadyPrev = false;					//前フレームの復活準備フラグ
 
 	float m_invincebleTime = 0.0f;						//無敵時間
 	float m_fireCounter = 0.0f;							//発射間隔カウンタ
@@ -241,6 +249,8 @@ private:
 
 	BulletManager* m_bulletManager = nullptr;
 
-	Effect m_explosionEffect;									//被弾時のエフェクト
+	Effect m_explosionEffect;							//被弾時のエフェクト
+	Effect m_reviveEffect;
+
 };
 

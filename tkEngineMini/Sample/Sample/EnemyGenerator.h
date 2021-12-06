@@ -10,15 +10,22 @@ public:
 	bool Start()override { return true; }
 	void Update()override;
 
-
+	/// @brief 初期化処理
+	/// @param pos 座標
+	/// @param rot 回転
+	/// @param isActive 最初からアクティブにするかどうか
+	/// @param enemyType スポーンさせるエネミーの種類
 	void Init(const Vector3& pos,const Quaternion& rot ,const bool isActive, const EnEnemyType& enemyType);
 
+	/// @brief エネミー生成
+	/// @param enemyType スポーンさせるエネミーの種類
 	void GenerateEnemy(const EnEnemyType& enemyType);
 
 	void Move();
 
 	void Rotation();
 
+	/// @brief スポーン周期用のカウンターを上昇
 	void AddCounter();
 
 	/// @brief 座標を設定
@@ -56,6 +63,8 @@ public:
 		return m_rotation;
 	}
 
+	/// @brief 生成器のアクティブ状態を取得
+	/// @return 
 	const bool GetIsActive() const
 	{
 		return m_isActive;

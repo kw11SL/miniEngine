@@ -12,7 +12,6 @@ void RenderingEngine::Init()
 	//シャドウマップの初期化
 	InitShadowMap();
 	
-	
 	//ブルームの初期化
 	InitBloom(m_mainRenderTarget);
 }

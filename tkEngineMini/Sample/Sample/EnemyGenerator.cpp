@@ -3,8 +3,11 @@
 #include<random>
 
 namespace {
-	const float ENEMY_SPAWN_TIME = 2.0f;
-	const float GENERATOR_AVTIVE_COUNT = 45.0f;
+	const float BORDER_TIMEUP = 10.0f;						//スポーン周期を早くする時間のボーダー
+	const float ENEMY_SPAWN_TIME = 2.0f;					//エネミーのスポーン周期
+	const float ENEMY_SPAWN_TIME_NEAR_TIMEUP = 1.5f;		//タイムアップ前のエネミーのスポーン周期
+	const float GENERATOR_ACTIVE_COUNT_SHOT = 45.0f;		//射撃型エネミー生成器をアクティブにする時間
+	const float GENERATOR_ACTIVE_COUNT_BOMB = 30.0f;		//自爆型エネミー生成器をアクティブにする時間
 }
 
 EnemyGenerator::~EnemyGenerator()
@@ -28,16 +31,32 @@ void EnemyGenerator::Init(const Vector3& pos, const Quaternion& rot, const bool 
 
 void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 {
+	//残り時間が0以下だったら生成しない
+	if (GameDirector::GetInstance()->GetTime() <= 0.0f) {
+		return;
+	}
+
+	//エネミーの最大数を超えていなかったらスポーン
 	if (GameDirector::GetInstance()->GetEnemyCount() <= GameDirector::GetInstance()->GetMaxEnemyNum()) {
 
+		//乱数を生成
 		std::random_device rnd;
 		std::mt19937 mt(rnd());
 		std::uniform_real_distribution<float> randFloat(0.0f, 0.5f);
 
-		float interval = ENEMY_SPAWN_TIME;
-		interval += randFloat(mt);
+		float interval = 0.0f;
 
-		//エネミーを生成
+		//乱数の値をスポーン周期に加える
+		if (GameDirector::GetInstance()->GetTime() <= BORDER_TIMEUP) {
+			interval = ENEMY_SPAWN_TIME_NEAR_TIMEUP;
+			interval += randFloat(mt);
+		}
+		else {
+			interval = ENEMY_SPAWN_TIME;
+			interval += randFloat(mt);
+		}
+
+		//エネミーを生成。アクティブになるまでは生成しない。
 		if (m_spawnCounter > interval && m_isActive == true) {
 			m_enemy = NewGO<Enemy>(0, "enemy");
 			
@@ -76,15 +95,20 @@ void EnemyGenerator::AddCounter()
 
 void EnemyGenerator::Update()
 {
+	//射撃型エネミー生成器のとき
+	if (m_spawnEnemyType == enShot &&
+		GameDirector::GetInstance()->GetTime() <= GENERATOR_ACTIVE_COUNT_SHOT) {
+		SetActive(true);
+	}
+
+	//生成器がボムのとき
+	if (m_spawnEnemyType == enBomb &&
+		GameDirector::GetInstance()->GetTime() <= GENERATOR_ACTIVE_COUNT_BOMB) {
+		SetActive(true);
+	}
+
 	Move();
 	Rotation();
 	AddCounter();
 	GenerateEnemy(m_spawnEnemyType);
-
-	//生成器がボムのとき
-	if (m_spawnEnemyType == enBomb && 
-		GameDirector::GetInstance()->GetTime() <= GENERATOR_AVTIVE_COUNT) {
-		SetActive(true);
-	}
-
 }

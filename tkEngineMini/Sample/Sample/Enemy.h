@@ -182,6 +182,9 @@ private:
 	/// @brief 撃破処理
 	void Destroy();
 
+	/// @brief タイムアップ時に消滅させる処理
+	void DestroyTimeUp();
+
 	/// @brief 無敵時間を減らし、無敵時間が切れたら無敵状態をオフにする
 	void DecInvTime();
 

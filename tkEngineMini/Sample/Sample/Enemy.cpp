@@ -41,7 +41,7 @@ namespace {
 	const int SCORE_BOMB = 200;
 
 	const float LIFE_TIME_BOMB = 5.0f;
-	const float ACTIVATE_COUNT = 2.0f;		//当たり判定が有効になるまでのカウンター
+	const float ACTIVATE_COUNT = 0.7f;		//当たり判定が有効になるまでのカウンター
 
 	//シェーダーのファイルパス
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
@@ -303,7 +303,8 @@ void Enemy::SelfDestroy()
 	m_destroyEffect.SetScale({ 20.0f,20.0f,20.0f });
 	m_destroyEffect.Play(false);
 
-	if (m_enEnemyType == enBomb) {
+	//自爆型エネミーのときは爆発を発生させる
+	if (m_enEnemyType == enBomb && GameDirector::GetInstance()->GetTime() > 0.0f) {
 		m_explosion = NewGO<Explosion>(0, "enemyExplosion");
 		m_explosion->Init(
 			m_position,
@@ -337,6 +338,14 @@ void Enemy::Destroy()
 		GameDirector::GetInstance()->AddScore(m_score);
 	}
 
+}
+
+void Enemy::DestroyTimeUp()
+{
+	//タイムアップだったら自滅
+	if (GameDirector::GetInstance()->GetTime() <= 0.0f) {
+		SelfDestroy();
+	}
 }
 
 void Enemy::DecInvTime()
@@ -379,12 +388,15 @@ void Enemy::Update()
 	DecInvTime();
 	DecToActivateTime();
 	Destroy();
+	DestroyTimeUp();
 
+	//自爆型エネミーのとき、時間寿命をマイナス
 	if (m_enEnemyType == enBomb) {
 		DecLifeTime();
 	}
 
 	m_destroyEffect.Update();
+
 	m_skinModelRender->SetRotation(m_rot);
 
 }

@@ -46,7 +46,7 @@ void Game::Init(RenderingEngine& renderingEngine)
 
 	//ディレクションライトの初期化
 	m_directionLight = NewGO<DirectionLight>(0, "directionlight");
-	m_directionLight->Init({ 1.0f,0.0f,1.0f }, { 0.4f,0.4f,0.4f }, { 0.7f,0.7f,0.7f });
+	m_directionLight->Init({ 1.0f,0.0f,1.0f }, { 0.25f,0.25f,0.25f }, { 0.7f,0.7f,0.7f });
 	m_directionLight->SetEyePos(g_camera3D->GetPosition());
 
 	//ポイントライトの初期化
@@ -111,9 +111,10 @@ void Game::Init(RenderingEngine& renderingEngine)
 			m_enemyGenerator[1]->Init(
 				objData.position,
 				objData.rotation,
-				true,
+				false,
 				enShot
 			);
+
 			return true;
 		}
 
