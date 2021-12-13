@@ -4,6 +4,15 @@
 using namespace std;
 using namespace DirectX;
 
+namespace{
+	//フォントのファイルパス
+	const wchar_t* FILEPATH_MYFONT = L"Assets/font/myfile.spritefont";
+	const wchar_t* FILEPATH_MAKINAS4_FLAT = L"Assets/font/makinas4_flat.spritefont";
+	const wchar_t* FILEPATH_MAKINAS4_SQUARE = L"Assets/font/makinas4_square.spritefont";
+	const wchar_t* FILEPATH_KAISOUTAI_NEXT_UP_B = L"Assets/font/kaisoutai_next_up_b.spritefont";
+	const wchar_t* FILEPATH_ANNYANTOROMAN = L"Assets/font/annyantoroman.spritefont";
+}
+
 FontEngine::~FontEngine()
 {
 	if (m_srvDescriptorHeap != nullptr) {
@@ -51,7 +60,8 @@ void FontEngine::Init()
 	m_spriteFont = make_unique<SpriteFont>(
 		d3dDevice, 
 		re,
-		L"Assets/font/myfile.spritefont", 
+		//L"Assets/font/myfile.spritefont", 
+		FILEPATH_KAISOUTAI_NEXT_UP_B,
 		cpuHandle, 
 		gpuHandle);
 

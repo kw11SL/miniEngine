@@ -29,6 +29,14 @@ public:
 	const Vector2& GetPivot() { return m_pivot; }
 	const Vector4& GetColor() { return m_color; }
 
+	/// @brief フェードインする処理
+	/// @param addRate 加算割合
+	void FadeIn(const float addRate);
+
+	/// @brief フェードアウトする処理
+	/// @param decRate 減算割合
+	void FadeOut(const float decRate);
+
 private:
 	RenderingEngine* m_renderingEngine = nullptr;
 	Sprite m_sprite;

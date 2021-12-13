@@ -77,6 +77,26 @@ void SpriteRender::Render(RenderContext& rc)
 	m_sprite.Draw(rc);
 }
 
+void SpriteRender::FadeIn(const float addRate)
+{
+	if (m_color.w < 1.0f) {
+		m_color.w += addRate;
+	}
+	else if (m_color.w >= 1.0f) {
+		m_color.w = 1.0f;
+	}
+}
+
+void SpriteRender::FadeOut(const float decRate)
+{
+	if (m_color.w > 0.0f) {
+		m_color.w -= decRate;
+	}
+	else if (m_color.w <= 0.0f) {
+		m_color.w = 0.0f;
+	}
+}
+
 void SpriteRender::Update()
 {
 	m_sprite.Update(m_position, m_rotation, m_scale, m_pivot);

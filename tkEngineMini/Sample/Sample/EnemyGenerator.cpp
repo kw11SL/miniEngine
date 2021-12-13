@@ -42,6 +42,7 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 		//乱数を生成
 		std::random_device rnd;
 		std::mt19937 mt(rnd());
+		//指定した値の範囲でランダムなfloat値を返す
 		std::uniform_real_distribution<float> randFloat(0.0f, 0.5f);
 
 		float interval = 0.0f;

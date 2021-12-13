@@ -2,30 +2,45 @@
 #include "Score.h"
 
 namespace {
-	const Vector2 SCORE_TEXT_POS = { -500.0f,300.0f };
-	const Vector2 SCORE_TEXT_TO_NUMBER = { 150.0f,0.0f };
+	const char* SCORE_SPRITE_FILEPATH = "Assets/sprite/ui/score.dds";
+	const Vector3 SCORE_SPRITE_POS = { 330.0f,270.0f,0.0f };
+	const Vector2 SCORE_SPRITE_PIVOT = { 0.5f,0.5f };
+	const Vector3 SCORE_SPRITE_SCALE = { 0.5f,0.5f,1.0f };
+	const Vector4 SCORE_SPRITE_COLOR = { 1.0f,1.0f,1.0f,1.0f };
+	const int SCORE_SPRITE_WIDTH = 256;
+	const int SCORE_SPRITE_HEIGHT = 128;
 
-	const wchar_t* SCORE_TEXT = L"SCORE : ";
+	const Vector2 SCORE_SPRITE_TO_NUMBER = { 80.0f,15.0f };
+
 
 	const int DIGITS = 16;
 }
 
 Score::~Score()
 {
-	DeleteGO(m_scoreText);
+	DeleteGO(m_scoreSprite);
 	DeleteGO(m_scoreNumber);
 }
 
 void Score::Init()
 {
-	m_scoreText = NewGO<FontRender>(0);
+	m_scoreSprite = NewGO<SpriteRender>(0);
 	m_scoreNumber = NewGO<FontRender>(0);
-	m_scoreTextPos = SCORE_TEXT_POS;
 
-	//スコアテキストを決定
-	m_scoreText->Init(SCORE_TEXT);
-	m_scoreText->SetText(SCORE_TEXT);
-	m_scoreText->SetPosition(m_scoreTextPos);
+	//スプライトの初期化
+	m_scoreSprite->Init(
+		SCORE_SPRITE_FILEPATH,
+		SCORE_SPRITE_WIDTH,
+		SCORE_SPRITE_HEIGHT,
+		AlphaBlendMode_Trans
+	);
+
+	m_scoreSpritePos = SCORE_SPRITE_POS;
+
+	m_scoreSprite->SetPosition(m_scoreSpritePos);
+	m_scoreSprite->SetColor(SCORE_SPRITE_COLOR);
+	m_scoreSprite->SetPivot(SCORE_SPRITE_PIVOT);
+	m_scoreSprite->SetScale(SCORE_SPRITE_SCALE);
 	
 	//ゲームディレクターからスコアを取得
 	int point = GameDirector::GetInstance()->GetScore();
@@ -40,14 +55,16 @@ void Score::Init()
 	const wchar_t* score = m_scoreNumWs.c_str();
 
 	//座標の設定
-	Vector2 posFromText = m_scoreTextPos;
+	m_scoreTextPos.x = m_scoreSpritePos.x;
+	m_scoreTextPos.y = m_scoreSpritePos.y;
+
 	//テキストからのベクトルを加算
-	posFromText.x += SCORE_TEXT_TO_NUMBER.x;
-	posFromText.y += SCORE_TEXT_TO_NUMBER.y;
+	m_scoreTextPos.x += SCORE_SPRITE_TO_NUMBER.x;
+	m_scoreTextPos.y += SCORE_SPRITE_TO_NUMBER.y;
 	
 	//テキストの設定
 	m_scoreNumber->Init(score);
-	m_scoreNumber->SetPosition(posFromText);
+	m_scoreNumber->SetPosition(m_scoreTextPos);
 }
 
 void Score::UpdateScore()

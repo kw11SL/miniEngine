@@ -314,6 +314,7 @@
     <ClCompile Include="HelloFont.cpp" />
     <ClCompile Include="HelloLevel2D.cpp" />
     <ClCompile Include="Level_New.cpp" />
+    <ClCompile Include="Life.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapChip_New.cpp" />
     <ClCompile Include="MyCharacterController.cpp" />
@@ -342,6 +343,7 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TklFile.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="UIOutline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ExEngine\effect\Effect.h" />
@@ -431,6 +433,7 @@
     <ClInclude Include="HelloFont.h" />
     <ClInclude Include="HelloLevel2D.h" />
     <ClInclude Include="Level_New.h" />
+    <ClInclude Include="Life.h" />
     <ClInclude Include="MapChip_New.h" />
     <ClInclude Include="MyCharacterController.h" />
     <ClInclude Include="PhysicsBall.h" />
@@ -451,6 +454,7 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TklFile.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="UIOutline.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

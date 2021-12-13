@@ -11,11 +11,17 @@ public:
 	/// @brief ゲームディレクターから取得したスコアを更新する
 	void UpdateTime();
 
+	/// @brief 座標を設定(スプライト)
+	/// @param pos 座標
+	void SetPositionSprite(const Vector3& pos)
+	{
+		m_timeSprite->SetPosition(pos);
+	}
+
 	/// @brief 座標を設定
-	/// @param pos 
+	/// @param pos 座標
 	void SetPosition(const Vector2& pos)
 	{
-		m_timeText->SetPosition(pos);
 		m_timeNumber->SetPosition(pos);
 	}
 
@@ -23,7 +29,7 @@ public:
 	/// @param color 
 	void SetColor(const Vector4& color)
 	{
-		m_timeText->SetColor(color);
+
 		m_timeNumber->SetColor(color);
 	}
 
@@ -31,7 +37,6 @@ public:
 	/// @param scaleRate 
 	void SetScale(const float scaleRate)
 	{
-		m_timeText->SetScale(scaleRate);
 		m_timeNumber->SetScale(scaleRate);
 	}
 
@@ -39,7 +44,6 @@ public:
 	/// @param rotate 
 	void SetRotate(const float rotate)
 	{
-		m_timeText->SetAngle(rotate);
 		m_timeNumber->SetAngle(rotate);
 	}
 
@@ -47,15 +51,15 @@ public:
 	/// @param pivot 
 	void SetPivot(const Vector2& pivot)
 	{
-		m_timeText->SetPivot(pivot);
 		m_timeNumber->SetPivot(pivot);
 	}
 
 private:
-	FontRender* m_timeText = nullptr;		//スコアの文字表示部分
-	FontRender* m_timeNumber = nullptr;	//スコアの数値表示部分
+	SpriteRender* m_timeSprite = nullptr;
+	FontRender* m_timeNumber = nullptr;		//スコアの数値表示部分
 
-	Vector2 m_timeTextPos = Vector2::Zero;	//スコアのテキスト部分の座標
+	Vector3 m_timeSpritePos = Vector3::Zero;
+	Vector2 m_timeNumPos = Vector2::Zero;	//スコアの数値部分の座標
 
 	std::wstring m_timeNumWs = L"hoge";		//ポインタ保持用のメンバ
 
