@@ -6,6 +6,7 @@
 namespace{
 	//const char* MODELPATH_UTC = "Assets/modelData/unityChan.tkm";
 	const char* MODELPATH_UTC = "Assets/modelData/player/player_object.tkm";
+	//const char* MODELPATH_UTC = "Assets/modelData/player_a.tkm";
 	const char* SKELETON_PATH_UTC = "Assets/modelData/unityChan.tks";
 	const float UTC_RADIUS = 40.0f;
 	const float UTC_HEIHGT = 100.0f;

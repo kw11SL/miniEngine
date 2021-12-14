@@ -9,7 +9,7 @@ namespace {
 	const char* SPRITE_FILEPATH = "Assets/sprite/ui/ui_outline_mesh.dds";
 	const float FADEIN_ADDRATE = 0.04f;
 }
-
+ 
 UIOutline::~UIOutline()
 {
 	//スプライトを削除
