@@ -177,15 +177,17 @@ void Game::Init(RenderingEngine& renderingEngine)
 
 void Game::Update()
 {
-	//テスト：プレイヤーの削除
-	if (g_pad[0]->IsTrigger(enButtonX)) {
-		DeleteGO(m_player);
-	}
+	//m_pointLight->SetPosition(m_player->GetPosition());
+
+	////テスト：プレイヤーの削除
+	//if (g_pad[0]->IsTrigger(enButtonX)) {
+	//	DeleteGO(m_player);
+	//}
 
 
-	if (g_pad[0]->IsTrigger(enButtonSelect)) {
-		DeleteGO(this);
-	}
+	//if (g_pad[0]->IsTrigger(enButtonSelect)) {
+	//	DeleteGO(this);
+	//}
 
 
 }

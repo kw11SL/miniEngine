@@ -4,7 +4,8 @@
 
 
 namespace{
-	const char* MODELPATH_UTC = "Assets/modelData/unityChan.tkm";
+	//const char* MODELPATH_UTC = "Assets/modelData/unityChan.tkm";
+	const char* MODELPATH_UTC = "Assets/modelData/player/player_object.tkm";
 	const char* SKELETON_PATH_UTC = "Assets/modelData/unityChan.tks";
 	const float UTC_RADIUS = 40.0f;
 	const float UTC_HEIHGT = 100.0f;
@@ -32,6 +33,13 @@ namespace{
 
 	const char16_t* EFFECT_FILEPATH_REVIVE = u"Assets/effect/revive_a.efk";
 	const Vector3 EFFECT_SCALE_REVIVE = { 20.0f,20.0f,20.0f };
+
+	const char16_t* EFFECT_FILEPATH_TRACK = u"Assets/effect/moveTrack.efk";
+	const Vector3 EFFECT_SCALE_TRACK = { 10.0f,10.0f,10.0f };
+
+	const char16_t* EFFECT_FILEPATH_MARKER = u"Assets/effect/positionMarker.efk";
+	const Vector3 EFFECT_SCALE_MARKER = { 30.0f,30.0f,30.0f };
+	const float MARKER_PLAY_INTERVAL = 0.02f;
 }
 
 Player_new::~Player_new()
@@ -117,6 +125,8 @@ void Player_new::InitEffect()
 {
 	m_explosionEffect.Init(EFFECT_FILEPATH_EXPLOSION);
 	m_reviveEffect.Init(EFFECT_FILEPATH_REVIVE);
+	m_moveTrackEffect.Init(EFFECT_FILEPATH_TRACK);
+	m_markerEffect.Init(EFFECT_FILEPATH_MARKER);
 }
 
 bool Player_new::Start()
@@ -127,7 +137,7 @@ bool Player_new::Start()
 
 void Player_new::Move()
 {
-	
+	m_markerCounter += g_gameTime->GetFrameDeltaTime();
 
 	//テスト：移動
 	//パッドのスティックからx成分とy成分を受け取る
@@ -146,9 +156,26 @@ void Player_new::Move()
 	//プレイヤーの前後(奥、手前)方向への移動
 	m_moveSpeed += forward * y * PL_MOVE_SPEED;
 
-	//存在フラグがオフなら移動速度を0に
-	if (m_isExist == false) {
+	//ゲームディレクター側のライフが0か、存在フラグがオフなら移動速度を0に
+	if (m_isExist == false || 
+		GameDirector::GetInstance()->GetPlayerLife() <= 0) {
 		m_moveSpeed *= 0.0f;
+	}
+	//軌跡エフェクトの再生
+	if (m_moveSpeed.Length() > 5.0f) {
+		m_moveTrackEffect.SetPosition(m_position + m_up*50.0f);
+		m_moveTrackEffect.SetRotation(m_rot);
+		m_moveTrackEffect.SetScale(EFFECT_SCALE_TRACK);
+		m_moveTrackEffect.Play(false);
+
+		/*if (m_markerCounter >= MARKER_PLAY_INTERVAL) {
+			m_markerEffect.SetPosition(m_position + m_up * 50.0f);
+			m_markerEffect.SetRotation(m_rot);
+			m_markerEffect.SetScale(EFFECT_SCALE_MARKER);
+			m_markerEffect.Play(true);
+
+			m_markerCounter = 0.0f;
+		}*/
 	}
 
 	//自作キャラコンに移動速度を渡す
@@ -210,8 +237,9 @@ void Player_new::RotateShotDirection()
 
 void Player_new::FireBullet()
 {
-	//存在フラグがオフならreturn
-	if (m_isExist == false) {
+	//ゲームディレクター側のライフが0か、存在フラグがオフならreturn
+	if (m_isExist == false
+		|| GameDirector::GetInstance()->GetPlayerLife() <= 0) {
 		return;
 	}
 
@@ -284,6 +312,10 @@ void Player_new::ChangeWeapon()
 
 void Player_new::Hit()
 {
+	if (GameDirector::GetInstance()->GetPlayerLife() <= 0) {
+		return;
+	}
+
 	//被弾判定
 	//エネミーとの判定
 	QueryGOs<Enemy>("enemy", [&](Enemy* enemy) {
@@ -298,6 +330,8 @@ void Player_new::Hit()
 			if (m_isInvincible == false && enemy->GetIsActive() == true) {
 				//1機減らす
 				m_life -= 1;
+				//ゲームディレクターの保持するライフを減らす
+				GameDirector::GetInstance()->DecPlayerLife();
 				
 				//モデルを消す
 				DeleteGO(m_skinModelRender);
@@ -335,6 +369,8 @@ void Player_new::Hit()
 			if (m_isInvincible == false) {
 				//1機減らす
 				m_life -= 1;
+				//ゲームディレクターの保持するライフを減らす
+				GameDirector::GetInstance()->DecPlayerLife();
 
 				//モデルを消す
 				DeleteGO(m_skinModelRender);
@@ -388,6 +424,10 @@ void Player_new::AddReviveCouter()
 
 void Player_new::Revive()
 {
+	//ゲームディレクター側のライフが0なら復活しない
+	if (GameDirector::GetInstance()->GetPlayerLife() <= 0) {
+		return;
+	}
 
 	if (m_isExist == true
 		&& m_isExistPrev == false) {
@@ -420,6 +460,11 @@ void Player_new::Revive()
 
 void Player_new::ReviveReady()
 {
+	//ゲームディレクター側のライフが0なら処理しない
+	if (GameDirector::GetInstance()->GetPlayerLife() <= 0) {
+		return;
+	}
+
 	if (m_invincebleTime < 5.0f
 		&& m_isExist == false) {
 		//復活準備フラグをオン
@@ -539,5 +584,7 @@ void Player_new::Update()
 	//エフェクトの更新
 	m_explosionEffect.Update();
 	m_reviveEffect.Update();
+	m_moveTrackEffect.Update();
+	m_markerEffect.Update();
 
 }

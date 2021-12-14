@@ -6,6 +6,8 @@ private:
 	enum EnGameState {
 		enTitle,
 		enGame,
+		enStop,
+		enGameOver,
 		enPause,
 		enStateNum
 	};
@@ -74,39 +76,57 @@ public:
 		}
 	}
 
+	/// @brief プレイヤーのライフを1減らす
+	void DecPlayerLife()
+	{
+		m_playerLife -= 1;
+
+		if (m_playerLife <= 0) {
+			m_playerLife = 0;
+		}
+
+	}
+
 	/// @brief 存在しているエネミーの数を取得
-	/// @return 
+	/// @return エネミー存在数
 	const int& GetEnemyCount() const
 	{
 		return m_enemyNum;
 	}
 
 	/// @brief エネミー上限数を取得
-	/// @return 
+	/// @return エネミー上限数
 	const int& GetMaxEnemyNum() const
 	{
 		return MAX_ENEMY_NUM;
 	}
 
 	/// @brief ゲーム状態を設定
-	/// @param gameState 
+	/// @param gameState 設定する状態
 	void SetGameState(const EnGameState& gameState)
 	{
 		m_enGameState = gameState;
 	}
 
 	/// @brief ゲーム状態を取得 
-	/// @return 
+	/// @return ゲーム状態
 	EnGameState GetGameState()
 	{
 		return m_enGameState;
 	}
 
 	/// @brief ステージの残時間を取得
-	/// @return 
+	/// @return 残時間
 	const float& GetTime() const
 	{
 		return m_time;
+	}
+
+	/// @brief プレイヤーのライフを取得
+	/// @return プレイヤーのライフ
+	const int& GetPlayerLife() const
+	{
+		return m_playerLife;
 	}
 
 
@@ -119,6 +139,7 @@ private:
 	static GameDirector* m_gameDirector;		//唯一のインスタンス
 	
 	int m_score = 0;							//スコア
+	int m_playerLife = 3;						//プレイヤーのライフ
 	int m_waveNumber = 1;						//現在のwave。1から開始する
 	int m_enemyNum = 0;							//現在のエネミー数
 	float m_time = 60.0f;						//ステージの残時間

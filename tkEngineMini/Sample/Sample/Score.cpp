@@ -6,12 +6,13 @@ namespace {
 	const Vector3 SCORE_SPRITE_POS = { 330.0f,270.0f,0.0f };
 	const Vector2 SCORE_SPRITE_PIVOT = { 0.5f,0.5f };
 	const Vector3 SCORE_SPRITE_SCALE = { 0.5f,0.5f,1.0f };
-	const Vector4 SCORE_SPRITE_COLOR = { 1.0f,1.0f,1.0f,1.0f };
+	const Vector4 SCORE_SPRITE_COLOR = { 0.3f,0.3f,0.9f,1.0f };
 	const int SCORE_SPRITE_WIDTH = 256;
 	const int SCORE_SPRITE_HEIGHT = 128;
 
 	const Vector2 SCORE_SPRITE_TO_NUMBER = { 80.0f,15.0f };
 
+	const Vector4 SCORE_NUM_COLOR = { 0.3f,0.3f,0.9f,1.0f };
 
 	const int DIGITS = 16;
 }
@@ -65,6 +66,7 @@ void Score::Init()
 	//テキストの設定
 	m_scoreNumber->Init(score);
 	m_scoreNumber->SetPosition(m_scoreTextPos);
+	m_scoreNumber->SetColor(SCORE_NUM_COLOR);
 }
 
 void Score::UpdateScore()

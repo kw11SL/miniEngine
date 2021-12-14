@@ -10,14 +10,14 @@ namespace{
 	const Vector3 LIFE_TEXT_POS = { -550.0f,110.0f,0.0f };					//LIFEの字の位置
 	
 	const Vector3 LIFE_TEXT_SCALE = { 0.6f,0.6f,1.0f };						//LIFEの字の拡大率
-	const Vector3 LIFE_ICON_SCALE = { 0.3f,0.3f,1.0f };						//アイコンのスプライトの拡大率
+	const Vector3 LIFE_ICON_SCALE = { 0.2f,0.2f,1.0f };						//アイコンのスプライトの拡大率
 
-	const Vector4 LIFE_TEXT_COLOR = { 1.0f * 1.5f,1.0f * 1.5f,1.0f * 1.5f,1.0f };				//LIFEの字の色
+	const Vector4 LIFE_TEXT_COLOR = { 0.9f * 1.5f,0.25f * 1.5f,0.25f * 1.5f,1.0f };				//LIFEの字の色
 	const Vector4 LIFE_ICON_COLOR = { 0.95f,0.95f,0.95f,1.0f };				//アイコンの色
 
 	const Vector3 LIFE_TEXT_TO_LIFE_ICON_0 = { 60.0f,30.0f,0.0f };		//LIFEの字からライフアイコン1への相対位置
-	const Vector3 LIFE_ICON_0_TO_LIFE_ICON_1 = { 30.0f,-30.0f,0.0f };		//ライフアイコン1からライフアイコン2への相対位置
-	const Vector3 LIFE_ICON_1_TO_LIFE_ICON_2 = { -30.0f,-30.0f,0.0f };		//ライフアイコン2からライフアイコン3への相対位置
+	const Vector3 LIFE_ICON_0_TO_LIFE_ICON_1 = { 5.0f,-30.0f,0.0f };		//ライフアイコン1からライフアイコン2への相対位置
+	const Vector3 LIFE_ICON_1_TO_LIFE_ICON_2 = { -5.0f,-30.0f,0.0f };		//ライフアイコン2からライフアイコン3への相対位置
 
 	const Vector2 SPRITE_PIVOT = { 0.5f,0.5f };								//スプライトのピボット
 
@@ -106,7 +106,24 @@ void Life::Init()
 
 }
 
+void Life::LifeDisp()
+{
+	//残機2のとき、3つ目のアイコンをフェードアウトさせる
+	if (GameDirector::GetInstance()->GetPlayerLife() <= 2) {
+		m_lifeIconSprite[2]->FadeOut(0.04f);
+	}
+	//残1のとき、2つ目のアイコンをフェードアウトさせる
+	if (GameDirector::GetInstance()->GetPlayerLife() <= 1) {
+		m_lifeIconSprite[1]->FadeOut(0.04f);
+	}
+	//残0のとき、1つ目のアイコンをフェードアウトさせる
+	if (GameDirector::GetInstance()->GetPlayerLife() <= 0) {
+		m_lifeIconSprite[0]->FadeOut(0.04f);
+	}
+
+}
+
 void Life::Update()
 {
-
+	LifeDisp();
 }

@@ -9,10 +9,11 @@ namespace {
 	const Vector3 TIMER_SPRITE_POS = { 0.0f,310.0f,0.0f };
 	const Vector2 TIMER_SPRITE_TO_NUMBER = { 0.0f,-15.0f };
 	const Vector2 TIMER_SPRITE_PIVOT = { 0.5f,0.5f };
-	const Vector4 TIMER_SPRITE_COLOR = { 1.0f * 1.5f,1.0f * 1.5f,1.0f * 1.5f,1.0f };
+	const Vector4 TIMER_SPRITE_COLOR = { 0.25f * 1.5f,0.9f * 1.5f,0.45f * 1.5f,1.0f };
 	const Vector3 TIMER_SPRITE_SCALE = { 0.4f,0.4f,1.0f };
 	
 	const Vector2 TIMER_NUMBER_PIVOT = { 0.5f,0.5f };
+	const Vector4 TIMER_NUMBER_COLOR = { 0.25f * 1.5f,0.9f * 1.5f,0.45f * 1.5f,1.0f };
 
 	const int DIGITS = 4 ;
 }
@@ -71,6 +72,7 @@ void Timer::Init()
 	//時間表示テキストの設定
 	m_timeNumber->Init(score);
 	m_timeNumber->SetPosition(m_timeNumPos);
+	m_timeNumber->SetColor(TIMER_NUMBER_COLOR);
 	m_timeNumber->SetPivot(TIMER_NUMBER_PIVOT);
 }
 

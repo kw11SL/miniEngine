@@ -216,7 +216,7 @@ private:
 	Vector3 m_downVector = { 0.0f,-10.0f,0.0f };		//レイを飛ばす方向ベクトル
 	Vector3 m_forward = Vector3::Front;					//前方
 	Vector3 m_right	= Vector3::Right;					//右
-	Vector3 m_up = Vector3::Up;						//上
+	Vector3 m_up = Vector3::Up;							//上
 	Vector3 m_upPrev = Vector3::Zero;					//前フレームの上
 	Vector3 m_cameraUp = Vector3::Zero;					//カメラの上(カメラに反映する上方向)
 	Vector3 m_scale = Vector3::One;						//拡大率
@@ -239,6 +239,7 @@ private:
 	bool m_isExistPrev = true;							//前フレームの生存フラグ
 	bool m_isReviveReady = false;						//復活準備フラグ(エフェクト再生用)
 	bool m_isReviveReadyPrev = false;					//前フレームの復活準備フラグ
+	float m_markerCounter = 0.0f;						//自機位置表示のエフェクト再生カウンター
 
 	float m_invincebleTime = 0.0f;						//無敵時間
 	float m_fireCounter = 0.0f;							//発射間隔カウンタ
@@ -250,7 +251,8 @@ private:
 	BulletManager* m_bulletManager = nullptr;
 
 	Effect m_explosionEffect;							//被弾時のエフェクト
-	Effect m_reviveEffect;
-
+	Effect m_reviveEffect;								//復活時のエフェクト
+	Effect m_moveTrackEffect;							//移動時の軌跡エフェクト
+	Effect m_markerEffect;								//自機位置の表示エフェクト
 };
 

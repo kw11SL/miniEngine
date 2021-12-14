@@ -73,5 +73,5 @@ void PointLight::SetRange(float range)
 
 void PointLight::Update()
 {
-	Move();
+	//Move();
 }
