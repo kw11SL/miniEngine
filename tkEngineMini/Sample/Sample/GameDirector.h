@@ -144,6 +144,8 @@ private:
 	int m_enemyNum = 0;							//現在のエネミー数
 	float m_time = 60.0f;						//ステージの残時間
 
+
+
 	//定数
 	const int MAX_ENEMY_NUM = 15;				//エネミーの最大数
 	const int MAX_ENEMY_NUM_NEAR_TIMEUP = 25;	//エネミーの最大数(タイムアップ前)

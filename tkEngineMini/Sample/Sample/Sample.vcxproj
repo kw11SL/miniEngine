@@ -344,6 +344,7 @@
     <ClCompile Include="TklFile.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="UIOutline.cpp" />
+    <ClCompile Include="WeaponIcon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\ExEngine\effect\Effect.h" />
@@ -455,6 +456,7 @@
     <ClInclude Include="TklFile.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="UIOutline.h" />
+    <ClInclude Include="WeaponIcon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
