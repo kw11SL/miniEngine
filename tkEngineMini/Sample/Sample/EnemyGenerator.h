@@ -25,8 +25,17 @@ public:
 
 	void Rotation();
 
-	/// @brief スポーン周期用のカウンターを上昇
-	void AddCounter();
+	/// @brief スポーン周期用のカウンターを増加
+	void AddCounter()
+	{
+		m_spawnCounter += g_gameTime->GetFrameDeltaTime();
+	}
+
+	/// @brief エフェクト発生用のカウンターを増加
+	void AddSpawnEffectPlayCounter()
+	{
+		m_spawnEffectCounter += g_gameTime->GetFrameDeltaTime();
+	}
 
 	/// @brief 座標を設定
 	/// @param pos 
@@ -70,6 +79,15 @@ public:
 		return m_isActive;
 	}
 
+	//生成器のアクティベート処理
+	void Activate();
+
+	/// @brief スポーン時のエフェクト再生処理
+	void PlaySpawnEffect();
+
+	/// @brief エフェクトの更新
+	void UpdateEffect();
+
 private:
 	Enemy* m_enemy = nullptr;							//エネミー
 
@@ -84,6 +102,9 @@ private:
 	Vector3 m_downVector = { 0.0f,-10.0f,0.0f };		//レイを飛ばす下方向ベクトル
 	EnEnemyType m_spawnEnemyType = enCommon;			//スポーンさせるエネミータイプ
 	float m_spawnCounter = 0.0f;						//スポーン間隔用カウンター
+	float m_spawnEffectCounter = 0.0f;					//スポーンエフェクトの再生用カウンター
 	bool m_isActive = false;							//生成器がアクティブかどうか
+
+	Effect m_spawnEffect;								//エネミーをスポーンさせるときのエフェクト
 };
 

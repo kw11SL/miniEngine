@@ -118,7 +118,7 @@ void Game::Init(RenderingEngine& renderingEngine)
 			return true;
 		}
 
-		//エネミー3
+		//エネミー3の生成器
 		if (objData.EqualObjectName(L"enemy_03") == true) {
 			m_enemyGenerator[2] = NewGO<EnemyGenerator>(0, "enemyGenerator03");
 			m_enemyGenerator[2]->Init(

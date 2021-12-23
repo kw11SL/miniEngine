@@ -3,8 +3,12 @@
 #include<random>
 
 namespace {
+	const char16_t* ENEMY_SPAWN_EFFECT_FILEPATH = u"Assets/effect/enemySpawn.efk";		//エネミーがスポーンするときのエフェクトのファイルパス
+	const Vector3 ENEMY_SPAWN_EFFECT_SCALE = { 20.0f,20.0f,20.0f };
+
 	const float BORDER_TIMEUP = 10.0f;						//スポーン周期を早くする時間のボーダー
 	const float ENEMY_SPAWN_TIME = 2.0f;					//エネミーのスポーン周期
+	const float EFFECT_PLAY_TIME = 1.4f;					//スポーン時のエフェクトを再生する周期
 	const float ENEMY_SPAWN_TIME_NEAR_TIMEUP = 1.5f;		//タイムアップ前のエネミーのスポーン周期
 	const float GENERATOR_ACTIVE_COUNT_SHOT = 45.0f;		//射撃型エネミー生成器をアクティブにする時間
 	const float GENERATOR_ACTIVE_COUNT_BOMB = 30.0f;		//自爆型エネミー生成器をアクティブにする時間
@@ -24,9 +28,32 @@ void EnemyGenerator::Init(const Vector3& pos, const Quaternion& rot, const bool 
 	//初期化時にアクティブにするかどうかを選択
 	SetActive(isActive);
 
+	//キャラコンを初期化
 	m_myCharaCon.Init(m_position);
 	m_sphericalMove.Init(m_forward, m_right, m_up);
 
+	//エフェクトを初期化
+	m_spawnEffect.Init(ENEMY_SPAWN_EFFECT_FILEPATH);
+}
+
+void EnemyGenerator::PlaySpawnEffect()
+{
+	//残り時間が0以下だったら生成しない
+	if (GameDirector::GetInstance()->GetTime() <= 0.0f) {
+		return;
+	}
+
+	//アクティブフラグがオンなら発生
+	if (m_spawnEffectCounter > EFFECT_PLAY_TIME && m_isActive == true) {
+		m_spawnEffect.SetPosition(m_position);
+		m_spawnEffect.SetRotation(m_rotation);
+		m_spawnEffect.SetScale(ENEMY_SPAWN_EFFECT_SCALE);
+
+		m_spawnEffect.Play(false);
+
+		//カウンターをリセット
+		m_spawnEffectCounter = 0.0f;
+	}
 }
 
 void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
@@ -57,6 +84,9 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 			interval += randFloat(mt);
 		}
 
+		//スポーンエフェクトを再生
+		PlaySpawnEffect();
+
 		//エネミーを生成。アクティブになるまでは生成しない。
 		if (m_spawnCounter > interval && m_isActive == true) {
 			m_enemy = NewGO<Enemy>(0, "enemy");
@@ -69,13 +99,35 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 
 			//カウンターを0にリセット
 			m_spawnCounter = 0.0f;
+			//エフェクト再生用カウンターも0にリセット
+			m_spawnEffectCounter = 0.0f;
 		}
 	}
-	else
-	{
+	else{
 		m_spawnCounter = 0.0f;
+		m_spawnEffectCounter = 0.0f;
 	}
 
+}
+
+void EnemyGenerator::UpdateEffect()
+{
+	m_spawnEffect.Update();
+}
+
+void EnemyGenerator::Activate()
+{
+	//射撃型エネミー生成器のとき
+	if (m_spawnEnemyType == enShot &&
+		GameDirector::GetInstance()->GetTime() <= GENERATOR_ACTIVE_COUNT_SHOT) {
+		SetActive(true);
+	}
+
+	//生成器がボムのとき
+	if (m_spawnEnemyType == enBomb &&
+		GameDirector::GetInstance()->GetTime() <= GENERATOR_ACTIVE_COUNT_BOMB) {
+		SetActive(true);
+	}
 }
 
 void EnemyGenerator::Move()
@@ -89,27 +141,20 @@ void EnemyGenerator::Rotation()
 	m_sphericalMove.Rotation(m_forward,m_right,m_up,m_rotation);
 }
 
-void EnemyGenerator::AddCounter()
-{
-	m_spawnCounter += g_gameTime->GetFrameDeltaTime();
-}
-
 void EnemyGenerator::Update()
 {
-	//射撃型エネミー生成器のとき
-	if (m_spawnEnemyType == enShot &&
-		GameDirector::GetInstance()->GetTime() <= GENERATOR_ACTIVE_COUNT_SHOT) {
-		SetActive(true);
-	}
-
-	//生成器がボムのとき
-	if (m_spawnEnemyType == enBomb &&
-		GameDirector::GetInstance()->GetTime() <= GENERATOR_ACTIVE_COUNT_BOMB) {
-		SetActive(true);
-	}
+	//生成器のアクティベート処理
+	Activate();
 
 	Move();
 	Rotation();
+
 	AddCounter();
+	AddSpawnEffectPlayCounter();
+
 	GenerateEnemy(m_spawnEnemyType);
+	//PlaySpawnEffect();
+
+	//エフェクトを更新
+	UpdateEffect();
 }

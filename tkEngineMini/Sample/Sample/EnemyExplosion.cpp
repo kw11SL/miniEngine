@@ -5,7 +5,7 @@ namespace {
 	//エフェクトのファイルパス
 	const char16_t* EFFECT_FILEPATH = u"Assets/effect/enemy_explosion.efk";
 	//生存時間
-	const float LIFETIME = 2.0f;
+	const float LIFETIME = 1.0f;
 	//ダメージ半径
 	const float DAMAGE_RADIUS = 200.0f;
 }
