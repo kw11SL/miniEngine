@@ -120,43 +120,43 @@ void SpotLight::Rotation()
 
 void SpotLight::Update()
 {
-	Move();
-	Rotation();
+	//Move();
+	//Rotation();
 
-	//ƒeƒXƒg
-	//ŽËoŠp“xi‚è
-	if (g_pad[0]->IsPress(enButtonLeft)) {
-		m_angle -= Math::DegToRad(1.0f);
-	}
-	else if (g_pad[0]->IsPress(enButtonRight)) {
-		m_angle += Math::DegToRad(1.0f);
-	}
+	////ƒeƒXƒg
+	////ŽËoŠp“xi‚è
+	//if (g_pad[0]->IsPress(enButtonLeft)) {
+	//	m_angle -= Math::DegToRad(1.0f);
+	//}
+	//else if (g_pad[0]->IsPress(enButtonRight)) {
+	//	m_angle += Math::DegToRad(1.0f);
+	//}
 
-	if (m_angle < 0.0f) {
-		m_angle = 0.0f;
-	}
-	
-	/*if (m_angle <= Math::DegToRad(0.0f)) {
-		m_angle = Math::DegToRad(0.0f);
-	}
-	else if (m_angle >= Math::DegToRad(60.0f)) {
-		m_angle = Math::DegToRad(60.0f);
-	}*/
+	//if (m_angle < 0.0f) {
+	//	m_angle = 0.0f;
+	//}
+	//
+	///*if (m_angle <= Math::DegToRad(0.0f)) {
+	//	m_angle = Math::DegToRad(0.0f);
+	//}
+	//else if (m_angle >= Math::DegToRad(60.0f)) {
+	//	m_angle = Math::DegToRad(60.0f);
+	//}*/
 
-	SetAngle(m_angle);
+	//SetAngle(m_angle);
 
-	//‰e‹¿”ÍˆÍ•Ï‰»
-	if (g_pad[0]->IsPress(enButtonUp)) {
-		m_range += 1.0f;
-	}
-	else if (g_pad[0]->IsPress(enButtonDown)) {
-		m_range -= 1.0f;
-	}
-	
-	if (m_range < 0.0f) {
-		m_range = 0.0f;
-	}
+	////‰e‹¿”ÍˆÍ•Ï‰»
+	//if (g_pad[0]->IsPress(enButtonUp)) {
+	//	m_range += 1.0f;
+	//}
+	//else if (g_pad[0]->IsPress(enButtonDown)) {
+	//	m_range -= 1.0f;
+	//}
+	//
+	//if (m_range < 0.0f) {
+	//	m_range = 0.0f;
+	//}
 
-	SetRange(m_range);
+	//SetRange(m_range);
 
 }

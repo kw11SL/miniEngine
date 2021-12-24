@@ -248,7 +248,7 @@ private:
 	EnUseWeapon m_enUseWeapon = enNormalShot;			//現在使用しているショット
 	EnBulletType m_enBulletType = enPlayerNormal;		//弾に渡す弾のタイプ情報
 
-	BulletManager* m_bulletManager = nullptr;
+	BulletManager* m_bulletManager = nullptr;			//弾の管理クラスのオブジェクト
 
 	Effect m_explosionEffect;							//被弾時のエフェクト
 	Effect m_reviveEffect;								//復活時のエフェクト

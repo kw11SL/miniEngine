@@ -142,21 +142,28 @@ public:
 	}
 
 	/// @brief プレイヤーに対する当たり判定が有効かどうか
-	/// @return 
+	/// @return アクティブフラグ
 	const bool GetIsActive()
 	{
 		return m_isActive;
 	}
 
 	/// @brief 無敵状態かどうか？
-	/// @return 
-	bool IsInvincible()
+	/// @return 無敵フラグ
+	bool GetIsInvincible()
 	{
 		return m_isInvincible;
 	}
 
+	/// @brief 存在しているかどうか？
+	/// @return 存在フラグ
+	bool GetIsExist()
+	{
+		return m_isExist;
+	}
+
 	/// @brief 無敵時間を設定
-	/// @param invTime 
+	/// @param invTime 無敵時間
 	void SetInvincibleTime(const float invTime)
 	{
 		m_invTime = invTime;
@@ -208,7 +215,7 @@ private:
 	float m_speed = 0.0f;								//移動速度
 	int m_score = 0;									//エネミーの撃破スコア
 	float m_durability = 0.0f;							//弾への影響値
-	bool m_exist = false;								//存在フラグ
+	bool m_isExist = false;								//存在フラグ
 	bool m_isInvincible = false;						//無敵状態かどうか
 	bool m_isActive = false;							//プレイヤーに対する当たり判定が有効かどうか
 

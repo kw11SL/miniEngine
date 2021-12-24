@@ -88,8 +88,13 @@ public:
 	/// @brief エフェクトの更新
 	void UpdateEffect();
 
+	/// @brief 生成したエネミーの削除および配列からの削除処理
+	void DeleteEnemy();
+
 private:
 	Enemy* m_enemy = nullptr;							//エネミー
+
+	std::vector<Enemy*> m_enemies;						//エネミーの可変長配列
 
 	MyCharacterController m_myCharaCon;					//球面移動用キャラコン
 	SphericalMove m_sphericalMove;						//球面移動用クラス
@@ -104,6 +109,8 @@ private:
 	float m_spawnCounter = 0.0f;						//スポーン間隔用カウンター
 	float m_spawnEffectCounter = 0.0f;					//スポーンエフェクトの再生用カウンター
 	bool m_isActive = false;							//生成器がアクティブかどうか
+
+	EnemyManager* m_enemyManager = nullptr;				//エネミー管理クラスのオブジェクト
 
 	Effect m_spawnEffect;								//エネミーをスポーンさせるときのエフェクト
 };

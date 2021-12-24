@@ -19,6 +19,7 @@
 #include "Explosion.h"
 #include "GameDirector.h"
 #include "BulletManager.h"
+#include "EnemyManager.h"
 
 
 

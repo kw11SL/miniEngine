@@ -215,7 +215,7 @@ private:
 	Explosion* m_spreadExplosion = nullptr;
 
 	float m_life = 0.0f;							//耐久値
-	float m_speed = 0.0f;							//移動速度
+	float m_speed = 0.0f;							//速さ
 	float m_lifeTime = 0.0f;						//時間寿命
 	float m_power = 0.0f;							//弾が与えるダメージ
 	bool m_isExist = true;							//存在フラグ

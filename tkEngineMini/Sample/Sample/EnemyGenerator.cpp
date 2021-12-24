@@ -21,6 +21,9 @@ EnemyGenerator::~EnemyGenerator()
 
 void EnemyGenerator::Init(const Vector3& pos, const Quaternion& rot, const bool isActive ,const EnEnemyType& enemyType)
 {
+	////エネミーの管理クラスのポインタを取得
+	//m_enemyManager = EnemyManager::GetInstance();
+
 	m_position = pos;
 	m_rotation = rot;
 	m_spawnEnemyType = enemyType;
@@ -89,14 +92,31 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 
 		//エネミーを生成。アクティブになるまでは生成しない。
 		if (m_spawnCounter > interval && m_isActive == true) {
-			m_enemy = NewGO<Enemy>(0, "enemy");
+			//m_enemy = NewGO<Enemy>(0, "enemy");
 			
-			m_enemy->Init(
+			/*m_enemy->Init(
 				*RenderingEngine::GetInstance(),
 				m_position,
 				m_up,
-				enemyType);
+				enemyType);*/
 
+			/*m_enemyManager->InitEnemies(
+				m_position,
+				m_up,
+				enemyType
+			);*/
+
+			//自身の可変長配列の中にNewGOする
+			m_enemies.push_back(NewGO<Enemy>(0, "enemy"));
+			
+			//初期化するのは可変長配列のサイズ - 1の要素
+			m_enemies[m_enemies.size() - 1]->Init(
+				*RenderingEngine::GetInstance(),
+				m_position,
+				m_up,
+				enemyType
+			);
+			
 			//カウンターを0にリセット
 			m_spawnCounter = 0.0f;
 			//エフェクト再生用カウンターも0にリセット
@@ -141,6 +161,35 @@ void EnemyGenerator::Rotation()
 	m_sphericalMove.Rotation(m_forward,m_right,m_up,m_rotation);
 }
 
+void EnemyGenerator::DeleteEnemy()
+{
+	//存在フラグを調べて、オフだったら破棄
+	for (auto& enemy : m_enemies) {
+		if (enemy->GetIsExist() == false) {
+			DeleteGO(enemy);
+		}
+	}
+
+	//配列からエネミーを消すための条件を記述した関数オブジェクト
+	auto func = [&](Enemy* enemy)->bool {
+		//存在フラグがfalseだったらtrueを返す(=削除対象にする)
+		if (enemy->GetIsExist() == false) {
+			return true;
+		}
+		//それ以外の場合はfalse
+		return false;
+	};
+
+	//eraseとremove_ifを組み合わせ
+	//remove_ifで配列内の先頭から終端までを調査し、関数オブジェクトがtrueを返してきた要素(=弾の存在フラグがfalse、つまり削除対象)を末尾へ移動させていく。
+	//remove_ifの戻り値は末尾に移動させた削除対象たちの先頭イテレータなのでそこから終端までをeraseすることで配列から削除される
+	m_enemies.erase(
+		std::remove_if(m_enemies.begin(), m_enemies.end(), func),
+		m_enemies.end()
+	);
+
+}
+
 void EnemyGenerator::Update()
 {
 	//生成器のアクティベート処理
@@ -153,6 +202,7 @@ void EnemyGenerator::Update()
 	AddSpawnEffectPlayCounter();
 
 	GenerateEnemy(m_spawnEnemyType);
+	DeleteEnemy();
 	//PlaySpawnEffect();
 
 	//エフェクトを更新

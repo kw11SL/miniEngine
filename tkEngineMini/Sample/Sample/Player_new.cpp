@@ -14,11 +14,12 @@ namespace{
 	const char* VS_ENTRYPOINT_NAME = "VSMain";
 	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
 	
-	const Vector3 INIT_POINT = {0.0f,700.0f,0.0f};
-	const float UPPER_OFFSET = 0.0f;
+	const Vector3 INIT_POINT = {0.0f,700.0f,0.0f};			//初期位置
+	const float UPPER_OFFSET = 0.0f;						//地形から浮かせる距離
 
 	const float PL_MOVE_SPEED = -12.0f;			//移動速度
-	const float FIRECOUNTER_NORMAL = 0.15f;		//通常弾の発射間隔
+	const float FIRECOUNTER_NORMAL = 0.075f;	//通常弾の発射間隔
+	const float FIRECOUNTER_SPREAD = 0.8f;		//スプレッドボムの発射間隔
 	const int INIT_LIFE = 3;					//初期残機
 	const float INVINCIBLE_TIME_REVIVE = 7.0f;	//復活時に設定される無敵時間
 	const float REVIVE_TIME = 3.0f;				//被弾から復活までの時間
@@ -29,18 +30,19 @@ namespace{
 	const float CAMERA_ROTATE_FRACTION_ADD_RATE_MAX = 0.03f;		//カメラの回転に使う補間係数に加算する定数
 	const float CAMERA_MOVESPEED_MAX = 1000.0f;						//カメラ、注視点の追従最高速度 
 
-	const char16_t* EFFECT_FILEPATH_EXPLOSION = u"Assets/effect/justguard.efk";
-	const Vector3 EFFECT_SCALE_EXPLOSION = { 30.0f,30.0f,30.0f };
+	//エフェクト関連
+	const char16_t* EFFECT_FILEPATH_EXPLOSION = u"Assets/effect/justguard.efk";		//被弾エフェクトファイルパス
+	const Vector3 EFFECT_SCALE_EXPLOSION = { 30.0f,30.0f,30.0f };					//被弾エフェクトの拡大率
 
-	const char16_t* EFFECT_FILEPATH_REVIVE = u"Assets/effect/revive_a.efk";
-	const Vector3 EFFECT_SCALE_REVIVE = { 20.0f,20.0f,20.0f };
+	const char16_t* EFFECT_FILEPATH_REVIVE = u"Assets/effect/revive_a.efk";			//復活エフェクトのファイルパス
+	const Vector3 EFFECT_SCALE_REVIVE = { 20.0f,20.0f,20.0f };						//復活エフェクトの拡大率
 
-	const char16_t* EFFECT_FILEPATH_TRACK = u"Assets/effect/moveTrack.efk";
-	const Vector3 EFFECT_SCALE_TRACK = { 10.0f,10.0f,10.0f };
+	const char16_t* EFFECT_FILEPATH_TRACK = u"Assets/effect/moveTrack.efk";			//軌跡エフェクトのファイルパス
+	const Vector3 EFFECT_SCALE_TRACK = { 10.0f,10.0f,10.0f };						//軌跡エフェクトの拡大率
 
-	const char16_t* EFFECT_FILEPATH_MARKER = u"Assets/effect/positionMarker.efk";
-	const Vector3 EFFECT_SCALE_MARKER = { 30.0f,30.0f,30.0f };
-	const float MARKER_PLAY_INTERVAL = 0.02f;
+	const char16_t* EFFECT_FILEPATH_MARKER = u"Assets/effect/positionMarker.efk";	//当たり判定エフェクトのファイルパス
+	const Vector3 EFFECT_SCALE_MARKER = { 30.0f,30.0f,30.0f };						//当たり判定エフェクトの拡大率
+	const float MARKER_PLAY_INTERVAL = 0.02f;										//当たり判定エフェクトの発生間隔
 }
 
 Player_new::~Player_new()
@@ -58,6 +60,7 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 	m_pointLight = FindGO<PointLight>("pointlight");
 	m_spotLight = FindGO<SpotLight>("spotlight");
 
+	//弾の管理クラスのポインタを取得
 	m_bulletManager = BulletManager::GetInstance();
 
 	m_skinModelRender = NewGO<SkinModelRender>(0);
@@ -100,15 +103,18 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 	
 	//カメラ注視点から視点へのベクトルを設定
 	Vector3 toCamera;
-	toCamera.x = 0.0f;
+	/*toCamera.x = 0.0f;
 	toCamera.y = 700.0f;
-	toCamera.z = 1000.0f;
+	toCamera.z = 1000.0f;*/
+	toCamera.x = 0.0f;
+	toCamera.y = 1600.0f;
+	toCamera.z = 2400.0f;
 
 	//カメラの初期化
 	m_gameCamera.Init(CAMERA_MOVESPEED_MAX);
-	//注視点を設定
+	//注視点をプレイヤーの位置に設定
 	m_gameCamera.SetTargetPosition(m_position);
-	//視点を設定
+	//注視点からの相対位置で視点を設定
 	m_gameCamera.SetCameraPosition(m_position + toCamera);
 	//注視点目標を設定
 	m_gameCamera.SetTargetPositionTarget(m_position);
@@ -148,7 +154,7 @@ void Player_new::Move()
 	//前方ベクトルを作成
 	Vector3 forward;
 	//上ベクトルとカメラの右ベクトルの外積を前方ベクトルにする
-	forward.Cross(m_up, g_camera3D->GetRight());
+	forward.Cross(m_up,g_camera3D->GetRight());
 	forward.Normalize();
 
 	//プレイヤーの左右方向への移動
@@ -162,6 +168,7 @@ void Player_new::Move()
 		GameDirector::GetInstance()->GetPlayerLife() <= 0) {
 		m_moveSpeed *= 0.0f;
 	}
+
 	//軌跡エフェクトの再生
 	if (m_moveSpeed.Length() > 5.0f) {
 		m_moveTrackEffect.SetPosition(m_position + m_up*50.0f);
@@ -182,23 +189,24 @@ void Player_new::Move()
 	//自作キャラコンに移動速度を渡す
 	m_position = m_myCharaCon.Execute(m_moveSpeed,m_downVector,UPPER_OFFSET);
 
+	//// 上ベクトルを更新
+	////下向きベクトル(=レイを飛ばす方向)* -1.0　= プレイヤーの上ベクトル
+	//Vector3 newUp = m_downVector * -1.0f;
+	//// 現在の上ベクトルから、新しい上ベクトルに向けるための回転クォータニオンを計算
+	////		→　カメラの計算で使う。
+	//m_rotUpToGroundNormal.SetRotation(m_up, newUp);
 
-	// 上ベクトルを更新
-	//下向きベクトル(=レイを飛ばす方向)* -1.0　= プレイヤーの上ベクトル
-	Vector3 newUp = m_downVector * -1.0f;
-	// 現在の上ベクトルから、新しい上ベクトルに向けるための回転クォータニオンを計算
-	//		→　カメラの計算で使う。
-	m_rotUpToGroundNormal.SetRotation(m_up, newUp);
+	////自身の上ベクトルを更新
+	//m_up = newUp;
 
-	//自身の上ベクトルを更新
-	m_up = newUp;
-
-	//更新した上ベクトルと前方ベクトルの外積　=　右ベクトル
-	//m_right = g_camera3D->GetRight();
-	m_right.Cross(m_up,m_forward);
-	//求めた右ベクトルと更新した上ベクトルの外積　=　前方ベクトル
-	m_forward.Cross(m_right, m_up);
-	
+	////更新した上ベクトルと前方ベクトルの外積　=　右ベクトル
+	////m_right = g_camera3D->GetRight();
+	//m_right.Cross(m_up,m_forward);
+	////求めた右ベクトルと更新した上ベクトルの外積　=　前方ベクトル
+	//m_forward.Cross(m_right, m_up);
+	Vector3 oldUp = m_up;
+	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
+	m_rotUpToGroundNormal.SetRotation(oldUp, m_up);
 	
 	//モデルの座標更新
 	m_skinModelRender->SetPosition(m_position);
@@ -211,8 +219,10 @@ void Player_new::Rotation()
 
 void Player_new::RotateShotDirection()
 {
+	//ショットの方向はプレイヤーの前方
+	m_shotDirection = m_forward;
 
-	//発射方向を上方向とカメラの右の外積にしておく
+	//発射方向を上方向とカメラの右方向の外積にしておく
 	m_shotDirection = Cross(m_up, g_camera3D->GetRight());
 	m_shotDirection.Normalize();
 
@@ -227,13 +237,14 @@ void Player_new::RotateShotDirection()
 
 	//入力値から角度を求める
 	float angle = atan2f(x, y);
+	//float angleDeg = Math::RadToDeg(angle);
 
 	//軸周りの回転を求める
 	rot.SetRotation(m_up, angle);
+	//rot.SetRotationDeg(m_up, angleDeg);
 
 	//ベクトルを回転
 	rot.Apply(m_shotDirection);
-	
 }
 
 void Player_new::FireBullet()
@@ -247,9 +258,11 @@ void Player_new::FireBullet()
 	//R1ボタンを押すと発射、押しっぱなしで連射
 	if (g_pad[0]->IsPress(enButtonRB1)) {
 		
+		//右スティック方向にショットを撃つ
 		//カウンターが0のときとカウンターが一定値を超えると発射
 		if (m_fireCounter > FIRECOUNTER_NORMAL || m_fireCounter == 0.0f) {
 			
+			//弾管理クラスの関数を使用して出現させる
 			m_bulletManager->InitBullets(
 				m_position,
 				m_up,
@@ -313,6 +326,7 @@ void Player_new::ChangeWeapon()
 
 void Player_new::Hit()
 {
+	//プレイヤーのライフが0のときは処理しない
 	if (GameDirector::GetInstance()->GetPlayerLife() <= 0) {
 		return;
 	}
@@ -383,7 +397,7 @@ void Player_new::Hit()
 				SetInvincibleTime(INVINCIBLE_TIME_REVIVE);
 				SetIsInvFlag(true);
 
-				//爆散エフェクトを発生
+				//被弾エフェクトを発生
 				m_explosionEffect.SetPosition(m_position);
 				m_explosionEffect.SetRotation(m_rot);
 				m_explosionEffect.SetScale(EFFECT_SCALE_EXPLOSION);
@@ -485,7 +499,6 @@ void Player_new::ReviveReady()
 
 void Player_new::Update()
 {
-
 	float addRate = 0.0f;
 	float maxAddRate = CAMERA_ROTATE_FRACTION_ADD_RATE_MAX;
 	float minAddRate = CAMERA_ROTATE_FRACTION_ADD_RATE_MIN;
@@ -562,8 +575,6 @@ void Player_new::Update()
 	m_gameCamera.UpdateCamera();
 
 
-
-	
 	//各種フラグの記録
 	//////////////////////////////////
 	//現フレームの上を記録
@@ -580,6 +591,27 @@ void Player_new::Update()
 	//テスト　モデルの削除
 	if (g_pad[0]->IsTrigger(enButtonY)) {
 		DeleteGO(m_skinModelRender);
+	}
+
+	//テスト　モデルの出現
+	if (g_pad[0]->IsTrigger(enButtonX)) {
+		m_skinModelRender = NewGO<SkinModelRender>(0);
+		
+		m_skinModelRender->Init(
+			MODELPATH_UTC,
+			enModelUpAxisZ,
+			*RenderingEngine::GetInstance(),
+			true,
+			false,
+			SKELETON_PATH_UTC
+		);
+
+		//ライトの受け取り処理
+		RecieveDirectionLight(m_directionLight);
+		RecievePointLight(m_pointLight);
+		RecieveSpotLight(m_spotLight);
+
+		InitModelFromInitData();
 	}
 
 	//エフェクトの更新

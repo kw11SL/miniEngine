@@ -45,14 +45,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	GameDirector::CreateInstance();
 	//バレットマネージャを作成
 	BulletManager::CreateInstance();
+	//エネミーマネージャを作成
+	EnemyManager::CreateInstance();
 
 	//step-1 エフェクトエンジンのインスタンスを作成する。
 	EffectEngine::CreateInstance();
-
 	//テスト：レンダリングエンジン
 	RenderingEngine::CreateInstance();
 	//レンダリングエンジンの初期化
 	RenderingEngine::GetInstance()->Init();
+
 
 	//テクスチャを貼りつけるためのスプライトを初期化
 	SpriteInitData spriteInitData;
@@ -88,7 +90,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 		//レンダリング開始。
 		g_engine->BeginFrame();
-		
+		//バレットマネージャの更新処理
 		BulletManager::GetInstance()->ExecuteUpdate();
 
 		//登録されているゲームオブジェクトの更新関数を呼び出す。
@@ -143,6 +145,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	GameDirector::DeleteInstance();
 	//バレットマネージャを削除
 	BulletManager::DeleteInstance();
+	//エネミーマネージャを削除
+	EnemyManager::DeleteInstance();
 	//ゲームを削除
 	DeleteGO(game);
 

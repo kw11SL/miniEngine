@@ -25,6 +25,7 @@ void BulletManager::InitBullets(
 
 void BulletManager::ExecuteUpdate()
 {
+	//存在フラグを調べて、オフだったら破棄
 	for (auto& bullet : m_bullets) {
 		if (bullet->GetIsExist() == false) {
 			//bullet->DeleteSkinModel();
@@ -32,7 +33,7 @@ void BulletManager::ExecuteUpdate()
 		}
 	}
 
-	//弾を消すための条件を記述した匿名関数
+	//弾を消すための条件を記述した関数オブジェクト
 	auto func = [&](Bullet* bullet)->bool {
 		//存在フラグがfalseだったらtrueを返す(=削除対象にする)
 		if (bullet->GetIsExist() == false) {
@@ -43,7 +44,7 @@ void BulletManager::ExecuteUpdate()
 	};
 
 	//eraseとremove_ifを組み合わせ
-	//remove_ifで配列内の先頭から終端までを調査し、匿名関数がtrueを返してきた要素(=弾の存在フラグがfalse、つまり削除対象)を末尾へ移動させていく。
+	//remove_ifで配列内の先頭から終端までを調査し、関数オブジェクトがtrueを返してきた要素(=弾の存在フラグがfalse、つまり削除対象)を末尾へ移動させていく。
 	//remove_ifの戻り値は末尾に移動させた削除対象たちの先頭イテレータなのでそこから終端までをeraseすることで配列から削除される
 	m_bullets.erase(
 		std::remove_if(m_bullets.begin(),m_bullets.end(), func),

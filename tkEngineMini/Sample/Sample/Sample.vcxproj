@@ -303,6 +303,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyExplosion.cpp" />
     <ClCompile Include="EnemyGenerator.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="ExplosionBase.cpp" />
     <ClCompile Include="FontRender.cpp" />
@@ -423,6 +424,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyExplosion.h" />
     <ClInclude Include="EnemyGenerator.h" />
+    <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="ExplosionBase.h" />
     <ClInclude Include="FontRender.h" />

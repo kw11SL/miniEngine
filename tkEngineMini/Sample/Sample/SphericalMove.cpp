@@ -21,14 +21,16 @@ void SphericalMove::UpdateVectorFromUp(const Vector3& downVector, Vector3& forwa
 	//上ベクトルは受け取った下ベクトルの逆
 	newUp = downVector * -1.0f;
 
+	//上ベクトルを更新
 	up = newUp;
 
+	//前方ベクトルは右ベクトルと上ベクトルの外積
 	forward.Cross(right, up);
 	forward.Normalize();
 
+	//右ベクトルは上ベクトルと前方ベクトルの外積
 	right.Cross(up, forward);
 	right.Normalize();
-
 }
 
 void SphericalMove::Rotation(const Vector3& forward, const Vector3& right, const Vector3& up, Quaternion& rot)

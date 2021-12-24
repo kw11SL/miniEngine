@@ -51,10 +51,6 @@ namespace {
 	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
 	//初期座標
 	const Vector3 INIT_POINT = { 0.0f,700.0f,0.0f };
-
-	const float CHARACON_RADIUS = 50.0f;
-	const float CHARACON_HEIGHT = 120.0f;
-
 }
 
 Enemy::Enemy()
@@ -170,7 +166,7 @@ void Enemy::Init(
 	m_sphericalMove.Init(m_forward, m_right, m_up);
 	
 	//生存フラグをオン
-	m_exist = true;
+	m_isExist = true;
 
 	//無敵状態フラグをオフ
 	m_isInvincible = false;
@@ -180,8 +176,6 @@ void Enemy::Init(
 
 	//エフェクトの初期化
 	m_destroyEffect.Init(u"Assets/effect/destroy.efk");
-
-
 }
 
 void Enemy::Move()
@@ -323,10 +317,10 @@ void Enemy::Destroy()
 		m_life = 0.0f;
 		
 		//生存フラグをオフ
-		m_exist = false;
+		m_isExist = false;
 	}
 	//生存フラグがオフならエフェクトを出して削除処理
-	if (m_exist == false) {
+	if (m_isExist == false) {
 		m_destroyEffect.SetPosition(m_position);
 		m_destroyEffect.SetRotation(m_rot);
 		m_destroyEffect.SetScale({ 20.0f,20.0f,20.0f });

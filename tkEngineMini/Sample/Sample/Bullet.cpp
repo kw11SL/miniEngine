@@ -6,7 +6,6 @@ namespace{
 	//モデル毎のファイルパス
 	const char* MODELPATH_PLAYER_NORMAL = "Assets/modelData/bullet/bullet.tkm";
 	const char* MODELPATH_PLAYER_SPREAD_BOMB = "Assets/modelData/bullet/bullet.tkm";
-
 	const char* MODELPATH_ENEMY_NORMAL = "Assets/modelData/bullet/bullet.tkm";
 	
 	//地形からどれくらい浮かせるか
@@ -15,13 +14,11 @@ namespace{
 	//弾の耐久値
 	const float LIFE_PLAYER_NORMAL = 1.0f;
 	const float LIFE_PLAYER_SPREAD_BOMB = 1.0f;
-	
 	const float LIFE_ENEMY_NORMAL = 1.0f;
 	
 	//弾ごとの弾速
 	const float MOVE_SPEED_PLAYER_NORMAL = 25.0f;
 	const float MOVE_SPEED_PLAYER_SPREAD_BOMB = 10.0f;
-	
 	const float MOVE_SPEED_ENEMY_NORMAL = 3.0f;
 
 	//スプレッドボムの速度減衰
@@ -30,13 +27,11 @@ namespace{
 	//弾の残存時間
 	const float LIFETIME_PLAYER_NORMAL = 1.0f;
 	const float LIFETIME_PLAYER_SPREAD_BOMB = 1.5f;
-	
 	const float LIFETIME_ENEMY_NORMAL = 6.0f;
 
 	//弾の威力
 	const float POWER_PLAYER_NORMAL = 5.0f;
 	const float POWER_PLAYER_SPREAD_BOMB = 1.0f;
-	
 	const float POWER_ENEMY_NORMAL = 1.0f;
 
 	//ダメージを与える間隔
@@ -46,8 +41,6 @@ namespace{
 	const char16_t* EFFECT_FILEPATH_PLAYER_NORMAL = u"Assets/effect/shot_pl1.efk";
 	const char16_t* EFFECT_FILEPATH_PLAYER_SPREAD_BOMB = u"Assets/effect/shot_pl_spread.efk";
 	const char16_t* EFFECT_FILEPATH_PLAYER_SPREAD_BOMB_BURST = u"Assets/effect/shot_spread_burst.efk";
-
-	
 	const char16_t* EFFECT_FILEPATH_ENEMY_NORMAL = u"Assets/effect/shot_pl1.efk";
 
 	//シェーダーのファイルパス
@@ -174,6 +167,9 @@ void Bullet::Init(
 	m_direction = direction;
 	m_direction.Normalize();
 
+	/*m_direction = m_forward;
+	m_direction.Normalize();*/
+
 	//エフェクトの初期化
 	InitEffect(bulletType);
 	
@@ -197,9 +193,10 @@ void Bullet::Move()
 	//キャラコンによる座標更新
 	m_position = m_myCharaCon.Execute(m_moveSpeed, m_downVector,UPPER_OFFSET);
 	
-	//更新前の前方ベクトルを記録
+	//この時点での前方ベクトルを記録
 	m_oldForward = m_forward;
 
+	//ベクトルの向きを変える処理
 	//上方向を球面の法線で更新し、右と前方を更新
 	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
 
@@ -218,7 +215,7 @@ void Bullet::Move()
 
 void Bullet::Rotation()
 {
-	//モデルの向きを変える処理
+	//エフェクトの向きを変える処理
 	//回転クォータニオンを作成
 	Quaternion rot;
 	//記録しておいた更新前の前方から更新後の前方に回転するクォータニオンを計算
@@ -227,16 +224,19 @@ void Bullet::Rotation()
 	Quaternion mulRot;
 	//クォータニオンを乗算
 	mulRot.Multiply(m_rot, rot);
-	//               
 
+	//m_rot.Multiply(m_rot, rot);
+
+	//前方、右、上の各ベクトルを渡し、向きを変える
 	m_sphericalMove.Rotation(m_forward, m_right, m_up, m_rot);
 }
 
 void Bullet::DecLifeTime()
 {
+	//ライフを減少
 	m_lifeTime -= g_gameTime->GetFrameDeltaTime();
-	
 
+	//弾の耐久値、時間寿命、速さのいずれかが0以下になったとき、存在フラグをオフ
 	if (m_life < 0.0f 
 		||m_lifeTime < 0.0f
 		||m_speed < 0.0f) {
@@ -291,8 +291,6 @@ void Bullet::InitEffect(const EnBulletType& bulletType)
 
 void Bullet::Update()
 {
-
-
 	Move();
 	Rotation();
 	DecLifeTime();

@@ -145,7 +145,6 @@ void SkinModelRender::InitModel()
 void SkinModelRender::SetPosition(const Vector3& pos)
 {
 	m_position = pos;
-
 }
 
 void SkinModelRender::SetScale(const Vector3& scale)
