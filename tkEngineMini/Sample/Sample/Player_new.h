@@ -68,7 +68,7 @@ public:
 	void SetPostion(const Vector3& pos)
 	{
 		m_position = pos;
-		m_skinModelRender->SetPosition(m_position);
+		//m_skinModelRender->SetPosition(m_position);
 	}
 
 	/// @brief Šg‘å—¦‚ğİ’è
@@ -76,14 +76,21 @@ public:
 	void SetScale(const Vector3& scale)
 	{
 		m_scale = scale;
-		m_skinModelRender->SetScale(m_scale);
+		//m_skinModelRender->SetScale(m_scale);
 	}
 
 	/// @brief ‰ñ“]‚ğİ’è
 	/// @param rot	‰ñ“]
-	void SetRotation(const Quaternion rot)
+	void SetRotation(const Quaternion& rot)
 	{
 		m_rot = rot;
+	}
+
+	/// @brief s—ñ‚©‚ç‰ñ“]‚ğİ’è
+	/// @param mat s—ñ
+	void SetRotationFromMatrix(const Matrix& mat)
+	{
+		m_rot.SetRotation(mat);
 	}
 	
 	/// @brief Šp“x‚ğİ’è

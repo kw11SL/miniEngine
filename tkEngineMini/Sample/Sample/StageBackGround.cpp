@@ -11,11 +11,6 @@ namespace
 	const float MODEL_INIT_SCALE_RATIO = 5.0f;
 }
 
-StageBackGround::StageBackGround()
-{
-
-}
-
 StageBackGround::~StageBackGround()
 {
 	DeleteGO(m_skinModelRender);
@@ -29,7 +24,7 @@ bool StageBackGround::Start()
 void StageBackGround::Init(RenderingEngine& renderingEngine, const Vector3& pos, const Quaternion& rot, const Vector3& scale)
 {
 	m_skinModelRender = NewGO<SkinModelRender>(0);
-	//背景には影を落としたいのでシャドウレシーバーフラグをオンにする
+
 	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisZ, renderingEngine, false, false);
 
 	//モデル拡大
@@ -44,25 +39,7 @@ void StageBackGround::Init(RenderingEngine& renderingEngine, const Vector3& pos,
 
 }
 
-void StageBackGround::RecieveDirectionLight(DirectionLight* dirLight)
-{
-	m_skinModelRender->InitDirectionLight(dirLight);
-}
 
-void StageBackGround::RecievePointLight(PointLight* ptLight)
-{
-	m_skinModelRender->InitPointLight(ptLight);
-}
-
-void StageBackGround::RecieveSpotLight(SpotLight* spLight)
-{
-	m_skinModelRender->InitSpotLight(spLight);
-}
-
-void StageBackGround::InitModelFromInitData()
-{
-	m_skinModelRender->InitModel();
-}
 
 void StageBackGround::Update()
 {

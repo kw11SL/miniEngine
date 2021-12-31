@@ -2,36 +2,69 @@
 class StageBackGround : public IGameObject
 {
 public:
-	StageBackGround();
+	StageBackGround() {}
 	~StageBackGround();
 
 	bool Start() override;
 	void Update() override;
+	
+	/// @brief 初期化処理
+	/// @param renderingEngine	レンダリングエンジン 
+	/// @param pos 座標
+	/// @param rot 回転
+	/// @param scale 拡大率
 	void Init(RenderingEngine& renderingEngine, const Vector3& pos, const Quaternion& rot, const Vector3& scale);
 
-	void RecieveDirectionLight(DirectionLight* dirLight);
-	void RecievePointLight(PointLight* ptLight);
-	void RecieveSpotLight(SpotLight* spLight);
-	void InitModelFromInitData();
-
+	/// @brief 座標を設定
+	/// @param pos 
 	void SetPosition(const Vector3& pos)
 	{
 		m_position = pos;
 		m_skinModelRender->SetPosition(m_position);
 	}
 
+	/// @brief 回転を設定
+	/// @param qRot 
 	void SetRotation(const Quaternion& qRot)
 	{
 		m_rotation = qRot;
 		m_skinModelRender->SetRotation(m_rotation);
 	}
 
+	/// @brief 拡大率を設定
+	/// @param scale 
 	void SetScale(const Vector3& scale)
 	{
 		m_scale = scale;
 		m_skinModelRender->SetScale(m_scale);
 	}
 
+	/// @brief ディレクションライトの受け取り
+	/// @param dirLight 
+	void RecieveDirectionLight(DirectionLight* dirLight)
+	{
+		m_skinModelRender->InitDirectionLight(dirLight);
+	}
+
+	/// @brief ポイントライトの受け取り
+	void RecievePointLight(PointLight* ptLight)
+	{
+		m_skinModelRender->InitPointLight(ptLight);
+	}
+
+	/// @brief スポットライトの受け取り
+	void RecieveSpotLight(SpotLight* spLight)
+	{
+		m_skinModelRender->InitSpotLight(spLight);
+	}
+
+	/// @brief モデルの初期化
+	void InitModelFromInitData()
+	{
+		m_skinModelRender->InitModel();
+	}
+
+	/// @brief モデルレンダーの取得
 	SkinModelRender* GetSkinModelRender() { return m_skinModelRender; }
 
 private:

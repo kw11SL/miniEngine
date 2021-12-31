@@ -183,6 +183,7 @@ void Bullet::Move()
 	//正面を発射方向で更新(初回のみ)
 	if (m_isDecideDirection == false) {
 		m_forward = m_direction;
+		m_forward.Normalize();
 		//発射方向が決まったのでフラグをtrue
 		m_isDecideDirection = true;
 	}

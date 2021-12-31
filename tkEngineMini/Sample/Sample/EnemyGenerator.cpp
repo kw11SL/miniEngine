@@ -16,7 +16,13 @@ namespace {
 
 EnemyGenerator::~EnemyGenerator()
 {
-	DeleteGO(m_enemy);
+	//配列内の全エネミーをDeleteGO
+	for (auto& enemy : m_enemies) {
+		DeleteGO(enemy);
+	}
+
+	//配列内の要素を最初から最後まで全て消去
+	m_enemies.erase(m_enemies.begin(), m_enemies.end());
 }
 
 void EnemyGenerator::Init(const Vector3& pos, const Quaternion& rot, const bool isActive ,const EnEnemyType& enemyType)
@@ -92,20 +98,7 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 
 		//エネミーを生成。アクティブになるまでは生成しない。
 		if (m_spawnCounter > interval && m_isActive == true) {
-			//m_enemy = NewGO<Enemy>(0, "enemy");
 			
-			/*m_enemy->Init(
-				*RenderingEngine::GetInstance(),
-				m_position,
-				m_up,
-				enemyType);*/
-
-			/*m_enemyManager->InitEnemies(
-				m_position,
-				m_up,
-				enemyType
-			);*/
-
 			//自身の可変長配列の中にNewGOする
 			m_enemies.push_back(NewGO<Enemy>(0, "enemy"));
 			

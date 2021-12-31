@@ -189,24 +189,26 @@ void Player_new::Move()
 	//自作キャラコンに移動速度を渡す
 	m_position = m_myCharaCon.Execute(m_moveSpeed,m_downVector,UPPER_OFFSET);
 
-	//// 上ベクトルを更新
-	////下向きベクトル(=レイを飛ばす方向)* -1.0　= プレイヤーの上ベクトル
-	//Vector3 newUp = m_downVector * -1.0f;
-	//// 現在の上ベクトルから、新しい上ベクトルに向けるための回転クォータニオンを計算
-	////		→　カメラの計算で使う。
-	//m_rotUpToGroundNormal.SetRotation(m_up, newUp);
+	// 上ベクトルを更新
+	//下向きベクトル(=レイを飛ばす方向)* -1.0　= プレイヤーの上ベクトル
+	Vector3 newUp = m_downVector * -1.0f;
+	// 現在の上ベクトルから、新しい上ベクトルに向けるための回転クォータニオンを計算
+	//		→　カメラの計算で使う。
+	m_rotUpToGroundNormal.SetRotation(m_up, newUp);
 
-	////自身の上ベクトルを更新
-	//m_up = newUp;
+	//自身の上ベクトルを更新
+	m_up = newUp;
 
-	////更新した上ベクトルと前方ベクトルの外積　=　右ベクトル
-	////m_right = g_camera3D->GetRight();
-	//m_right.Cross(m_up,m_forward);
-	////求めた右ベクトルと更新した上ベクトルの外積　=　前方ベクトル
-	//m_forward.Cross(m_right, m_up);
-	Vector3 oldUp = m_up;
-	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
-	m_rotUpToGroundNormal.SetRotation(oldUp, m_up);
+	//更新した上ベクトルと前方ベクトルの外積　=　右ベクトル
+	//m_right = g_camera3D->GetRight();
+	m_right.Cross(m_up,m_forward);
+	//求めた右ベクトルと更新した上ベクトルの外積　=　前方ベクトル
+	m_forward.Cross(m_right, m_up);
+
+	////上記まとめ
+	//Vector3 oldUp = m_up;
+	//m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
+	//m_rotUpToGroundNormal.SetRotation(oldUp, m_up);
 	
 	//モデルの座標更新
 	m_skinModelRender->SetPosition(m_position);
@@ -237,12 +239,9 @@ void Player_new::RotateShotDirection()
 
 	//入力値から角度を求める
 	float angle = atan2f(x, y);
-	//float angleDeg = Math::RadToDeg(angle);
 
 	//軸周りの回転を求める
-	rot.SetRotation(m_up, angle);
-	//rot.SetRotationDeg(m_up, angleDeg);
-
+	rot.SetRotation(axis, angle);
 	//ベクトルを回転
 	rot.Apply(m_shotDirection);
 }

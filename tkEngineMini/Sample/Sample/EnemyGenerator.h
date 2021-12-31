@@ -92,8 +92,6 @@ public:
 	void DeleteEnemy();
 
 private:
-	Enemy* m_enemy = nullptr;							//エネミー
-
 	std::vector<Enemy*> m_enemies;						//エネミーの可変長配列
 
 	MyCharacterController m_myCharaCon;					//球面移動用キャラコン

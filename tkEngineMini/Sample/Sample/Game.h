@@ -31,6 +31,9 @@ public:
 	/// @param renderingEngine レンダリングエンジン
 	void Init(RenderingEngine& renderingEngine);
 
+	/// @brief 生成器の削除
+	void DeleteGenerators();
+
 private:
 	RenderingEngine* m_renderingEngine = nullptr;
 	
@@ -42,7 +45,7 @@ private:
 	PointLight* m_pointLight = nullptr;				//ポイントライト
 	SpotLight* m_spotLight = nullptr;				//スポットライト
 	UI* m_ui = nullptr;								//UI
-	EnemyGenerator* m_enemyGenerator[10] = {nullptr};		//エネミー生成器
+	std::vector<EnemyGenerator*> m_enemyGenerators;			//エネミー生成器の可変長配列
 	//テスト
 	SpriteRender* m_sprite = nullptr;				//テスト表示スプライト
 	

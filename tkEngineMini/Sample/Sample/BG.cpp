@@ -35,6 +35,8 @@ void BG::Init(RenderingEngine& renderingEngine,const Vector3& pos, const Quatern
 	//ƒ‚ƒfƒ‹Šg‘å
 	//m_scale *= MODEL_INIT_SCALE_RATIO;
 
+	m_scale = scale;
+
 	m_skinModelRender->SetPosition(pos);
 	m_skinModelRender->SetRotation(rot);
 	m_skinModelRender->SetScale(m_scale);
