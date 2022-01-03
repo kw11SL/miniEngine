@@ -224,9 +224,9 @@ void Player_new::RotateShotDirection()
 	//ショットの方向はプレイヤーの前方
 	m_shotDirection = m_forward;
 
-	//発射方向を上方向とカメラの右方向の外積にしておく
-	m_shotDirection = Cross(m_up, g_camera3D->GetRight());
-	m_shotDirection.Normalize();
+	////発射方向を上方向とカメラの右方向の外積にしておく
+	//m_shotDirection = Cross(m_up, g_camera3D->GetRight());
+	//m_shotDirection.Normalize();
 
 	//回転軸は上ベクトル
 	Vector3 axis = m_up;
@@ -406,7 +406,7 @@ void Player_new::Hit()
 			}
 		}
 		return true;
-		});
+	});
 
 }
 

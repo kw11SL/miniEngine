@@ -20,6 +20,7 @@
 #include "GameDirector.h"
 #include "BulletManager.h"
 #include "EnemyManager.h"
+#include "Title.h"
 
 
 

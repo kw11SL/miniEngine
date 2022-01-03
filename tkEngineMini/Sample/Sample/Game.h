@@ -13,11 +13,12 @@ class UI;
 class EnemyGenerator;
 class Bullet;
 class StageBackGround;
+class SkyCube;
 
 class Game : public IGameObject
 {
 public:
-	Game(){}
+	Game();
 	~Game();
 	
 	/// @brief 
@@ -28,15 +29,12 @@ public:
 	void Update() override;
 
 	/// @brief 初期化処理
-	/// @param renderingEngine レンダリングエンジン
-	void Init(RenderingEngine& renderingEngine);
+	void Init();
 
 	/// @brief 生成器の削除
 	void DeleteGenerators();
 
-private:
-	RenderingEngine* m_renderingEngine = nullptr;
-	
+private:	
 	Player_new* m_player = nullptr;					//プレイヤー
 	Enemy* m_enemy[3] = { nullptr };						//エネミー
 	BG* m_bg = nullptr;								//ステージ
@@ -49,6 +47,8 @@ private:
 	//テスト
 	SpriteRender* m_sprite = nullptr;				//テスト表示スプライト
 	
+	//スカイキューブ
+	SkyCube* m_skyCube = nullptr;
 	
 	Level_New m_level;
 

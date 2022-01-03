@@ -11,11 +11,17 @@ namespace
 	//シャドウレシーバー用のシェーダーファイルパス
 	const char* MODEL_FX_FILEPATH_SHADOWRECIEVER = "Assets/shader/ShadowReciever.fx";
 
-	//シェーダのエントリーポイント名
+	//頂点シェーダのエントリーポイント名
 	//通常のエントリーポイント
 	const char* VS_ENTRYPOINT_NAME = "VSMain";
 	//スキンモデルのエントリーポイント
 	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
+
+	//ピクセルシェーダのエントリーポイント名
+	//通常のエントリーポイント
+	const char* PS_ENTRYPOINT_NAME = "PSMain";
+	//スキンモデルのエントリーポイント
+	const char* PS_SKIN_ENTRYPOINT_NAME = "PSSkinMain";
 }
 
 SkinModelRender::~SkinModelRender()
@@ -70,8 +76,12 @@ void SkinModelRender::Init(
 		m_modelInitData.m_modelUpAxis = upAxis;
 
 		if (shadowRecieverFlag == false) {
-			//シャドウレシーバーフラグがオフなら通常のシェーダーを指定
-			m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH;
+			//シャドウレシーバーフラグがオフで、シェーダーが指定されていなければ(nullptrなら)通常のシェーダーを指定
+			//すでにシェーダーが指定されているとき(≠nullptr)はそちらのシェーダーを使用する
+			if (m_modelInitData.m_fxFilePath == nullptr) {
+				m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH;
+			}
+
 		}
 		else {
 			//シャドウレシーバーフラグがオンのとき
@@ -155,6 +165,11 @@ void SkinModelRender::SetScale(const Vector3& scale)
 void SkinModelRender::SetRotation(const Quaternion& rot)
 {
 	m_rot = rot;
+}
+
+void SkinModelRender::SetModelInitDataAdditional(const ModelInitData& modelInitData)
+{
+	m_modelInitData = modelInitData;
 }
 
 void SkinModelRender::Render(RenderContext& rc)

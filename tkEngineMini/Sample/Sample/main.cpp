@@ -55,7 +55,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//レンダリングエンジンの初期化
 	RenderingEngine::GetInstance()->Init();
 
-
 	//テクスチャを貼りつけるためのスプライトを初期化
 	SpriteInitData spriteInitData;
 	//テクスチャはメインレンダリングターゲットのカラーバッファ
@@ -69,23 +68,37 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	Sprite frameBufferSprite;
 	frameBufferSprite.Init(spriteInitData);
 
+	//タイトルの作成
+	NewGO<Title>(0, "title");
+
+	////ゲームシーンの作成
+	//NewGO<Game>(0, "game");
+
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
 	//////////////////////////////////////
 	auto& renderContext = g_graphicsEngine->GetRenderContext();
 
-	//ゲームシーンを作成
-	Game* game = nullptr;
-	game = NewGO<Game>(0, "game");
-	game->Init(*RenderingEngine::GetInstance());
-
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
-	{
+	{	
+		//テスト：ゲームの削除
+		if(g_pad[0]->IsTrigger(enButtonStart)){
+			QueryGOs<Game>("game", [&](Game* gameScene) {
+				
+				//ゲームを削除
+				DeleteGO(gameScene);
+				//ゲームを初期状態に戻す
+				GameDirector::GetInstance()->ResetGame();
+				//タイトルをNewGO
+				NewGO<Title>(0, "title");
+				
+				//問い合わせ終了
+				return false;
+			});
 
-		if (g_pad[0]->IsTrigger(enButtonStart)) {
-			game = NewGO<Game>(0, "game");
-			game->Init(*RenderingEngine::GetInstance());
+			//バレットマネージャ内からすべての弾を消去
+			BulletManager::GetInstance()->DeleteBullets();
 		}
 
 		//レンダリング開始。
@@ -147,8 +160,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	BulletManager::DeleteInstance();
 	//エネミーマネージャを削除
 	EnemyManager::DeleteInstance();
-	//ゲームを削除
-	DeleteGO(game);
 
 	return 0;
 }

@@ -9,16 +9,19 @@ namespace{
 	const char* LIFE_TEXT_SPRITE_FILEPATH = "Assets/sprite/ui/life.dds";						//LIFEアイコン画像のファイルパス
 	const char* LIFE_ICON_SPRITE_FILEPATH = "Assets/sprite/ui/lifeIcon_noneFrame.dds";			//LIFEアイコンの枠画像のファイルパス
 	const char* LIFE_ICON_HALO_SPRITE_FILEPATH = "Assets/sprite/ui/lifeIconHalo.dds";			//発光画像のファイルパス
+	const char* LIFE_ICON_FRAME_FILEPATH = "Assets/sprite/ui/lifeIcon_frame.dds";				//枠スプライトのファイルパス
 
 	//位置、拡大率、カラー、ピボット
 	const Vector3 LIFE_TEXT_POS = { -550.0f,110.0f,0.0f };										//LIFEの字のスプライト位置
 	
 	const Vector3 LIFE_TEXT_SCALE = { 0.6f,0.6f,1.0f };											//LIFEの字のスプライトの拡大率
 	const Vector3 LIFE_ICON_SCALE = { 0.2f,0.2f,1.0f };											//アイコンのスプライトの拡大率
+	const Vector3 LIFE_ICON_FRAME_SCALE = { 0.2f,0.2f,1.0f };									//枠スプライトの拡大率
 	const Vector3 LIFE_ICON_HALO_SCALE = { 1.0f,1.0f,1.0f };									//発光スプライトの拡大率
 
 	const Vector4 LIFE_TEXT_COLOR = { 0.9f * 1.5f,0.25f * 1.5f,0.25f * 1.5f,1.0f };				//LIFEの字のスプライトの色
 	const Vector4 LIFE_ICON_COLOR = { 0.95f,0.95f,0.95f,1.0f };									//アイコンの色
+	const Vector4 LIFE_ICON_FRAME_COLOR = { 1.0f,1.0f,1.0f,1.0f };								//枠スプライトの色
 	const Vector4 LIFE_ICON_HALO_COLOR = { 0.9f,0.3f,0.2f,1.0f };								//発光の色
 
 	const Vector3 LIFE_TEXT_TO_LIFE_ICON_0 = { 60.0f,30.0f,0.0f };								//LIFEの字からライフアイコン1への相対位置
@@ -32,6 +35,8 @@ namespace{
 	const int LIFE_TEXT_HEIGHT = 256;															//FIFEの字の高さ
 	const int LIFE_ICON_WIDTH = 256;															//ライフアイコンの幅
 	const int LIFE_ICON_HEIGHT = 256;															//ライフアイコンの高さ
+	const int LIFE_ICON_FRAME_WIDTH = 256;														//枠スプライトの幅
+	const int LIFE_ICON_FRAME_HEIGHT = 256;														//枠スプライトの高さ
 	const int LIFE_ICON_HALO_WIDTH = 128;														//発光の高さ
 	const int LIFE_ICON_HALO_HEIGHT = 128;														//発光の幅
 }
@@ -41,8 +46,10 @@ Life::Life()
 	m_prevPlayerLife = LIFE_ICON_NUM;
 
 	int iconNum = 0;
+	//ライフアイコン、枠スプライトの初期化
 	for (; iconNum < LIFE_ICON_NUM; iconNum++) {
 		m_lifeIconSpritePos[iconNum] = Vector3::Zero;
+		m_lifeIconFramePos[iconNum] = Vector3::Zero;
 	}
 }
 
@@ -51,6 +58,7 @@ Life::~Life()
 	int iconNum = 0;
 	for (; iconNum < LIFE_ICON_NUM; iconNum++){
 		DeleteGO(m_lifeIconSprite[iconNum]);
+		DeleteGO(m_lifeIconFrame[iconNum]);
 	}
 
 	DeleteGO(m_lifeIconHalo);
@@ -78,7 +86,7 @@ void Life::Init()
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
-	//アイコンスプライトの初期化
+	//アイコンスプライト,アイコン枠スプライトの初期化
 	//位置を先に決めておく
 	m_lifeIconSpritePos[0] = m_lifeTextSpritePos;
 	m_lifeIconSpritePos[0] += LIFE_TEXT_TO_LIFE_ICON_0;
@@ -89,32 +97,55 @@ void Life::Init()
 	m_lifeIconSpritePos[2] = m_lifeIconSpritePos[1];
 	m_lifeIconSpritePos[2] += LIFE_ICON_1_TO_LIFE_ICON_2;
 
-	//アイコンスプライトをそれぞれNewGOし、初期化
+	//枠スプライトの位置をアイコンと同じ位置にする
+	int iconFrameNum = 0;
+	for (; iconFrameNum < LIFE_ICON_NUM; iconFrameNum++) {
+		m_lifeIconFramePos[iconFrameNum] = m_lifeIconSpritePos[iconFrameNum];
+	}
+
+	//アイコンスプライト,枠スプライトをそれぞれNewGOし、初期化
 	int iconNum = 0;
 	for (; iconNum < LIFE_ICON_NUM; iconNum++) {
 		m_lifeIconSprite[iconNum] = NewGO<SpriteRender>(0);
+		m_lifeIconFrame[iconNum] = NewGO<SpriteRender>(0);
 
-		//それぞれのアイコンの初期化
+		//アイコンの初期化
 		m_lifeIconSprite[iconNum]->Init(
 			LIFE_ICON_SPRITE_FILEPATH,
 			LIFE_ICON_WIDTH,
 			LIFE_ICON_HEIGHT,
 			AlphaBlendMode_Trans
 		);
-		//決めていた位置にアイコン座標を設定
+
+		//枠スプライトの初期化
+		m_lifeIconFrame[iconNum]->Init(
+			LIFE_ICON_FRAME_FILEPATH,
+			LIFE_ICON_FRAME_WIDTH,
+			LIFE_ICON_FRAME_HEIGHT,
+			AlphaBlendMode_Trans
+		);
+
+		//アイコン、枠スプライトをあらかじめ決めた位置に設定
 		m_lifeIconSprite[iconNum]->SetPosition(m_lifeIconSpritePos[iconNum]);
-		//拡大率を設定
+		m_lifeIconFrame[iconNum]->SetPosition(m_lifeIconFramePos[iconNum]);
+
+		//アイコン、枠スプライトの拡大率を設定
 		m_lifeIconSprite[iconNum]->SetScale(LIFE_ICON_SCALE);
-		
-		//2つめのアイコンは左右反転させたいのでxの拡大率に-1を掛ける
+		m_lifeIconFrame[iconNum]->SetScale(LIFE_ICON_FRAME_SCALE);
+
+		//アイコン、枠スプライトの2つめのアイコンは左右反転させたいのでxの拡大率に-1を掛ける
 		if (iconNum == 1) {
 			m_lifeIconSprite[iconNum]->SetScale({ -LIFE_ICON_SCALE.x ,LIFE_ICON_SCALE.y,LIFE_ICON_SCALE.z });
+			m_lifeIconFrame[iconNum]->SetScale({ -LIFE_ICON_FRAME_SCALE.x,LIFE_ICON_FRAME_SCALE.y,LIFE_ICON_FRAME_SCALE.z });
 		}
 		
 		//色を設定
 		m_lifeIconSprite[iconNum]->SetColor(LIFE_ICON_COLOR);
+		m_lifeIconFrame[iconNum]->SetColor(LIFE_ICON_FRAME_COLOR);
+
 		//ピボットを設定
 		m_lifeIconSprite[iconNum]->SetPivot(SPRITE_PIVOT);
+		m_lifeIconFrame[iconNum]->SetPivot(SPRITE_PIVOT);
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -225,11 +256,12 @@ void Life::VariableHalo()
 
 void Life::HaloVanish()
 {
-	//前フレームからライフの値に変化があったら消えるフラグをオン
+	//前フレームからライフの値に変化があったら消える準備フラグをオン
 	if (m_prevPlayerLife - GameDirector::GetInstance()->GetPlayerLife() >= 1) {
 		m_isHaloFadeOutReady = true;
 	}
 
+	//消える準備フラグがオンのとき、変形
 	if (m_isHaloFadeOutReady == true) {
 		//色を最大の明るさにする
 		m_lifeIconHaloColorRate = 1.0f;
@@ -241,6 +273,7 @@ void Life::HaloVanish()
 
 	if (m_lifeIconHaloScale.y <= 0.0f) {
 		m_lifeIconHaloScale.y = 0.0f;
+		//縦のスケールが0以下になったら(=見た目上消えたら)0にして、消える準備フラグをオフ
 		m_isHaloFadeOutReady = false;
 	}
 
@@ -254,7 +287,6 @@ void Life::Update()
 	VariableHalo();
 	HaloVanish();
 	HaloDisp();
-	
 	
 	//現フレームでのプレイヤーのライフを記録
 	m_prevPlayerLife = GameDirector::GetInstance()->GetPlayerLife();

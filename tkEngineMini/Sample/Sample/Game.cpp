@@ -11,29 +11,10 @@
 #include "Bullet.h"
 #include "RenderingEngine.h"
 #include "StageBackGround.h"
+#include "SkyCube.h"
 
-Game::~Game()
+Game::Game()
 {
-	DeleteGO(m_player);
-	DeleteGO(m_bg);
-	DeleteGO(m_directionLight);
-	DeleteGO(m_pointLight);
-	DeleteGO(m_spotLight);
-	DeleteGO(m_ui);
-	DeleteGenerators();
-
-}
-
-bool Game::Start()
-{
-	
-	return true;
-}
-
-void Game::Init(RenderingEngine& renderingEngine)
-{
-	m_renderingEngine = &renderingEngine;
-
 	//ディレクションライトの初期化
 	m_directionLight = NewGO<DirectionLight>(0, "directionlight");
 	m_directionLight->Init({ 1.0f,0.0f,1.0f }, { 0.25f,0.25f,0.25f }, { 0.7f,0.7f,0.7f });
@@ -50,10 +31,14 @@ void Game::Init(RenderingEngine& renderingEngine)
 	float spEmitAngle = Math::DegToRad(25.0f);
 	m_spotLight->Init({ 0.0f,0.0f,200.0f }, { 2.0f,2.0f,2.0f }, 1000.0f, spDir, spEmitAngle);
 
-	
+
 	//UIの初期化
 	m_ui = NewGO<UI>(0, "ui");
 	m_ui->Init();
+
+	//スカイキューブの初期化
+	m_skyCube = NewGO<SkyCube>(0, "skyCube");
+	m_skyCube->Init("Assets/modelData/skyCube/sky.tkm");
 
 
 	//レベル構築
@@ -61,9 +46,9 @@ void Game::Init(RenderingEngine& renderingEngine)
 		//プレイヤー
 		if (objData.EqualObjectName(L"player") == true) {
 			m_player = NewGO<Player_new>(0, "player");
-			
-			m_player->Init(renderingEngine);
 
+			//m_player->Init(renderingEngine);
+			m_player->Init(*RenderingEngine::GetInstance());
 			m_player->SetPostion(objData.position);
 			m_player->SetRotation(objData.rotation);
 
@@ -74,7 +59,7 @@ void Game::Init(RenderingEngine& renderingEngine)
 				m_player->RecieveDirectionLight(m_directionLight);
 				m_player->RecievePointLight(m_pointLight);
 				m_player->RecieveSpotLight(m_spotLight);
-		
+
 				m_player->InitModelFromInitData();
 			}
 
@@ -83,14 +68,6 @@ void Game::Init(RenderingEngine& renderingEngine)
 
 		//エネミー1の生成器
 		if (objData.EqualObjectName(L"enemy_01") == true) {
-			
-			/*m_enemyGenerator[0] = NewGO<EnemyGenerator>(0, "enemyGenerator01");
-			m_enemyGenerator[0]->Init(
-				objData.position,
-				objData.rotation,
-				true,
-				enCommon
-			);*/
 			m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator01"));
 			m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
 				objData.position,
@@ -104,13 +81,6 @@ void Game::Init(RenderingEngine& renderingEngine)
 
 		//エネミー2の生成器
 		if (objData.EqualObjectName(L"enemy_02") == true) {
-			/*m_enemyGenerator[1] = NewGO<EnemyGenerator>(0, "enemyGenerator02");
-			m_enemyGenerator[1]->Init(
-				objData.position,
-				objData.rotation,
-				false,
-				enShot
-			);*/
 			m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator02"));
 			m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
 				objData.position,
@@ -124,13 +94,6 @@ void Game::Init(RenderingEngine& renderingEngine)
 
 		//エネミー3の生成器
 		if (objData.EqualObjectName(L"enemy_03") == true) {
-			/*m_enemyGenerator[2] = NewGO<EnemyGenerator>(0, "enemyGenerator03");
-			m_enemyGenerator[2]->Init(
-				objData.position,
-				objData.rotation,
-				false,
-				enBomb
-			);*/
 			m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator03"));
 			m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
 				objData.position,
@@ -139,16 +102,18 @@ void Game::Init(RenderingEngine& renderingEngine)
 				enBomb
 			);
 
-
 			return true;
 		}
 
 		//ステージ
 		if (objData.EqualObjectName(L"stageBg") == true) {
 			m_bg = NewGO<BG>(0, "bg");
-			m_bg->Init(renderingEngine,objData.position,objData.rotation,Vector3::One);
-
-
+			m_bg->Init(
+				//renderingEngine,
+				*RenderingEngine::GetInstance(),
+				objData.position,
+				objData.rotation,
+				Vector3::One);
 
 			//背景にライトを渡す処理
 			if (m_bg->GetSkinModelRender() != nullptr) {
@@ -164,7 +129,12 @@ void Game::Init(RenderingEngine& renderingEngine)
 		//背景
 		if (objData.EqualObjectName(L"backGround") == true) {
 			m_stageBackGround = NewGO<StageBackGround>(0, "stageBackGround");
-			m_stageBackGround->Init(renderingEngine, objData.position, objData.rotation, Vector3::One);
+			m_stageBackGround->Init(
+				//renderingEngine,
+				*RenderingEngine::GetInstance(),
+				objData.position,
+				objData.rotation,
+				Vector3::One);
 
 
 			//背景にライトを渡す処理
@@ -180,113 +150,30 @@ void Game::Init(RenderingEngine& renderingEngine)
 
 		//構築終了
 		return true;
-
 	});
+}
 
-	////レベル構築
-	//m_level.Init("Assets/level3D/level01.tkl", [&](LevelObjectData& objData) {
-	//	//プレイヤー
-	//	if (objData.EqualObjectName(L"player") == true) {
-	//		m_player = NewGO<Player_new>(0, "player");
-	//		m_player->Init(renderingEngine);
-	//		m_player->SetPostion(objData.position);
-	//		m_player->SetRotation(objData.rotation);
+Game::~Game()
+{
+	DeleteGO(m_player);
+	DeleteGO(m_bg);
+	DeleteGO(m_directionLight);
+	DeleteGO(m_pointLight);
+	DeleteGO(m_spotLight);
+	DeleteGO(m_ui);
+	DeleteGO(m_skyCube);
+	DeleteGO(m_stageBackGround);
+	DeleteGenerators();
 
-	//		m_player->InitCharaCon();
+}
 
-	//		//ライトを渡す処理
-	//		if (m_player->GetSkinModelRender() != nullptr) {
-	//			m_player->RecieveDirectionLight(m_directionLight);
-	//			m_player->RecievePointLight(m_pointLight);
-	//			m_player->RecieveSpotLight(m_spotLight);
+bool Game::Start()
+{
+	return true;
+}
 
-	//			m_player->InitModelFromInitData();
-	//		}
-
-	//		return true;
-	//	}
-
-	//	//エネミー1の生成器
-	//	if (objData.EqualObjectName(L"enemy_01") == true) {
-	//		m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator01"));
-	//		m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
-	//			objData.position,
-	//			objData.rotation,
-	//			true,
-	//			enCommon
-	//		);
-
-	//		return true;
-	//	}
-
-	//	//エネミー2の生成器
-	//	if (objData.EqualObjectName(L"enemy_02") == true) {
-	//		m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator02"));
-	//		m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
-	//			objData.position,
-	//			objData.rotation,
-	//			false,
-	//			enShot
-	//		);
-
-	//		return true;
-	//	}
-
-	//	//エネミー3の生成器
-	//	if (objData.EqualObjectName(L"enemy_03") == true) {
-	//		m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator03"));
-	//		m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
-	//			objData.position,
-	//			objData.rotation,
-	//			false,
-	//			enBomb
-	//		);
-
-	//		return true;
-	//	}
-
-	//	//ステージ
-	//	if (objData.EqualObjectName(L"stageBg") == true) {
-	//		m_bg = NewGO<BG>(0, "bg");
-	//		//m_bg->Init(renderingEngine, objData.position, objData.rotation, Vector3::One);
-	//		m_bg->Init(renderingEngine, objData.position, objData.rotation, {2.0f,2.0f,2.0f});
-
-
-
-	//		//背景にライトを渡す処理
-	//		if (m_bg->GetSkinModelRender() != nullptr) {
-	//			m_bg->RecieveDirectionLight(m_directionLight);
-	//			m_bg->RecievePointLight(m_pointLight);
-	//			m_bg->RecieveSpotLight(m_spotLight);
-
-	//			m_bg->InitModelFromInitData();
-	//		}
-	//		return true;
-	//	}
-
-	//	//背景
-	//	if (objData.EqualObjectName(L"backGround") == true) {
-	//		m_stageBackGround = NewGO<StageBackGround>(0, "stageBackGround");
-	//		m_stageBackGround->Init(renderingEngine, objData.position, objData.rotation, Vector3::One);
-
-
-	//		//背景にライトを渡す処理
-	//		if (m_stageBackGround->GetSkinModelRender() != nullptr) {
-	//			m_stageBackGround->RecieveDirectionLight(m_directionLight);
-	//			m_stageBackGround->RecievePointLight(m_pointLight);
-	//			m_stageBackGround->RecieveSpotLight(m_spotLight);
-
-	//			m_stageBackGround->InitModelFromInitData();
-	//		}
-	//		return true;
-	//	}
-
-
-	//	//構築終了
-	//	return true;
-
-	//});
-
+void Game::Init()
+{
 }
 
 void Game::DeleteGenerators()

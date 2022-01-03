@@ -23,6 +23,17 @@ void BulletManager::InitBullets(
 	);
 }
 
+void BulletManager::DeleteBullets()
+{
+	//配列内の弾を全てDeleteGOする
+	for (auto& bullet : m_bullets) {
+		DeleteGO(bullet);
+	}
+
+	//配列内の要素を全て消去
+	m_bullets.erase(m_bullets.begin(), m_bullets.end());
+}
+
 void BulletManager::ExecuteUpdate()
 {
 	//存在フラグを調べて、オフだったら破棄

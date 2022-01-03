@@ -48,6 +48,9 @@ public:
 	/// @brief 更新処理 
 	void ExecuteUpdate();
 
+	/// @brief 配列内の弾を全て削除する
+	void DeleteBullets();
+
 private:
 	BulletManager() {}
 

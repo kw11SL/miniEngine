@@ -129,6 +129,8 @@ public:
 		return m_playerLife;
 	}
 
+	/// @brief ゲームを初期状態に戻す処理
+	void ResetGame();
 
 private:
 	GameDirector() {}
@@ -151,6 +153,6 @@ private:
 	const int MAX_ENEMY_NUM_NEAR_TIMEUP = 25;	//エネミーの最大数(タイムアップ前)
 
 
-	EnGameState m_enGameState = enGame;			//ゲーム状態
+	EnGameState m_enGameState = enTitle;			//ゲーム状態
 };
 

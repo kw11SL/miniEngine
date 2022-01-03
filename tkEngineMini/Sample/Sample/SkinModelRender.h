@@ -54,9 +54,6 @@ public:
 	/// @brief モデルを初期化情報で初期化
 	void InitModel();
 
-	/*void InitAnimation(AnimationClip* animation, int animationNum);
-	void PlayAnimation(int animNo, float interpolateTime = 0.0f);*/
-
 	//セッター
 	
 	/// @brief 座標の設定
@@ -84,6 +81,9 @@ public:
 	{
 		m_isShadowReciever = isShadowReciever;
 	}
+
+	//追加のモデルの初期化情報を設定
+	void SetModelInitDataAdditional(const ModelInitData& modelInitData);
 
 	//ゲッター
 
@@ -114,6 +114,15 @@ public:
 	void UpdateWorldMatrix() 
 	{
 		m_model.UpdateWorldMatrix(m_position, m_rot, m_scale); 
+	}
+	
+	/// @brief ワールド行列の更新(手動)
+	/// @param pos 座標
+	/// @param rot 回転クォータニオン
+	/// @param scale 拡大率
+	void UpdateWorldMatrix(const Vector3& pos, const Quaternion& rot, const Vector3& scale)
+	{
+		m_model.UpdateWorldMatrix(pos, rot, scale);
 	}
 
 private:

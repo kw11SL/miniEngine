@@ -327,6 +327,7 @@
     <ClCompile Include="Seesaw.cpp" />
     <ClCompile Include="ShadowMapRender.cpp" />
     <ClCompile Include="SkinModelRender.cpp" />
+    <ClCompile Include="SkyCube.cpp" />
     <ClCompile Include="SphericalMove.cpp" />
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="SpreadBombExplosion.cpp" />
@@ -342,6 +343,8 @@
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Title.cpp" />
+    <ClCompile Include="TitleSprite.cpp" />
     <ClCompile Include="TklFile.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="UIOutline.cpp" />
@@ -447,6 +450,7 @@
     <ClInclude Include="Seesaw.h" />
     <ClInclude Include="ShadowMapRender.h" />
     <ClInclude Include="SkinModelRender.h" />
+    <ClInclude Include="SkyCube.h" />
     <ClInclude Include="SphericalMove.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="SpreadBombExplosion.h" />
@@ -455,6 +459,8 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Title.h" />
+    <ClInclude Include="TitleSprite.h" />
     <ClInclude Include="TklFile.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="UIOutline.h" />
