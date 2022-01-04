@@ -21,6 +21,8 @@
 #include "BulletManager.h"
 #include "EnemyManager.h"
 #include "Title.h"
+#include "SoundSource.h"
+#include "SoundEngine.h"
 
 
 

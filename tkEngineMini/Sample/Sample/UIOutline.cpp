@@ -5,7 +5,7 @@ namespace {
 	const Vector3 INIT_POINT = { 0.0f,0.0f,0.0f };
 	const int SPRITE_WIDTH = 1280;
 	const int SPRITE_HEIGHT = 720;
-	const Vector4 SPRITE_COLOR = { 0.3f * 1.8f,0.7f * 1.8f,0.5f * 1.8f, 0.0f };
+	const Vector4 SPRITE_COLOR = { 0.3f,0.7f,0.5f, 0.0f };
 	const char* SPRITE_FILEPATH = "Assets/sprite/ui/ui_outline_mesh.dds";
 	const float FADEIN_ADDRATE = 0.04f;
 }
@@ -31,7 +31,7 @@ void UIOutline::Init()
 	m_outlineSprite->SetPosition(INIT_POINT);
 	m_outlineSprite->SetPivot({ 0.5f, 0.5f });
 	//フェードインさせるために不等明度を0にしておく
-	m_outlineSprite->SetColor(SPRITE_COLOR);
+	m_outlineSprite->SetColor(SPRITE_COLOR * 2.0f);
 }
 
 void UIOutline::Update()

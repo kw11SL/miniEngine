@@ -23,10 +23,15 @@ void Title::Update()
 	m_titleSprite.Update();
 
 	//フェードインが完了した状態でスタートボタンを押すとゲーム開始フラグをオン
-	if (g_pad[0]->IsPress(enButtonStart) && 
+	if (g_pad[0]->IsTrigger(enButtonStart) && 
 		m_titleSprite.GetIsFinishFadeIn() == true) {
 		//ゲーム開始フラグをオン
 		m_gameReady = true;
+
+		CSoundSource* ss = NewGO<CSoundSource>(0);
+		ss->Init(L"Assets/wav/decide_2.wav", false);
+		ss->SetVolume(0.5f);
+		ss->Play(false);
 	}
 
 	//ゲーム開始フラグがオンならタイトルのフェードアウト開始

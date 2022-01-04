@@ -39,7 +39,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//ゲームオブジェクトマネージャーのインスタンスを作成する。
 	GameObjectManager::CreateInstance();
+	//物理ワールドのインスタンスを作成
 	PhysicsWorld::CreateInstance();
+	//サウンドエンジンを作成
+	CSoundEngine::CreateInstance();
+	CSoundEngine::GetInstance()->Init();
 
 	//ゲームディレクターを作成
 	GameDirector::CreateInstance();
@@ -92,7 +96,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 				GameDirector::GetInstance()->ResetGame();
 				//タイトルをNewGO
 				NewGO<Title>(0, "title");
-				
+
 				//問い合わせ終了
 				return false;
 			});
@@ -150,16 +154,21 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		g_engine->EndFrame();
 	}
 
+	////////////////////////////////////////////////////
+	//マネージャ、エンジンの削除
 	//ゲームオブジェクトマネージャーを削除。
 	GameObjectManager::DeleteInstance();
 	//レンダリングエンジンを削除
 	RenderingEngine::DeleteInstance();
+	//サウンドエンジンを削除
+	CSoundEngine::DeleteInstance();
 	//ゲームディレクターを削除
 	GameDirector::DeleteInstance();
 	//バレットマネージャを削除
 	BulletManager::DeleteInstance();
 	//エネミーマネージャを削除
 	EnemyManager::DeleteInstance();
+	////////////////////////////////////////////////////
 
 	return 0;
 }
