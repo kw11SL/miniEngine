@@ -72,6 +72,12 @@
     <Filter Include="ヘッダー ファイル\Enemy">
       <UniqueIdentifier>{e5fcb46e-bf41-4999-bf3d-19430714bdc8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Title">
+      <UniqueIdentifier>{ebd16860-8c6e-4ada-add4-eef3ad6fd95e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Title">
+      <UniqueIdentifier>{3fca34d5-3c9f-4ddf-91f4-53a8876c5294}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -353,12 +359,6 @@
     <ClCompile Include="SkyCube.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Title.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="TitleSprite.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="UI.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
@@ -406,6 +406,15 @@
     </ClCompile>
     <ClCompile Include="WaveFile.cpp">
       <Filter>ソース ファイル\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Title.cpp">
+      <Filter>ソース ファイル\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleSprite.cpp">
+      <Filter>ソース ファイル\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="PressStart.cpp">
+      <Filter>ソース ファイル\Title</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -718,12 +727,6 @@
     <ClInclude Include="SkyCube.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Title.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="TitleSprite.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
@@ -771,6 +774,15 @@
     </ClInclude>
     <ClInclude Include="WaveFileBank.h">
       <Filter>ヘッダー ファイル\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h">
+      <Filter>ヘッダー ファイル\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleSprite.h">
+      <Filter>ヘッダー ファイル\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="PressStart.h">
+      <Filter>ヘッダー ファイル\Title</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

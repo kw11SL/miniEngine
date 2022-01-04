@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Title.h"
-//#include "TitleSprite.h"
+
 
 Title::Title()
 {
@@ -16,11 +16,17 @@ bool Title::Start()
 void Title::Init()
 {
 	m_titleSprite.Init();
+	m_pressStart.Init();
 }
 
 void Title::Update()
 {
 	m_titleSprite.Update();
+
+	//タイトルのフェードインが完了したらpressstartのUpdateを処理し始める
+	if (m_titleSprite.GetIsFinishFadeIn() == true) {
+		m_pressStart.Update();
+	}
 
 	//フェードインが完了した状態でスタートボタンを押すとゲーム開始フラグをオン
 	if (g_pad[0]->IsTrigger(enButtonStart) && 

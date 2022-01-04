@@ -1,6 +1,6 @@
 #pragma once
 #include "TitleSprite.h"
-//class TitleSprite;
+#include "PressStart.h"
 
 class Title : public IGameObject
 {
@@ -15,6 +15,7 @@ public:
 
 private:
 	TitleSprite m_titleSprite;
+	PressStart m_pressStart;
 
 	bool m_gameReady = false;
 };
