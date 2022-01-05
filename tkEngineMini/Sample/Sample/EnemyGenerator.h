@@ -91,6 +91,29 @@ public:
 	/// @brief 生成したエネミーの削除および配列からの削除処理
 	void DeleteEnemy();
 
+	/// @brief 下方向ベクトルを上方向の反対で初期化
+	/// @param up 上方向
+	void SetDownVector(const Vector3& up)
+	{
+		m_downVector = up * -1.0f;
+	}
+
+	/// @brief クォータニオンで右、上、前を回転
+	/// @param rot 適用するクォータニオン
+	void SetVectorFromQuaternion(const Quaternion& rot)
+	{
+		rot.Apply(m_right);
+		rot.Apply(m_up);
+		rot.Apply(m_forward);
+
+		m_right.Normalize();
+		m_up.Normalize();
+		m_forward.Normalize();
+
+		//変更した上方向を基に下方向を設定する
+		SetDownVector(m_up);
+	}
+
 private:
 	std::vector<Enemy*> m_enemies;						//エネミーの可変長配列
 

@@ -13,6 +13,7 @@ namespace{
 
 	//位置、拡大率、カラー、ピボット
 	const Vector3 LIFE_TEXT_POS = { -550.0f,110.0f,0.0f };										//LIFEの字のスプライト位置
+	const Vector3 LIFE_TEXT_SHADOW_OFFSET = { 7.0f,-7.0f,0.0f };
 	
 	const Vector3 LIFE_TEXT_SCALE = { 0.6f,0.6f,1.0f };											//LIFEの字のスプライトの拡大率
 	const Vector3 LIFE_ICON_SCALE = { 0.2f,0.2f,1.0f };											//アイコンのスプライトの拡大率
@@ -20,6 +21,7 @@ namespace{
 	const Vector3 LIFE_ICON_HALO_SCALE = { 1.0f,1.0f,1.0f };									//発光スプライトの拡大率
 
 	const Vector4 LIFE_TEXT_COLOR = { 0.9f * 1.5f,0.25f * 1.5f,0.25f * 1.5f,1.0f };				//LIFEの字のスプライトの色
+	const Vector4 LIFE_TEXT_SHADOW_COLOR = { 0.9f * 0.3f,0.25f * 0.3f,0.25f * 0.3f,1.0f * 0.7f };
 	const Vector4 LIFE_ICON_COLOR = { 0.95f,0.95f,0.95f,1.0f };									//アイコンの色
 	const Vector4 LIFE_ICON_FRAME_COLOR = { 1.0f,1.0f,1.0f,1.0f };								//枠スプライトの色
 	const Vector4 LIFE_ICON_HALO_COLOR = { 0.9f,0.3f,0.2f,1.0f };								//発光の色
@@ -39,6 +41,10 @@ namespace{
 	const int LIFE_ICON_FRAME_HEIGHT = 256;														//枠スプライトの高さ
 	const int LIFE_ICON_HALO_WIDTH = 128;														//発光の高さ
 	const int LIFE_ICON_HALO_HEIGHT = 128;														//発光の幅
+
+	//発光関係
+	const float X_SCALE_RATE = 0.1f;															//横に延びる量
+	const float Y_SCALE_RATE = 0.03f;															//縦に縮む量
 }
 
 Life::Life()
@@ -63,11 +69,22 @@ Life::~Life()
 
 	DeleteGO(m_lifeIconHalo);
 	DeleteGO(m_lifeTextSprite);
+	DeleteGO(m_lifeTextShadowSprite);
 }
 
 void Life::Init()
 {
 	//////////////////////////////////////////////////////////////////////////////////////////////
+	
+	//文字の影スプライトの初期化。先にしておく。
+	m_lifeTextShadowSprite = NewGO<SpriteRender>(0);
+	m_lifeTextShadowSprite->Init(
+		LIFE_TEXT_SPRITE_FILEPATH,
+		LIFE_TEXT_WIDTH,
+		LIFE_TEXT_HEIGHT,
+		AlphaBlendMode_Trans
+	);
+	
 	//文字スプライトの初期化
 	m_lifeTextSprite = NewGO<SpriteRender>(0);
 	m_lifeTextSprite->Init(
@@ -83,6 +100,14 @@ void Life::Init()
 	m_lifeTextSprite->SetScale(LIFE_TEXT_SCALE);
 	m_lifeTextSprite->SetColor(LIFE_TEXT_COLOR);
 	m_lifeTextSprite->SetPivot(SPRITE_PIVOT);
+
+	//影スプライトのパラメータを設定
+	//少しずらす
+	m_lifeTextShadowSprite->SetPosition(m_lifeTextSpritePos + LIFE_TEXT_SHADOW_OFFSET);
+	m_lifeTextShadowSprite->SetScale(LIFE_TEXT_SCALE);
+	m_lifeTextShadowSprite->SetColor(LIFE_TEXT_SHADOW_COLOR);
+	m_lifeTextShadowSprite->SetPivot(SPRITE_PIVOT);
+
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -266,9 +291,9 @@ void Life::HaloVanish()
 		//色を最大の明るさにする
 		m_lifeIconHaloColorRate = 1.0f;
 		//横方向に広げる
-		m_lifeIconHaloScale.x += 0.03f;
+		m_lifeIconHaloScale.x += X_SCALE_RATE;
 		//縦方向に縮めて消えたように見せる
-		m_lifeIconHaloScale.y -= 0.04f;
+		m_lifeIconHaloScale.y -= Y_SCALE_RATE;
 	}
 
 	if (m_lifeIconHaloScale.y <= 0.0f) {

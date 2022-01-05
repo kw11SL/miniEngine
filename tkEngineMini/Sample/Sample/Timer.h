@@ -56,7 +56,10 @@ public:
 
 private:
 	SpriteRender* m_timeSprite = nullptr;
+	SpriteRender* m_timeSpriteShadow = nullptr;
+
 	FontRender* m_timeNumber = nullptr;		//スコアの数値表示部分
+	FontRender* m_timeNumberOutline = nullptr;
 
 	Vector3 m_timeSpritePos = Vector3::Zero;
 	Vector2 m_timeNumPos = Vector2::Zero;	//スコアの数値部分の座標

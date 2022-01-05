@@ -42,7 +42,7 @@ Game::Game()
 
 
 	//レベル構築
-	m_level.Init("Assets/level3D/level00.tkl", [&](LevelObjectData& objData) {
+	m_level.Init("Assets/level3D/level00_a.tkl", [&](LevelObjectData& objData) {
 		//プレイヤー
 		if (objData.EqualObjectName(L"player") == true) {
 			m_player = NewGO<Player_new>(0, "player");
@@ -51,7 +51,8 @@ Game::Game()
 			m_player->Init(*RenderingEngine::GetInstance());
 			m_player->SetPostion(objData.position);
 			m_player->SetRotation(objData.rotation);
-
+			//プレイヤーの前方、右、上ベクトルにレベルの回転を適用
+			//m_player->SetVectorFromQuaternion(objData.rotation);
 			m_player->InitCharaCon();
 
 			//ライトを渡す処理
@@ -76,6 +77,9 @@ Game::Game()
 				enCommon
 			);
 
+			//敵生成器の前方、右、上ベクトルにレベルの回転を適用
+			m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
+
 			return true;
 		}
 
@@ -89,6 +93,9 @@ Game::Game()
 				enShot
 			);
 
+			//敵生成器の前方、右、上ベクトルにレベルの回転を適用
+			m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
+
 			return true;
 		}
 
@@ -101,6 +108,9 @@ Game::Game()
 				false,
 				enBomb
 			);
+
+			//敵生成器の前方、右、上ベクトルにレベルの回転を適用
+			m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
 
 			return true;
 		}

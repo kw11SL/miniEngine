@@ -50,12 +50,15 @@ public:
 	}
 
 private:
-	SpriteRender* m_scoreSprite = nullptr;
-	FontRender* m_scoreNumber = nullptr;	//スコアの数値表示部分
+	SpriteRender* m_scoreSprite = nullptr;			//スコアのテキスト部分のスプライト
+	SpriteRender* m_scoreShadowSprite = nullptr;	//影部分のスプライト
+	
+	FontRender* m_scoreNumber = nullptr;			//スコアの数値表示部分
+	FontRender* m_scoreNumberShadow = nullptr;		//スコアの数値表示部分の影スプライト
 
 	Vector3 m_scoreSpritePos = Vector3::Zero;
-	Vector2 m_scoreTextPos = Vector2::Zero;	//スコアのテキスト部分の座標
+	Vector2 m_scoreTextPos = Vector2::Zero;			//スコアのテキスト部分の座標
 
-	std::wstring m_scoreNumWs = L"hoge";				//ポインタ保持用のメンバ
+	std::wstring m_scoreNumWs = L"hoge";			//ポインタ保持用のメンバ
 };
 

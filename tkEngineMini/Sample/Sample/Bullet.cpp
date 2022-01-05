@@ -67,6 +67,9 @@ Bullet::~Bullet()
 
 bool Bullet::Start()
 {
+	//右ベクトルは発射方向と上方向の外積
+	m_right = Cross(m_up, m_direction);
+
 	return true;
 }
 
@@ -177,9 +180,6 @@ void Bullet::Init(
 
 void Bullet::Move()
 {
-	//右ベクトルは発射方向と上方向の外積
-	m_right = Cross(m_up, m_direction);
-	
 	//正面を発射方向で更新(初回のみ)
 	if (m_isDecideDirection == false) {
 		m_forward = m_direction;
@@ -198,7 +198,7 @@ void Bullet::Move()
 	m_oldForward = m_forward;
 
 	//ベクトルの向きを変える処理
-	//上方向を球面の法線で更新し、右と前方を更新
+	//上方向を更新し、右と前方を更新
 	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
 
 	////モデルの座標を更新

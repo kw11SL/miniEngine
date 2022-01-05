@@ -120,6 +120,13 @@ public:
 	{
 		m_invincebleTime = invTime;
 	}
+
+	/// @brief 下方向ベクトルを設定
+	/// @param up 上方向ベクトル
+	void SetDownVector(const Vector3& up)
+	{
+		m_downVector = up * -1.0f;
+	}
 	
 	/// @brief 初期化処理
 	/// @param renderingEngine　レンダリングエンジン 
@@ -166,6 +173,24 @@ public:
 	/// @brief 復活準備処理とエフェクト再生処理
 	void ReviveReady();
 
+	/// @brief クォータニオンで右、上、前を回転
+	/// @param rot 適用するクォータニオン
+	void SetVectorFromQuaternion(const Quaternion& rot)
+	{
+		//各ベクトルにクォータニオンを適用
+		rot.Apply(m_right);
+		rot.Apply(m_up);
+		rot.Apply(m_forward);
+
+		//各ベクトルを正規化
+		m_right.Normalize();
+		m_up.Normalize();
+		m_forward.Normalize();
+
+		//変更した上ベクトルで下方向ベクトルを設定
+		SetDownVector(m_up);
+	}
+
 private:
 	//内部で使う処理
 
@@ -204,7 +229,6 @@ private:
 
 	/// @brief エフェクトの初期化
 	void InitEffect();
-	
 
 private:
 

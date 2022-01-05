@@ -326,6 +326,12 @@ void Enemy::Destroy()
 		m_destroyEffect.SetScale({ 20.0f,20.0f,20.0f });
 		m_destroyEffect.Play(false);
 		
+		//”š”jse‚ÌÄ¶
+		CSoundSource* ssDestroy = NewGO<CSoundSource>(0);
+		ssDestroy->Init(L"Assets/wav/destroySe.wav");
+		ssDestroy->SetVolume(0.6f);
+		ssDestroy->Play(false);
+		
 		DeleteGO(this);
 
 		//“_”‚ğ‰Á“_

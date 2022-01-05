@@ -103,12 +103,13 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 	
 	//カメラ注視点から視点へのベクトルを設定
 	Vector3 toCamera;
-	/*toCamera.x = 0.0f;
-	toCamera.y = 700.0f;
-	toCamera.z = 1000.0f;*/
 	toCamera.x = 0.0f;
+	toCamera.y = 700.0f;
+	toCamera.z = 1000.0f;
+	/*toCamera.x = 0.0f;
 	toCamera.y = 1600.0f;
-	toCamera.z = 2400.0f;
+	toCamera.z = 2400.0f;*/
+	toCamera *= 1.5f;
 
 	//カメラの初期化
 	m_gameCamera.Init(CAMERA_MOVESPEED_MAX);
@@ -144,7 +145,7 @@ bool Player_new::Start()
 
 void Player_new::Move()
 {
-	m_markerCounter += g_gameTime->GetFrameDeltaTime();
+	//m_markerCounter += g_gameTime->GetFrameDeltaTime();
 
 	//テスト：移動
 	//パッドのスティックからx成分とy成分を受け取る
@@ -189,23 +190,24 @@ void Player_new::Move()
 	//自作キャラコンに移動速度を渡す
 	m_position = m_myCharaCon.Execute(m_moveSpeed,m_downVector,UPPER_OFFSET);
 
-	// 上ベクトルを更新
-	//下向きベクトル(=レイを飛ばす方向)* -1.0　= プレイヤーの上ベクトル
-	Vector3 newUp = m_downVector * -1.0f;
-	// 現在の上ベクトルから、新しい上ベクトルに向けるための回転クォータニオンを計算
-	//		→　カメラの計算で使う。
-	m_rotUpToGroundNormal.SetRotation(m_up, newUp);
+	{
+		// 上ベクトルを更新
+		//下向きベクトル(=レイを飛ばす方向)* -1.0　= プレイヤーの上ベクトル
+		Vector3 newUp = m_downVector * -1.0f;
+		// 現在の上ベクトルから、新しい上ベクトルに向けるための回転クォータニオンを計算
+		//		→　カメラの計算で使う。
+		m_rotUpToGroundNormal.SetRotation(m_up, newUp);
 
-	//自身の上ベクトルを更新
-	m_up = newUp;
+		//自身の上ベクトルを更新
+		m_up = newUp;
 
-	//更新した上ベクトルと前方ベクトルの外積　=　右ベクトル
-	//m_right = g_camera3D->GetRight();
-	m_right.Cross(m_up,m_forward);
-	//求めた右ベクトルと更新した上ベクトルの外積　=　前方ベクトル
-	m_forward.Cross(m_right, m_up);
-
-	////上記まとめ
+		//更新した上ベクトルと前方ベクトルの外積　=　右ベクトル
+		//m_right = g_camera3D->GetRight();
+		m_right.Cross(m_up, m_forward);
+		//求めた右ベクトルと更新した上ベクトルの外積　=　前方ベクトル
+		m_forward.Cross(m_right, m_up);
+	}
+	////※上記まとめ
 	//Vector3 oldUp = m_up;
 	//m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
 	//m_rotUpToGroundNormal.SetRotation(oldUp, m_up);
@@ -261,6 +263,14 @@ void Player_new::FireBullet()
 		//カウンターが0のときとカウンターが一定値を超えると発射
 		if (m_fireCounter > FIRECOUNTER_NORMAL || m_fireCounter == 0.0f) {
 			
+			//ショットSEの再生
+			if (m_enBulletType == enNormalShot) {
+				CSoundSource* ssNormalSe = NewGO<CSoundSource>(0);
+				ssNormalSe->Init(L"Assets/wav/normalShotSe_1.wav");
+				ssNormalSe->SetVolume(0.4f);
+				ssNormalSe->Play(false);
+			}
+
 			//弾管理クラスの関数を使用して出現させる
 			m_bulletManager->InitBullets(
 				m_position,
@@ -357,6 +367,12 @@ void Player_new::Hit()
 				SetInvincibleTime(INVINCIBLE_TIME_REVIVE);
 				SetIsInvFlag(true);
 
+				//ミス時のseを再生
+				CSoundSource* ssMissSe = NewGO<CSoundSource>(0);
+				ssMissSe->Init(L"Assets/wav/missSe.wav");
+				ssMissSe->SetVolume(1.0f);
+				ssMissSe->Play(false);
+
 				//爆散エフェクトを発生
 				m_explosionEffect.Init(EFFECT_FILEPATH_EXPLOSION);
 				m_explosionEffect.SetPosition(m_position);
@@ -416,6 +432,7 @@ void Player_new::DecInvTime()
 	m_invincebleTime -= g_gameTime->GetFrameDeltaTime();
 	//無敵時間が切れたら無敵フラグをオフにする
 	if (m_invincebleTime <= 0.0f) {
+		m_invincebleTime = 0.0f;
 		m_isInvincible = false;
 	}
 }

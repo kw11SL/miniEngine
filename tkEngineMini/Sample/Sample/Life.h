@@ -25,6 +25,8 @@ public:
 
 private:
 	SpriteRender* m_lifeTextSprite = nullptr;				//ライフの文字スプライト
+	SpriteRender* m_lifeTextShadowSprite = nullptr;			//ライフの文字の影スプライト
+
 	Vector3 m_lifeTextSpritePos = Vector3::Zero;			//ライフの文字スプライトの位置
 
 	SpriteRender* m_lifeIconSprite[3] = { nullptr };		//ライフアイコンの配列
