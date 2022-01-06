@@ -6,9 +6,19 @@ namespace {
 
 }
 
+UI::UI()
+{
+
+}
+
 UI::~UI()
 {
-	
+}
+
+bool UI::Start()
+{
+
+	return true;
 }
 
 void UI::Init()
@@ -16,14 +26,16 @@ void UI::Init()
 	m_uiOutline.Init();
 	m_score.Init();
 	m_timer.Init();
-	m_life.Init();
-
-	/*m_score.SetColor({ 1.0f,0.0f,0.0f,1.0f });
-	m_timer.SetColor({ 0.0f,1.0f,0.0f,1.0f });  */                                                                                                                                                                                                                                                                                                              
+	m_life.Init();                                                                                                                                                                                                                                                                                                            
 }
 
 void UI::Update()
 {
+	// ƒQ[ƒ€’†ˆÈŠO‚È‚çˆ—‚µ‚È‚¢
+	if(GameDirector::GetInstance()->GetGameState() != enGame){
+		return;
+	}
+
 	//ŽžŠÔ‚ðŒ¸­
 	GameDirector::GetInstance()->DecTime();
 

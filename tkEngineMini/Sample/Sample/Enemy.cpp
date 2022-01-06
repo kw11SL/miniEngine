@@ -57,6 +57,8 @@ Enemy::Enemy()
 {
 	//発生したらエネミー数に+1
 	GameDirector::GetInstance()->AddEnemyCount();
+	//エネミー総数に+1
+	GameDirector::GetInstance()->AddEnemyTotalCount();
 }
 
 Enemy::~Enemy()
@@ -336,6 +338,8 @@ void Enemy::Destroy()
 
 		//点数を加点
 		GameDirector::GetInstance()->AddScore(m_score);
+		//プレイヤーの撃破総数に+1
+		GameDirector::GetInstance()->AddDestroyedEnemyCount();
 	}
 
 }
@@ -382,6 +386,11 @@ void Enemy::DecLifeTime()
 
 void Enemy::Update()
 {
+	//ゲーム中以外なら処理しない
+	if(GameDirector::GetInstance()->GetGameState() != enGame) {
+		return;
+	}
+
 	Move();
 	Rotation();
 	Hit();

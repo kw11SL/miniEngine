@@ -17,12 +17,12 @@ Game::Game()
 {
 	//ディレクションライトの初期化
 	m_directionLight = NewGO<DirectionLight>(0, "directionlight");
-	m_directionLight->Init({ 1.0f,0.0f,1.0f }, { 0.25f,0.25f,0.25f }, { 0.7f,0.7f,0.7f });
+	m_directionLight->Init(/*{ 1.0f,0.0f,1.0f }*/g_camera3D->GetPosition() - g_camera3D->GetTarget(), { 0.25f,0.25f,0.25f }, { 0.7f,0.7f,0.7f });
 	m_directionLight->SetEyePos(g_camera3D->GetPosition());
 
 	//ポイントライトの初期化
 	m_pointLight = NewGO<PointLight>(0, "pointlight");
-	m_pointLight->Init({ 0.0f,0.0f,50.0f }, { 1.0f,0.0f,0.0f }, 500.0f);
+	m_pointLight->Init({ 0.0f,0.0f,100.0f }, { 1.0f,0.0f,0.0f }, 500.0f);
 
 	//スポットライトの初期化
 	m_spotLight = NewGO<SpotLight>(0, "spotlight");
@@ -125,7 +125,7 @@ Game::Game()
 				objData.rotation,
 				Vector3::One);
 
-			//背景にライトを渡す処理
+			//ステージにライトを渡す処理
 			if (m_bg->GetSkinModelRender() != nullptr) {
 				m_bg->RecieveDirectionLight(m_directionLight);
 				m_bg->RecievePointLight(m_pointLight);
@@ -195,7 +195,11 @@ void Game::DeleteGenerators()
 
 void Game::Update()
 {
-	//m_pointLight->SetPosition(m_player->GetPosition());
+
+	//m_pointLight->SetPosition(m_player->GetPosition()/* + m_player->GetUp()*100.0f*/);
+
+	/*m_spotLight->SetPosition(m_player->GetPosition() + m_player->GetUp() * 20.0f);
+	m_spotLight->SetDirection(m_player->GetPosition() - m_spotLight->GetPosition());*/
 
 	////テスト：プレイヤーの削除
 	//if (g_pad[0]->IsTrigger(enButtonX)) {

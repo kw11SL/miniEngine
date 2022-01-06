@@ -67,8 +67,8 @@ Bullet::~Bullet()
 
 bool Bullet::Start()
 {
-	//右ベクトルは発射方向と上方向の外積
-	m_right = Cross(m_up, m_direction);
+	////右ベクトルは発射方向と上方向の外積
+	//m_right = Cross(m_up, m_direction);
 
 	return true;
 }
@@ -96,7 +96,6 @@ void Bullet::Init(
 		m_power = POWER_PLAYER_NORMAL;
 		m_speed = MOVE_SPEED_PLAYER_NORMAL;
 
-		//テスト：ダメージ間隔
 		m_damageInterval = DAMAGE_INTERVAL_PLAYER_NORMAL;
 		break;
 
@@ -176,6 +175,8 @@ void Bullet::Init(
 	//エフェクトの初期化
 	InitEffect(bulletType);
 	
+	//右ベクトルは発射方向と上方向の外積
+	m_right = Cross(m_up, m_direction);
 }
 
 void Bullet::Move()
@@ -292,6 +293,11 @@ void Bullet::InitEffect(const EnBulletType& bulletType)
 
 void Bullet::Update()
 {
+	//ゲーム中以外なら処理しない
+	if (GameDirector::GetInstance()->GetGameState() != enGame) {
+		return;
+	}
+
 	Move();
 	Rotation();
 	DecLifeTime();

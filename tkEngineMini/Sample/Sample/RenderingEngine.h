@@ -1,12 +1,12 @@
 #pragma once
-
 #include "Bloom.h"
 #include "ShadowMapRender.h"
 
+//フォントデータの構造体
 struct SFontData;
 
 
-//シングルトンパターン
+/// @brief レンダリングエンジン
 class RenderingEngine
 {
 public:

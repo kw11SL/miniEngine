@@ -67,8 +67,11 @@ void EnemyGenerator::PlaySpawnEffect()
 
 void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 {
+
 	//残り時間が0以下だったら生成しない
-	if (GameDirector::GetInstance()->GetTime() <= 0.0f) {
+	if (GameDirector::GetInstance()->GetGameState() != enGame || 
+		GameDirector::GetInstance()->GetTime() <= 0.0f) {
+		
 		return;
 	}
 
@@ -84,6 +87,7 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 		float interval = 0.0f;
 
 		//乱数の値をスポーン周期に加える
+		//タイムアップが迫ってきたら発生間隔を小さくする
 		if (GameDirector::GetInstance()->GetTime() <= BORDER_TIMEUP) {
 			interval = ENEMY_SPAWN_TIME_NEAR_TIMEUP;
 			interval += randFloat(mt);
@@ -156,12 +160,6 @@ void EnemyGenerator::Rotation()
 
 void EnemyGenerator::DeleteEnemy()
 {
-	//存在フラグを調べて、オフだったら破棄
-	for (auto& enemy : m_enemies) {
-		if (enemy->GetIsExist() == false) {
-			DeleteGO(enemy);
-		}
-	}
 
 	//配列からエネミーを消すための条件を記述した関数オブジェクト
 	auto func = [&](Enemy* enemy)->bool {
@@ -185,6 +183,11 @@ void EnemyGenerator::DeleteEnemy()
 
 void EnemyGenerator::Update()
 {
+	//ゲーム中以外なら処理しない
+	if (GameDirector::GetInstance()->GetGameState() != enGame) {
+		return;
+	}
+
 	//生成器のアクティベート処理
 	Activate();
 

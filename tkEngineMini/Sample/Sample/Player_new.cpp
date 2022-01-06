@@ -515,6 +515,11 @@ void Player_new::ReviveReady()
 
 void Player_new::Update()
 {
+	//ƒQ[ƒ€’†ˆÈŠO‚È‚çˆ—‚µ‚È‚¢
+	if (GameDirector::GetInstance()->GetGameState() != enGame) {
+		return;
+	}
+
 	float addRate = 0.0f;
 	float maxAddRate = CAMERA_ROTATE_FRACTION_ADD_RATE_MAX;
 	float minAddRate = CAMERA_ROTATE_FRACTION_ADD_RATE_MIN;

@@ -7,14 +7,14 @@
 class UI : public IGameObject
 {
 public:
-	UI() {}
+	UI();
 	~UI();
 
 	/// @brief ‰Šú‰»ˆ—
 	void Init();
 
 private:
-	bool Start() { return true; }
+	bool Start();
 	void Update();
 
 

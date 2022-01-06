@@ -11,7 +11,6 @@ void RenderingEngine::Init()
 	InitMainRenderTarget();
 	//シャドウマップの初期化
 	InitShadowMap();
-	
 	//ブルームの初期化
 	InitBloom(m_mainRenderTarget);
 }
@@ -21,11 +20,14 @@ void RenderingEngine::Execute(RenderContext& rc)
 	//ライトカメラの更新
 	UpdateLightCamera();
 
+	//シャドウマップへの描画
+	RenderToShadowMap(rc, m_lightCamera);
+
 	//通常描画
 	CommonRendering(rc);
 
-	//シャドウマップへの描画
-	RenderToShadowMap(rc, m_lightCamera);
+	//エフェクトを描画
+	EffectEngine::GetInstance()->Draw();
 
 	//ブルーム処理
 	BloomRendering(rc, m_mainRenderTarget);
@@ -39,6 +41,13 @@ void RenderingEngine::Execute(RenderContext& rc)
 
 void RenderingEngine::CommonRendering(RenderContext& rc)
 {
+	//メインレンダリングターゲットが利用できるまで待つ
+	rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
+	//描き込み先をメインレンダリングターゲットにする。
+	rc.SetRenderTargetAndViewport(m_mainRenderTarget);
+	//レンダリングターゲットをクリア
+	rc.ClearRenderTargetView(m_mainRenderTarget);
+
 	//モデルをドロー
 	for (auto& model : m_commonModels) {
 		model->Draw(rc);
@@ -52,7 +61,6 @@ void RenderingEngine::RenderToShadowMap(RenderContext& rc , Camera camera)
 {
 	//シャドウマップに描き込み
 	m_shadowMap.Render(rc, camera);
-
 }
 
 void RenderingEngine::BloomRendering(RenderContext& rc, RenderTarget& mainRT)
@@ -63,6 +71,13 @@ void RenderingEngine::BloomRendering(RenderContext& rc, RenderTarget& mainRT)
 
 void RenderingEngine::SpriteRendering(RenderContext& rc)
 {
+	//メインレンダリングターゲットが利用できるまで待つ
+	rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
+	//描き込み先をメインレンダリングターゲットにする。
+	rc.SetRenderTargetAndViewport(m_mainRenderTarget);
+	//レンダリングターゲットをクリア
+	//rc.ClearRenderTargetView(m_mainRenderTarget);
+
 	for (auto& sprite : m_sprites) {
 		//スプライトを描画
 		sprite->Draw(rc);
@@ -74,6 +89,13 @@ void RenderingEngine::SpriteRendering(RenderContext& rc)
 
 void RenderingEngine::FontRendering(RenderContext& rc)
 {
+	//メインレンダリングターゲットが利用できるまで待つ
+	rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
+	//描き込み先をメインレンダリングターゲットにする。
+	rc.SetRenderTargetAndViewport(m_mainRenderTarget);
+	//レンダリングターゲットをクリア
+	//rc.ClearRenderTargetView(m_mainRenderTarget);
+
 	for (auto& font : m_fontDataVector) {
 
 		//描画開始

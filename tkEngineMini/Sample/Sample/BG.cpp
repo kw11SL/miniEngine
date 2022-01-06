@@ -35,11 +35,13 @@ void BG::Init(RenderingEngine& renderingEngine,const Vector3& pos, const Quatern
 	//モデル拡大
 	//m_scale *= MODEL_INIT_SCALE_RATIO;
 
+	m_position = pos;
+	m_rotation = rot;
 	m_scale = scale;
-
-	m_skinModelRender->SetPosition(pos);
-	m_skinModelRender->SetRotation(rot);
+	
 	m_skinModelRender->SetScale(m_scale);
+	m_skinModelRender->SetRotation(m_rotation);
+	m_skinModelRender->SetPosition(m_position);
 
 	//ワールド行列の更新
 	m_skinModelRender->UpdateWorldMatrix();

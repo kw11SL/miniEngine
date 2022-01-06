@@ -35,6 +35,7 @@ public:
 	void SetAngleH(float angleH) { m_angleH = angleH; }
 	void SetAngleV(float angleV) { m_angleV = angleV; }
 	void SetColor(const Vector3& color);
+	void SetAmbColor(const Vector3& ambColor);
 	void SetEyePos(const Vector3& pos);
 
 	//ゲッター
@@ -45,6 +46,14 @@ public:
 	const float& GetAngleV() { return m_angleV; }
 	const Vector3& GetColor() { return m_dirLight.directionLight.color; }
 	
+	/// @brief 線形補完で明るさを上げていく処理
+	/// @param addRate 上昇補間率
+	void FadeIn(const float addRate);
+
+	/// @brief 線形補完で明るさを下げていく処理
+	/// @param decRate 下降補間率
+	void FadeOut(const float decRate);
+
 	/// @brief ライト構造体を返す関数
 	/// @return m_light
 	const DirLight& GetDirLight() { return m_dirLight; }
@@ -59,8 +68,13 @@ private:
 	Quaternion m_rotationH = Quaternion::Identity;
 	Quaternion m_rotationV = Quaternion::Identity;
 	Vector3 m_color = Vector3::One;
+	Vector3 m_colorAmb = Vector3::One;
 	Vector3 m_eyePos = Vector3::Zero;
 	Vector3 m_ambientLig = Vector3::Zero;
+
+	float m_colorRate = 0.0f;
+	float m_colorAmbRate = 0.0f;
+
 	float m_angleH = 0.0f;
 	float m_angleV = 0.0f;
 };

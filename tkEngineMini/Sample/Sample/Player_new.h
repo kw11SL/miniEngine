@@ -15,35 +15,42 @@ public:
 	//ゲッター
 	/// @brief	座標を取得 
 	/// @return 座標
-	Vector3 GetPosition() 
+	const Vector3& GetPosition() const 
 	{ 
 		return m_position; 
+	}
+
+	/// @brief 上ベクトルを取得
+	/// @return 上ベクトル
+	const Vector3& GetUp() const
+	{
+		return m_up;
 	}
 	
 	/// @brief 拡大率を取得
 	/// @return 拡大率
-	Vector3 GetScale() 
+	const Vector3& GetScale() const 
 	{ 
 		return m_scale; 
 	}
 	
 	/// @brief 回転を取得
 	/// @return 回転
-	Quaternion GetRotation() 
+	const Quaternion& GetRotation() const 
 	{ 
 		return m_rot; 
 	}
 	
 	/// @brief 回転角度を取得
 	/// @return 回転角度
-	float GetAngle() 
+	const float GetAngle() const 
 	{ 
 		return m_angle; 
 	}
 
 	/// @brief スキンモデルレンダーを取得
 	/// @return スキンモデルレンダー
-	SkinModelRender* GetSkinModelRender()
+	const SkinModelRender* GetSkinModelRender()
 	{
 		return m_skinModelRender;
 	}

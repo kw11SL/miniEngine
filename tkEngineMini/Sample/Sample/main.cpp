@@ -105,13 +105,27 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 			BulletManager::GetInstance()->DeleteBullets();
 		}
 
+		// テスト：ポーズ状態の切り替え
+		if (g_pad[0]->IsTrigger(enButtonSelect)) {
+			if (GameDirector::GetInstance()->GetGameState() == enGame) {
+				GameDirector::GetInstance()->SetGameState(enPause);
+			}
+			else if(GameDirector::GetInstance()->GetGameState() == enPause) {
+				GameDirector::GetInstance()->SetGameState(enGame);
+			}
+		}
+
 		//レンダリング開始。
 		g_engine->BeginFrame();
-		//バレットマネージャの更新処理
-		BulletManager::GetInstance()->ExecuteUpdate();
 
 		//登録されているゲームオブジェクトの更新関数を呼び出す。
 		GameObjectManager::GetInstance()->ExecuteUpdate();
+
+		//ゲームディレクターの更新処理
+		GameDirector::GetInstance()->ExecuteUpdate();
+
+		//バレットマネージャの更新処理
+		BulletManager::GetInstance()->ExecuteUpdate();
 
 		//物理ワールドの更新。
 		PhysicsWorld::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
@@ -138,8 +152,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//テスト：レンダリングエンジンの処理
 		RenderingEngine::GetInstance()->Execute(renderContext);
 
-		//step-6 エフェクトのドロー。
-		EffectEngine::GetInstance()->Draw();
+		////step-6 エフェクトのドロー。
+		//EffectEngine::GetInstance()->Draw();
 
 		//メインレンダリングターゲットに描画したものをフレームバッファにコピー
 		//レンダリングターゲットをオンスクリーンに戻す
