@@ -9,7 +9,7 @@ namespace {
 	const Vector3 MIN_COLOR_AMB = { 0.0f,0.0f,0.0f };
 
 	const float MAX_COLOR_RATE = 1.0f;
-	const float MAX_COLOR_AMB_RATE = 0.9f;
+	const float MAX_COLOR_AMB_RATE = 1.0f;
 
 	const float COLOR_FADEIN_RATE = 0.01f;
 }

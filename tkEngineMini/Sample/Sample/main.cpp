@@ -132,9 +132,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 		//step-5 エフェクトエンジンの更新。
 		EffectEngine::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
-
-
-		//ブルームの処理テスト
 		
 		//レンダリングターゲットをメインレンダリングターゲットに変更(=オフスクリーンレンダリングにする)
 		//レンダリングターゲットとして利用できるまで待つ

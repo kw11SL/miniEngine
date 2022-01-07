@@ -238,6 +238,8 @@ private:
 
 	//撃破エフェクト
 	Effect m_destroyEffect;
+	//ヒットエフェクト
+	Effect m_hitEffect;
 
 };
 

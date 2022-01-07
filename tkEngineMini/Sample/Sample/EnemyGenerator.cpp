@@ -9,7 +9,7 @@ namespace {
 	const float BORDER_TIMEUP = 10.0f;						//スポーン周期を早くする時間のボーダー
 	const float ENEMY_SPAWN_TIME = 2.0f;					//エネミーのスポーン周期
 	const float EFFECT_PLAY_TIME = 1.4f;					//スポーン時のエフェクトを再生する周期
-	const float ENEMY_SPAWN_TIME_NEAR_TIMEUP = 1.5f;		//タイムアップ前のエネミーのスポーン周期
+	const float ENEMY_SPAWN_TIME_NEAR_TIMEUP = 1.0f;		//タイムアップ前のエネミーのスポーン周期
 	const float GENERATOR_ACTIVE_COUNT_SHOT = 45.0f;		//射撃型エネミー生成器をアクティブにする時間
 	const float GENERATOR_ACTIVE_COUNT_BOMB = 30.0f;		//自爆型エネミー生成器をアクティブにする時間
 }

@@ -10,6 +10,10 @@ namespace {
 	const char* MODELPATH_SHOT = "Assets/modelData/enemy/enemy_shot.tkm";
 	const char* MODELPATH_BOMB = "Assets/modelData/enemy/enemy_bomb.tkm";
 
+	//エフェクトのファイルパス
+	const char16_t* DESTROY_EFFECT_FILEPATH = u"Assets/effect/destroy.efk";		//撃破エフェクトのファイルパス
+	const char16_t* HIT_EFFECT_FILEPATH = u"Assets/effect/hit.efk";				//ヒットエフェクトのファイルパス
+
 	const float UPPER_OFFSET = 50.0f;
 	
 	//エネミーのタイプ毎の移動速度
@@ -24,7 +28,7 @@ namespace {
 	const float LIFE_POWERED = 1.0f;
 	const float LIFE_CHASER = 1.0f;
 	const float LIFE_SHOT = 1.0f;
-	const float LIFE_BOMB = 10.0f;
+	const float LIFE_BOMB = 15.0f;
 
 	//エネミーのタイプ毎の弾への影響値
 	const float DURABILITY_COMMON = 1.0f;
@@ -38,7 +42,7 @@ namespace {
 	const int SCORE_POWERED = 500;
 	const int SCORE_CHASER = 300;
 	const int SCORE_SHOT = 300;
-	const int SCORE_BOMB = 200;
+	const int SCORE_BOMB = 1000;
 
 	const float LIFE_TIME_BOMB = 5.0f;
 	const float ACTIVATE_COUNT = 0.7f;		//当たり判定が有効になるまでのカウンター
@@ -173,11 +177,13 @@ void Enemy::Init(
 	//無敵状態フラグをオフ
 	m_isInvincible = false;
 
-	//当たり判定が有効になるまでの時間をセット
+	//出現から当たり判定が有効になるまでの時間をセット
 	m_toActivateCounter = ACTIVATE_COUNT;
 
 	//エフェクトの初期化
-	m_destroyEffect.Init(u"Assets/effect/destroy.efk");
+	m_destroyEffect.Init(DESTROY_EFFECT_FILEPATH);
+	m_hitEffect.Init(HIT_EFFECT_FILEPATH);
+
 }
 
 void Enemy::Move()
@@ -249,6 +255,13 @@ void Enemy::Hit()
 			if (m_isInvincible == false) {
 				//耐久力を減らす
 				m_life -= bullet->GetPower();
+
+				//ヒットエフェクトの再生
+				m_hitEffect.SetPosition(m_position + m_up * 50.0f);
+				m_hitEffect.SetRotation(m_rot);
+				m_hitEffect.SetScale({10.0f,10.0f,10.0f});
+				m_hitEffect.Play(false);
+
 				//エネミーに無敵時間を設定
 				SetInvincibleTime(bullet->GetDamageInterval());
 				m_isInvincible = true;
@@ -405,6 +418,7 @@ void Enemy::Update()
 	}
 
 	m_destroyEffect.Update();
+	m_hitEffect.Update();
 
 	m_skinModelRender->SetRotation(m_rot);
 

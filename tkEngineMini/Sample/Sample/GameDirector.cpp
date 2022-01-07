@@ -19,14 +19,14 @@ void GameDirector::ResetGame()
 
 void GameDirector::ExecuteUpdate()
 {
-	//状態の遷移
-	//タイムアップでリザルト
-	if (m_time <= 0) {
-		SetGameState(enResult);
-	}
+	////状態の遷移
+	////タイムアップでリザルト
+	//if (m_time <= 0) {
+	//	SetGameState(enResult);
+	//}
 
-	//プレイヤーのライフが0でゲームオーバー
-	if (m_playerLife <= 0) {
-		SetGameState(enGameOver);
-	}
+	////プレイヤーのライフが0でゲームオーバー
+	//if (m_playerLife <= 0) {
+	//	SetGameState(enGameOver);
+	//}
 }
