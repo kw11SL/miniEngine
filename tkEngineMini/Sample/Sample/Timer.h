@@ -67,5 +67,6 @@ private:
 	std::wstring m_timeNumWs = L"hoge";		//ポインタ保持用のメンバ
 
 
+
 };
 

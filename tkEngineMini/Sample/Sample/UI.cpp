@@ -26,15 +26,17 @@ void UI::Init()
 	m_uiOutline.Init();
 	m_score.Init();
 	m_timer.Init();
-	m_life.Init();                                                                                                                                                                                                                                                                                                            
+	m_life.Init();  
+	m_gameOver.Init();
 }
 
 void UI::Update()
 {
-	// ゲーム中以外なら処理しない
-	if(GameDirector::GetInstance()->GetGameState() != enGame){
-		return;
-	}
+	//// ゲーム中以外なら処理しない
+	//if(GameDirector::GetInstance()->GetGameState() != enGame){
+	//	
+	//	return;
+	//}
 
 	//時間を減少
 	GameDirector::GetInstance()->DecTime();
@@ -47,5 +49,7 @@ void UI::Update()
 	m_uiOutline.Update();
 	//ライフを更新
 	m_life.Update();
+	//ゲームオーバー機能を更新
+	m_gameOver.Update();
 
 }

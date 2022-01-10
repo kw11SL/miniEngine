@@ -179,7 +179,7 @@ private:
 	int m_enemyNum = 0;							//現在のエネミー数
 	int m_totalSpawnEnemyNum = 0;				//スポーンしたエネミーの総計
 	int m_totalDestroyedEnemyNum = 0;			//倒したエネミーの総数
-	float m_time = 15.0f;						//ステージの残時間
+	float m_time = 30.0f;						//ステージの残時間
 
 	//定数
 	const int MAX_ENEMY_NUM = 15;				//エネミーの最大数

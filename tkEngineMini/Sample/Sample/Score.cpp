@@ -10,8 +10,12 @@ namespace {
 	
 	const Vector4 SCORE_SPRITE_COLOR = { 0.3f,0.3f,0.9f,1.0f };
 	const Vector4 SCORE_SPRITE_SHADOW_COLOR = { 0.3f * 0.3f,0.3f * 0.3f,0.9f * 0.3f,1.0f * 0.7f };
+	
 	const Vector4 SCORE_NUM_COLOR = { 0.3f,0.3f,0.9f,1.0f };
+	const Vector4 SCORE_NUM_COLOR_MIN = { 0.0f,0.0f,0.0f,0.0f };
+	
 	const Vector4 SCORE_NUM_SHADOW_COLOR = { 0.3f * 0.3f,0.3f * 0.3f,0.9f * 0.3f,1.0f * 0.7f };
+	const Vector4 SCORE_NUM_SHADOW_COLOR_MIN = { 0.0f,0.0f,0.0f,0.0f };
 
 	const float SCORE_NUM_SHADOW_SCALE_RATE = 1.1f;
 
@@ -122,5 +126,23 @@ void Score::UpdateScore()
 		m_scoreNumber->SetText(score);
 		m_scoreNumberShadow->SetText(score);
 	}
+
+	if (GameDirector::GetInstance()->GetGameState() == enGameOver
+		|| GameDirector::GetInstance()->GetGameState() == enResult) {
+
+		m_scoreNumber->SetColor({ 0.0f,0.0f,0.0f,0.0f });
+		m_scoreNumberShadow->SetColor({ 0.0f,0.0f,0.0f,0.0f });
+
+		//m_fadeOutFraction -= 0.08f;
+	}
+
+	/*Vector4 color;
+	color.Lerp(m_fadeOutFraction, SCORE_NUM_COLOR_MIN, SCORE_NUM_COLOR);
+
+	Vector4 colorShadow;
+	colorShadow.Lerp(m_fadeOutFraction, SCORE_NUM_SHADOW_COLOR_MIN, SCORE_NUM_SHADOW_COLOR);
+
+	m_scoreNumber->SetColor(color);
+	m_scoreNumberShadow->SetColor(colorShadow);*/
 
 }

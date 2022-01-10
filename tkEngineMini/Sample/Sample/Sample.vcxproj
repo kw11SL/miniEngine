@@ -310,6 +310,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GameDirector.cpp" />
+    <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="GaussianBlur.cpp" />
     <ClCompile Include="Hello2D.cpp" />
     <ClCompile Include="HelloFont.cpp" />
@@ -442,6 +443,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameDirector.h" />
+    <ClInclude Include="GameOver.h" />
     <ClInclude Include="GaussianBlur.h" />
     <ClInclude Include="Hello2D.h" />
     <ClInclude Include="HelloFont.h" />

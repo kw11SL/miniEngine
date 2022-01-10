@@ -60,5 +60,7 @@ private:
 	Vector2 m_scoreTextPos = Vector2::Zero;			//スコアのテキスト部分の座標
 
 	std::wstring m_scoreNumWs = L"hoge";			//ポインタ保持用のメンバ
+
+	float m_fadeOutFraction = 1.0f;
 };
 

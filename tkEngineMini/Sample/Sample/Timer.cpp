@@ -135,4 +135,11 @@ void Timer::UpdateTime()
 		m_timeNumberOutline->SetText(time);
 	}
 
+	if (GameDirector::GetInstance()->GetGameState() == enGameOver
+		|| GameDirector::GetInstance()->GetGameState() == enResult) {
+
+		m_timeNumber->SetColor({ 0.0f,0.0f,0.0f,0.0f });
+		m_timeNumberOutline->SetColor({ 0.0f,0.0f,0.0f,0.0f });
+	}
+
 }
