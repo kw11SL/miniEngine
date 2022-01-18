@@ -47,8 +47,8 @@ namespace {
 
 	//テキスト部分の初期カラー(見えない)
 	const Vector4 TEXT_INIT_COLOR = { 0.0f,0.0f,0.0f,0.0f };
-
-	const float TEXT_FADEIN_RATE = 0.03f;
+	//テキストのフェードインの速さ
+	const float TEXT_FADEIN_RATE = 0.04f;
 
 }
 
@@ -406,7 +406,7 @@ void Result::FadeInText()
 		}
 	}
 
-	//撃破率ボーナスの数値の表示
+	//撃破率ボーナスの値の表示
 	int destructionBonus = GameDirector::GetInstance()->CalcDestructionBonus();
 	m_destructionBonusWs = std::to_wstring(destructionBonus);
 	const wchar_t* destructionBonusWc = m_destructionBonusWs.c_str();
@@ -432,7 +432,7 @@ void Result::FadeInText()
 	const wchar_t* finalScoreWc = m_finalScoreNumWs.c_str();
 	m_finalScoreNum->SetText(finalScoreWc);
 
-	//残機ボーナス数値のフェードインが終わっていたらフェードイン開始
+	//撃破率ボーナス値のフェードインが終わっていたらフェードイン開始
 	if (m_destructionBonusNum->GetColor().w >= 1.0f) {
 		if (m_finalScoreNum->GetColor().w < 1.0f) {
 			m_finalScoreNum->SetColor(
@@ -446,10 +446,78 @@ void Result::FadeInText()
 		}
 	}
 
+	//最終スコア数値がフェードインし終わったらテキストのフェードインは完了
+	if (m_finalScoreNum->GetColor().w >= 1.0f) {
+		m_isFinishFadeInText = true;
+	}
+
 }
 
-void Result::FadeOut()
+void Result::FadeOutText(const float fadeOutRate)
 {
+	//残機数
+	m_remainPlayerNum->SetColor(
+		{
+			m_remainPlayerNum->GetColor().x - fadeOutRate,
+			m_remainPlayerNum->GetColor().y - fadeOutRate,
+			m_remainPlayerNum->GetColor().z - fadeOutRate,
+			m_remainPlayerNum->GetColor().w - fadeOutRate
+		}
+	);
+	//残機ボーナス文字
+	m_remainPlayerBonusText->SetColor(
+		{
+			m_remainPlayerBonusText->GetColor().x - fadeOutRate,
+			m_remainPlayerBonusText->GetColor().y - fadeOutRate,
+			m_remainPlayerBonusText->GetColor().z - fadeOutRate,
+			m_remainPlayerBonusText->GetColor().w - fadeOutRate
+		}
+	);
+	//残機ボーナス値
+	m_remainPlayerBonusNum->SetColor(
+		{
+			m_remainPlayerBonusNum->GetColor().x - fadeOutRate,
+			m_remainPlayerBonusNum->GetColor().y - fadeOutRate,
+			m_remainPlayerBonusNum->GetColor().z - fadeOutRate,
+			m_remainPlayerBonusNum->GetColor().w - fadeOutRate
+		}
+	);
+	//撃破率
+	m_destructionRateNum->SetColor(
+		{
+			m_destructionRateNum->GetColor().x - fadeOutRate,
+			m_destructionRateNum->GetColor().y - fadeOutRate,
+			m_destructionRateNum->GetColor().z - fadeOutRate,
+			m_destructionRateNum->GetColor().w - fadeOutRate
+		}
+	);
+	//撃破率ボーナス文字
+	m_destructionBonusText->SetColor(
+		{
+			m_destructionBonusText->GetColor().x - fadeOutRate,
+			m_destructionBonusText->GetColor().y - fadeOutRate,
+			m_destructionBonusText->GetColor().z - fadeOutRate,
+			m_destructionBonusText->GetColor().w - fadeOutRate
+		}
+	);
+	//撃破率ボーナス値
+	m_destructionBonusNum->SetColor(
+		{
+			m_destructionBonusNum->GetColor().x - fadeOutRate,
+			m_destructionBonusNum->GetColor().y - fadeOutRate,
+			m_destructionBonusNum->GetColor().z - fadeOutRate,
+			m_destructionBonusNum->GetColor().w - fadeOutRate
+		}
+	);
+	//最終スコア値
+	m_finalScoreNum->SetColor(
+		{
+			m_finalScoreNum->GetColor().x - fadeOutRate,
+			m_finalScoreNum->GetColor().y - fadeOutRate,
+			m_finalScoreNum->GetColor().z - fadeOutRate,
+			m_finalScoreNum->GetColor().w - fadeOutRate
+		}
+	);
 
 }
 
@@ -457,27 +525,32 @@ void Result::Update()
 {
 	if (GameDirector::GetInstance()->GetGameState() == enResult) {
 
-		/////////////////////////////////////////////////////////////////////////
-		//スプライトのフェードイン
-		FadeInSprite();
+		if (m_exitFlag == false) {
+			/////////////////////////////////////////////////////////////////////////
+			//スプライトのフェードイン
+			FadeInSprite();
 
-		/////////////////////////////////////////////////////////////////////////
-		//テキストの表示
-		//文字スプライトのフェードインが終わっていたら開始
-		if (m_isFinishFadeInSprite == true) {
-			FadeInText();
+			/////////////////////////////////////////////////////////////////////////
+			//テキストの表示
+			//文字スプライトのフェードインが終わっていたら開始
+			if (m_isFinishFadeInSprite == true) {
+				FadeInText();
+			}
+			/////////////////////////////////////////////////////////////////////////
 		}
-		/////////////////////////////////////////////////////////////////////////
 
 		/////////////////////////////////////////////////////////////////////////
 		//タイトル画面への遷移
 		//ボタンを押すとフェードアウト開始
-		if (g_pad[0]->IsTrigger(enButtonA)) {
+		if (g_pad[0]->IsTrigger(enButtonA) && m_isFinishFadeInText == true) {
 			m_exitFlag = true;
 		}
 		if (m_exitFlag == true) {
 			//フェードアウト(黒スプライトをフェードイン)
 			m_screenTopSprite->FadeIn(0.01f);
+
+			FadeOutText(0.01f);
+
 		}
 		//フェードアウトしきったら
 		if (m_screenTopSprite->GetColor().w >= 1.0f) {

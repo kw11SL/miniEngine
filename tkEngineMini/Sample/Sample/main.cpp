@@ -46,7 +46,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//サウンドエンジンを作成
 	CSoundEngine::CreateInstance();
 	CSoundEngine::GetInstance()->Init();
-
 	//ゲームディレクターを作成
 	GameDirector::CreateInstance();
 	//バレットマネージャを作成

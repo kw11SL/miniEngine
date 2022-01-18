@@ -10,11 +10,14 @@ public:
 	/// @brief 初期化処理
 	void Init();
 
+	/// @brief スプライトを順にフェードインさせる処理
 	void FadeInSprite();
 
+	/// @brief 文字を順にフェードインさせる処理
 	void FadeInText();
 
-	void FadeOut();
+	/// @brief 文字をフェードアウトさせる処理
+	void FadeOutText(const float fadeOutRate);
 
 	/// @brief 更新処理
 	void Update();
@@ -44,6 +47,7 @@ private:
 	std::wstring m_finalScoreNumWs = L"";
 
 	bool m_isFinishFadeInSprite = false;
+	bool m_isFinishFadeInText = false;
 	bool m_exitFlag = false;
 };
 

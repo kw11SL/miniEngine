@@ -7,6 +7,7 @@ enum EnGameState {
 	enGame,				//ゲーム中
 	enStop,				//停止中
 	enGameOver,			//ゲームオーバー
+	enTimeUp,			//タイムアップ時
 	enResult,			//リザルト画面
 	enPause,			//ポーズ中
 	enStateNum			//定義した状態の総数
@@ -206,7 +207,7 @@ private:
 	int m_enemyNum = 0;							//現在のエネミー数
 	int m_totalSpawnEnemyNum = 0;				//スポーンしたエネミーの総計
 	int m_totalDestroyedEnemyNum = 0;			//倒したエネミーの総数
-	float m_time = 60.0f;						//ステージの残時間
+	float m_time = 3.0f;						//ステージの残時間
 
 	float m_destructionRate = 0.0f;
 	int m_finalScore = 0;
