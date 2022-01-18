@@ -17,17 +17,19 @@ UI::~UI()
 
 bool UI::Start()
 {
+	m_uiOutline.Init();
+	m_score.Init();
+	m_timer.Init();
+	m_life.Init();
+	m_gameOver.Init();
+	m_result.Init();
 
 	return true;
 }
 
 void UI::Init()
 {
-	m_uiOutline.Init();
-	m_score.Init();
-	m_timer.Init();
-	m_life.Init();  
-	m_gameOver.Init();
+	
 }
 
 void UI::Update()
@@ -51,5 +53,6 @@ void UI::Update()
 	m_life.Update();
 	//ゲームオーバー機能を更新
 	m_gameOver.Update();
-
+	//リザルト画面を更新
+	m_result.Update();
 }

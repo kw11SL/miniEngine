@@ -12,7 +12,7 @@ namespace{
 	const char* LIFE_ICON_FRAME_FILEPATH = "Assets/sprite/ui/lifeIcon_frame.dds";				//枠スプライトのファイルパス
 
 	//位置、拡大率、カラー、ピボット
-	const Vector3 LIFE_TEXT_POS = { -550.0f,110.0f,0.0f };										//LIFEの字のスプライト位置
+	const Vector3 LIFE_TEXT_POS = { -600.0f,120.0f,0.0f };										//LIFEの字のスプライト位置
 	const Vector3 LIFE_TEXT_SHADOW_OFFSET = { 7.0f,-7.0f,0.0f };
 	
 	const Vector3 LIFE_TEXT_SCALE = { 0.6f,0.6f,1.0f };											//LIFEの字のスプライトの拡大率
@@ -26,9 +26,9 @@ namespace{
 	const Vector4 LIFE_ICON_FRAME_COLOR = { 1.0f,1.0f,1.0f,1.0f };								//枠スプライトの色
 	const Vector4 LIFE_ICON_HALO_COLOR = { 0.9f,0.3f,0.2f,1.0f };								//発光の色
 
-	const Vector3 LIFE_TEXT_TO_LIFE_ICON_0 = { 60.0f,30.0f,0.0f };								//LIFEの字からライフアイコン1への相対位置
-	const Vector3 LIFE_ICON_0_TO_LIFE_ICON_1 = { 5.0f,-30.0f,0.0f };							//ライフアイコン1からライフアイコン2への相対位置
-	const Vector3 LIFE_ICON_1_TO_LIFE_ICON_2 = { -5.0f,-30.0f,0.0f };							//ライフアイコン2からライフアイコン3への相対位置
+	const Vector3 LIFE_TEXT_TO_LIFE_ICON_0 = { 80.0f,40.0f,0.0f };								//LIFEの字からライフアイコン1への相対位置
+	const Vector3 LIFE_ICON_0_TO_LIFE_ICON_1 = { 5.0f,-40.0f,0.0f };							//ライフアイコン1からライフアイコン2への相対位置
+	const Vector3 LIFE_ICON_1_TO_LIFE_ICON_2 = { -5.0f,-40.0f,0.0f };							//ライフアイコン2からライフアイコン3への相対位置
 
 	const Vector2 SPRITE_PIVOT = { 0.5f,0.5f };													//スプライトのピボット
 

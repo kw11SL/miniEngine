@@ -38,6 +38,13 @@ public:
 		vec = _v.vec;
 		return *this;
 	}
+
+	const Vector2& operator+=(const Vector2& _v)
+	{
+		Add(_v);
+		return *this;
+	}
+
 	void Set(float _x, float _y)
 	{
 		vec.x = _x;
@@ -60,6 +67,37 @@ public:
 		x = v0.x + (v1.x - v0.x) * t;
 		y = v0.y + (v1.y - v0.y) * t;
 	}
+
+	/// <summary>
+	/// ベクトルの加算。
+	/// </summary>
+	/// <remarks>
+	/// this = v0 + v1;
+	/// </remarks>
+	void Add(const Vector2& v0, const Vector2& v1)
+	{
+		DirectX::XMVECTOR xmv0 = DirectX::XMLoadFloat2(&v0.vec);
+		DirectX::XMVECTOR xmv1 = DirectX::XMLoadFloat2(&v1.vec);
+		DirectX::XMVECTOR xmvr = DirectX::XMVectorAdd(xmv0, xmv1);
+		DirectX::XMStoreFloat2(&vec, xmvr);
+	}
+
+	/// <summary>
+	/// ベクトルの加算。
+	/// </summary>
+	/// <remarks>
+	/// this += _v;
+	/// </remarks>
+	/// <param name="_v">加算されるベクトル。</param>
+	void Add(const Vector2& _v)
+	{
+		DirectX::XMVECTOR xmv0 = DirectX::XMLoadFloat2(&vec);
+		DirectX::XMVECTOR xmv1 = DirectX::XMLoadFloat2(&_v.vec);
+		DirectX::XMVECTOR xmvr = DirectX::XMVectorAdd(xmv0, xmv1);
+		DirectX::XMStoreFloat2(&vec, xmvr);
+	}
+
+
 };
 /// <summary>
 /// 3次元ベクトル。

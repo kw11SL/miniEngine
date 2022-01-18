@@ -216,17 +216,6 @@ void Enemy::Move()
 		m_speed = MOVE_SPEED_COMMON;
 	}
 
-	//if (toPlayer.Dot(playerToMe) < 0.0f) {
-	//	//m_position = m_player->GetPosition();
-	//	OutputDebugStringA("hoge");
-	//}
-	//else {
-	//	OutputDebugStringA("true");
-	//}
-
-	/*m_moveSpeed = m_right * m_speed * 0.0f;
-	m_moveSpeed += m_forward * m_speed;*/
-
 	//キャラコンによる座標更新
 	m_position = m_myCharaCon.Execute(m_moveSpeed, m_downVector,UPPER_OFFSET);
 	//上方向を球面の法線で更新し、右と前方を更新

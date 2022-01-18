@@ -8,7 +8,7 @@ namespace {
 	const int TIMER_SPRITE_WIDTH = 256;
 	const int TIMER_SPRITE_HEIGHT = 128;
 	
-	const Vector3 TIMER_SPRITE_POS = { 0.0f,310.0f,0.0f };
+	const Vector3 TIMER_SPRITE_POS = { 0.0f,330.0f,0.0f };
 	const Vector3 TIMER_SPRITE_SHADOW_OFFSET = { 7.0f,-7.0f,0.0f };
 	const Vector2 TIMER_SPRITE_TO_NUMBER = { 0.0f,-15.0f };
 	const Vector2 TIMER_SPRITE_PIVOT = { 0.5f,0.5f };

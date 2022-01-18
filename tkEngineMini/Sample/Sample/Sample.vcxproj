@@ -326,6 +326,7 @@
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="PressStart.cpp" />
     <ClCompile Include="RenderingEngine.cpp" />
+    <ClCompile Include="Result.cpp" />
     <ClCompile Include="Score.cpp" />
     <ClCompile Include="Seesaw.cpp" />
     <ClCompile Include="ShadowMapRender.cpp" />
@@ -458,6 +459,7 @@
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="PressStart.h" />
     <ClInclude Include="RenderingEngine.h" />
+    <ClInclude Include="Result.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="Seesaw.h" />
     <ClInclude Include="ShadowMapRender.h" />

@@ -419,6 +419,9 @@
     <ClCompile Include="GameOver.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Result.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -788,6 +791,9 @@
       <Filter>ヘッダー ファイル\Title</Filter>
     </ClInclude>
     <ClInclude Include="GameOver.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Result.h">
       <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
   </ItemGroup>

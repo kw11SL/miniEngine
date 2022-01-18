@@ -4,6 +4,7 @@
 #include "UIOutline.h"
 #include "Life.h"
 #include "GameOver.h"
+#include "Result.h"
 
 class UI : public IGameObject
 {
@@ -25,5 +26,6 @@ private:
 	UIOutline m_uiOutline;		//外枠
 	Life m_life;				//ライフ表示
 	GameOver m_gameOver;		//ゲームオーバー時のスプライト表示
+	Result m_result;			//リザルト画面
 };
 

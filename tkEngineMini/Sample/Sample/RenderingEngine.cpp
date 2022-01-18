@@ -45,8 +45,8 @@ void RenderingEngine::CommonRendering(RenderContext& rc)
 	rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
 	//描き込み先をメインレンダリングターゲットにする。
 	rc.SetRenderTargetAndViewport(m_mainRenderTarget);
-	//レンダリングターゲットをクリア
-	rc.ClearRenderTargetView(m_mainRenderTarget);
+	////レンダリングターゲットをクリア
+	//rc.ClearRenderTargetView(m_mainRenderTarget);
 
 	//モデルをドロー
 	for (auto& model : m_commonModels) {

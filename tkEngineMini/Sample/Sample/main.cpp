@@ -37,6 +37,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	RootSignature rs;
 	InitRootSignature(rs);
 
+	g_camera3D->SetFar(50000.0f);
+
 	//ゲームオブジェクトマネージャーのインスタンスを作成する。
 	GameObjectManager::CreateInstance();
 	//物理ワールドのインスタンスを作成

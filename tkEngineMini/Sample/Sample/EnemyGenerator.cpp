@@ -114,6 +114,9 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 				enemyType
 			);
 			
+			//スポーン総数に+1
+			GameDirector::GetInstance()->AddEnemyTotalCount();
+
 			//カウンターを0にリセット
 			m_spawnCounter = 0.0f;
 			//エフェクト再生用カウンターも0にリセット

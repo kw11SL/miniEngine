@@ -15,6 +15,25 @@
 
 Game::Game()
 {
+	
+}
+
+Game::~Game()
+{
+	DeleteGO(m_player);
+	DeleteGO(m_bg);
+	DeleteGO(m_directionLight);
+	DeleteGO(m_pointLight);
+	DeleteGO(m_spotLight);
+	DeleteGO(m_ui);
+	DeleteGO(m_skyCube);
+	DeleteGO(m_stageBackGround);
+	DeleteGenerators();
+
+}
+
+bool Game::Start()
+{
 	//ディレクションライトの初期化
 	m_directionLight = NewGO<DirectionLight>(0, "directionlight");
 	m_directionLight->Init(/*{ 1.0f,0.0f,1.0f }*/g_camera3D->GetPosition() - g_camera3D->GetTarget(), { 0.25f,0.25f,0.25f }, { 0.7f,0.7f,0.7f });
@@ -161,24 +180,7 @@ Game::Game()
 		//構築終了
 		return true;
 	});
-}
 
-Game::~Game()
-{
-	DeleteGO(m_player);
-	DeleteGO(m_bg);
-	DeleteGO(m_directionLight);
-	DeleteGO(m_pointLight);
-	DeleteGO(m_spotLight);
-	DeleteGO(m_ui);
-	DeleteGO(m_skyCube);
-	DeleteGO(m_stageBackGround);
-	DeleteGenerators();
-
-}
-
-bool Game::Start()
-{
 	return true;
 }
 

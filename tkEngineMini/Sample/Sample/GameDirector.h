@@ -139,24 +139,51 @@ public:
 
 	/// @brief ゲーム状態を取得 
 	/// @return ゲーム状態
-	EnGameState GetGameState()
+	const EnGameState& GetGameState()
 	{
 		return m_enGameState;
 	}
 
 	/// @brief ステージの残時間を取得
 	/// @return 残時間
-	const float& GetTime() const
+	const float GetTime() const
 	{
 		return m_time;
 	}
 
 	/// @brief プレイヤーのライフを取得
 	/// @return プレイヤーのライフ
-	const int& GetPlayerLife() const
+	const int GetPlayerLife() const
 	{
 		return m_playerLife;
 	}
+
+	/// @brief 残機ボーナスを取得
+	/// @return 
+	const int CalcRemainBonus()
+	{
+		//残機×10000pt
+		return m_playerLife * 10000;
+	}
+
+	/// @brief 敵の撃破率を取得
+	/// @return 
+	const float CalcDestructionRate()
+	{
+		m_destructionRate = m_totalDestroyedEnemyNum;
+		m_destructionRate /= m_totalSpawnEnemyNum;
+		m_destructionRate *= 100.0f;
+
+		return m_destructionRate;
+	}
+
+	/// @brief 撃破率ボーナスを取得
+	/// @return 
+	const int CalcDestructionBonus();
+
+	/// @brief 最終スコアを取得
+	/// @return 
+	const int CalcFinalScore();
 
 	/// @brief ゲームを初期状態に戻す処理
 	void ResetGame();
@@ -179,7 +206,10 @@ private:
 	int m_enemyNum = 0;							//現在のエネミー数
 	int m_totalSpawnEnemyNum = 0;				//スポーンしたエネミーの総計
 	int m_totalDestroyedEnemyNum = 0;			//倒したエネミーの総数
-	float m_time = 30.0f;						//ステージの残時間
+	float m_time = 60.0f;						//ステージの残時間
+
+	float m_destructionRate = 0.0f;
+	int m_finalScore = 0;
 
 	//定数
 	const int MAX_ENEMY_NUM = 15;				//エネミーの最大数
