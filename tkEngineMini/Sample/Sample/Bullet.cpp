@@ -25,7 +25,7 @@ namespace{
 	const float SPREAD_BOMB_DEC_RATE = 0.15f;
 
 	//’e‚ÌŽc‘¶ŽžŠÔ
-	const float LIFETIME_PLAYER_NORMAL = 1.0f;
+	const float LIFETIME_PLAYER_NORMAL = 1.5f;
 	const float LIFETIME_PLAYER_SPREAD_BOMB = 1.5f;
 	const float LIFETIME_ENEMY_NORMAL = 6.0f;
 

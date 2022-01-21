@@ -73,4 +73,24 @@ void GameOver::Update()
 		m_fadeOutSprite->FadeIn(0.007f);
 	}
 
+	//タイトル画面への遷移
+	if (m_fadeOutSprite->GetColor().w >= 1.0f && g_pad[0]->IsTrigger(enButtonA)){
+		//ゲームを削除し、タイトルをNewGOさせる
+		QueryGOs<Game>("game", [&](Game* gameScene) {
+
+			//ゲームを削除
+			DeleteGO(gameScene);
+			//ゲームを初期状態に戻す
+			GameDirector::GetInstance()->ResetGame();
+			//ゲームの状態をタイトル画面にする
+			GameDirector::GetInstance()->SetGameState(enTitle);
+
+			//タイトルをNewGO
+			NewGO<Title>(0, "title");
+
+			//問い合わせ終了
+			return false;
+		});
+	}
+
 }

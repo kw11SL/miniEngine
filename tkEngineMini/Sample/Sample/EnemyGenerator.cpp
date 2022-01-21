@@ -125,7 +125,7 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 	}
 	else{
 		m_spawnCounter = 0.0f;
-		m_spawnEffectCounter = 0.0f;
+		//m_spawnEffectCounter = 0.0f;
 	}
 
 }

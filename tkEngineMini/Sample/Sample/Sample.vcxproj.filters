@@ -422,6 +422,12 @@
     <ClCompile Include="Result.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
+    <ClCompile Include="TimeUp.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Wave.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -794,6 +800,12 @@
       <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
     <ClInclude Include="Result.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeUp.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Wave.h">
       <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
   </ItemGroup>

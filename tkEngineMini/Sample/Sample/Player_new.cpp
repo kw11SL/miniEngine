@@ -48,12 +48,22 @@ namespace{
 Player_new::~Player_new()
 {
 	DeleteGO(m_skinModelRender);
+	DeleteGO(m_missSe);
+	DeleteGO(m_normalShotSe);
+
 }
 
 void Player_new::Init(RenderingEngine& renderingEngine)
 {
 	//エフェクトを初期化
 	InitEffect();
+
+	//SEを初期化
+	m_missSe = NewGO<CSoundSource>(0);
+	m_missSe->Init(L"Assets/wav/missSe.wav");
+
+	m_normalShotSe = NewGO<CSoundSource>(0);
+	m_normalShotSe->Init(L"Assets/wav/normalShotSe_1.wav");
 
 	//ライトを検索
 	m_directionLight = FindGO<DirectionLight>("directionlight");
@@ -269,6 +279,10 @@ void Player_new::FireBullet()
 				ssNormalSe->Init(L"Assets/wav/normalShotSe_1.wav");
 				ssNormalSe->SetVolume(0.4f);
 				ssNormalSe->Play(false);
+
+			/*	m_normalShotSe->SetVolume(0.4f);
+				m_normalShotSe->Play(false);*/
+
 			}
 
 			//弾管理クラスの関数を使用して出現させる
@@ -372,6 +386,9 @@ void Player_new::Hit()
 				ssMissSe->Init(L"Assets/wav/missSe.wav");
 				ssMissSe->SetVolume(1.0f);
 				ssMissSe->Play(false);
+				/*m_missSe->SetVolume(0.8f);
+				m_missSe->Play(false);*/
+
 
 				//爆散エフェクトを発生
 				m_explosionEffect.Init(EFFECT_FILEPATH_EXPLOSION);
@@ -606,34 +623,34 @@ void Player_new::Update()
 	m_isExistPrev = m_isExist;
 
 	m_isReviveReadyPrev = m_isReviveReady;
+	
 	//////////////////////////////////
 	
-	
-	//テスト　モデルの削除
-	if (g_pad[0]->IsTrigger(enButtonY)) {
-		DeleteGO(m_skinModelRender);
-	}
+	////テスト　モデルの削除
+	//if (g_pad[0]->IsTrigger(enButtonY)) {
+	//	DeleteGO(m_skinModelRender);
+	//}
 
-	//テスト　モデルの出現
-	if (g_pad[0]->IsTrigger(enButtonX)) {
-		m_skinModelRender = NewGO<SkinModelRender>(0);
-		
-		m_skinModelRender->Init(
-			MODELPATH_UTC,
-			enModelUpAxisZ,
-			*RenderingEngine::GetInstance(),
-			true,
-			false,
-			SKELETON_PATH_UTC
-		);
+	////テスト　モデルの出現
+	//if (g_pad[0]->IsTrigger(enButtonX)) {
+	//	m_skinModelRender = NewGO<SkinModelRender>(0);
+	//	
+	//	m_skinModelRender->Init(
+	//		MODELPATH_UTC,
+	//		enModelUpAxisZ,
+	//		*RenderingEngine::GetInstance(),
+	//		true,
+	//		false,
+	//		SKELETON_PATH_UTC
+	//	);
 
-		//ライトの受け取り処理
-		RecieveDirectionLight(m_directionLight);
-		RecievePointLight(m_pointLight);
-		RecieveSpotLight(m_spotLight);
+	//	//ライトの受け取り処理
+	//	RecieveDirectionLight(m_directionLight);
+	//	RecievePointLight(m_pointLight);
+	//	RecieveSpotLight(m_spotLight);
 
-		InitModelFromInitData();
-	}
+	//	InitModelFromInitData();
+	//}
 
 	//エフェクトの更新
 	m_explosionEffect.Update();

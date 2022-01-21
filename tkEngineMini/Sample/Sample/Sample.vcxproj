@@ -350,12 +350,14 @@
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TimeUp.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="TitleSprite.cpp" />
     <ClCompile Include="TklFile.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="UIOutline.cpp" />
     <ClCompile Include="Util.cpp" />
+    <ClCompile Include="Wave.cpp" />
     <ClCompile Include="WaveFile.cpp" />
     <ClCompile Include="WaveFileBank.cpp" />
     <ClCompile Include="WeaponIcon.cpp" />
@@ -476,12 +478,14 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TimeUp.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="TitleSprite.h" />
     <ClInclude Include="TklFile.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="UIOutline.h" />
     <ClInclude Include="Util.h" />
+    <ClInclude Include="Wave.h" />
     <ClInclude Include="WaveFile.h" />
     <ClInclude Include="WaveFileBank.h" />
     <ClInclude Include="WeaponIcon.h" />

@@ -256,7 +256,7 @@ void Result::Init()
 
 	//final scoreスプライトからの相対位置
 	Vector2 finalScoreNumPos = {
-		m_finalScoreTextSprite->GetPosition().x + RELATIVE_DISTANCE_TEXT.x - 80.0f ,
+		m_finalScoreTextSprite->GetPosition().x + RELATIVE_DISTANCE_TEXT.x - 50.0f ,
 		m_finalScoreTextSprite->GetPosition().y + RELATIVE_DISTANCE_TEXT.y + 20.0f
 	};
 
@@ -561,6 +561,8 @@ void Result::Update()
 				DeleteGO(gameScene);
 				//ゲームを初期状態に戻す
 				GameDirector::GetInstance()->ResetGame();
+				//ゲームの状態をタイトル画面にする
+				GameDirector::GetInstance()->SetGameState(enTitle);
 				//タイトルをNewGO
 				NewGO<Title>(0, "title");
 

@@ -21,6 +21,8 @@ bool UI::Start()
 	m_score.Init();
 	m_timer.Init();
 	m_life.Init();
+	m_wave.Init();
+	m_weaponIcon.Init();
 	m_gameOver.Init();
 	m_result.Init();
 
@@ -51,8 +53,13 @@ void UI::Update()
 	m_uiOutline.Update();
 	//ライフを更新
 	m_life.Update();
+	//wave表示を更新
+	m_wave.Update();
+	//武器アイコン表示を更新
+	m_weaponIcon.Update();
 	//ゲームオーバー機能を更新
 	m_gameOver.Update();
 	//リザルト画面を更新
 	m_result.Update();
+	
 }

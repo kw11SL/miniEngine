@@ -138,11 +138,19 @@ public:
 		m_enGameState = gameState;
 	}
 
+
 	/// @brief ゲーム状態を取得 
 	/// @return ゲーム状態
 	const EnGameState& GetGameState()
 	{
 		return m_enGameState;
+	}
+
+	/// @brief 前フレームのゲーム状態を取得 
+	/// @return 前フレームのゲーム状態
+	const EnGameState& GetGameStatePrev()
+	{
+		return m_enGameStatePrevFrame;
 	}
 
 	/// @brief ステージの残時間を取得
@@ -157,6 +165,13 @@ public:
 	const int GetPlayerLife() const
 	{
 		return m_playerLife;
+	}
+
+	/// @brief 現在のwave数を取得
+	/// @return 現在のwave数
+	const int GetWaveNumber() const
+	{
+		return m_waveNumber;
 	}
 
 	/// @brief 残機ボーナスを取得
@@ -207,15 +222,20 @@ private:
 	int m_enemyNum = 0;							//現在のエネミー数
 	int m_totalSpawnEnemyNum = 0;				//スポーンしたエネミーの総計
 	int m_totalDestroyedEnemyNum = 0;			//倒したエネミーの総数
-	float m_time = 3.0f;						//ステージの残時間
+	float m_time = 60.0f;						//ステージの残時間
 
 	float m_destructionRate = 0.0f;
 	int m_finalScore = 0;
+
+	float m_timeUpToResultCounter = 4.0f;		//タイムアップからリザルトに移行するための時間
+
+	//EnUseWeapon m_playerWeapon = enNormalShot;	//プレイヤーの使用している武器
 
 	//定数
 	const int MAX_ENEMY_NUM = 15;				//エネミーの最大数
 	const int MAX_ENEMY_NUM_NEAR_TIMEUP = 25;	//エネミーの最大数(タイムアップ前)
 
-	EnGameState m_enGameState = enTitle;		//ゲーム状態
+	EnGameState m_enGameState = enTitle;			//ゲーム状態
+	EnGameState m_enGameStatePrevFrame = enTitle;	//前フレームのゲーム状態
 };
 

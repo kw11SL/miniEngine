@@ -292,5 +292,8 @@ private:
 	Effect m_reviveEffect;								//復活時のエフェクト
 	Effect m_moveTrackEffect;							//移動時の軌跡エフェクト
 	Effect m_markerEffect;								//自機位置の表示エフェクト
+	
+	CSoundSource* m_missSe = nullptr;					//miss時の効果音
+	CSoundSource* m_normalShotSe = nullptr;
 };
 

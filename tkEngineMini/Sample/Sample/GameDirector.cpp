@@ -15,6 +15,7 @@ void GameDirector::ResetGame()
 	m_destructionRate = 0.0f;
 	m_waveNumber = 1;
 	m_time = 60.0f;
+	m_timeUpToResultCounter = 4.0f;
 	m_enGameState = enTitle;
 
 }
@@ -56,8 +57,23 @@ void GameDirector::ExecuteUpdate()
 		SetGameState(enResult);
 	}
 
+	////残時間0でタイムアップ
+	//if (m_time <= 0) {
+	//	SetGameState(enTimeUp);
+	//}
+	//if (m_enGameState == enTimeUp) {
+	//	//タイムアップ後一定時間でリザルトに遷移
+	//	m_timeUpToResultCounter -= g_gameTime->GetFrameDeltaTime();
+	//	if (m_timeUpToResultCounter <= 0.0f) {
+	//		SetGameState(enResult);
+	//	}
+	//}
+
 	//プレイヤーのライフが0でゲームオーバー
 	if (m_playerLife <= 0) {
 		SetGameState(enGameOver);
 	}
+
+	//現フレームでのゲームの状態を記録
+	m_enGameStatePrevFrame = m_enGameState;
 }

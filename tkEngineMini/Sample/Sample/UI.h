@@ -3,6 +3,8 @@
 #include "Timer.h"
 #include "UIOutline.h"
 #include "Life.h"
+#include "Wave.h"
+#include "WeaponIcon.h"
 #include "GameOver.h"
 #include "Result.h"
 
@@ -27,5 +29,7 @@ private:
 	Life m_life;				//ライフ表示
 	GameOver m_gameOver;		//ゲームオーバー時のスプライト表示
 	Result m_result;			//リザルト画面
+	Wave m_wave;				//wave数表
+	WeaponIcon m_weaponIcon;	//使用中の武器表示
 };
 
