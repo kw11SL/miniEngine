@@ -22,19 +22,16 @@ public:
 	void SetPosition(const Vector3& pos)
 	{
 		m_position = pos;
-		m_skinModelRender->SetPosition(m_position);
 	}
 
 	void SetRotation(const Quaternion& qRot)
 	{
 		m_rotation = qRot;
-		m_skinModelRender->SetRotation(m_rotation);
 	}
 
 	void SetScale(const Vector3& scale)
 	{
 		m_scale = scale;
-		m_skinModelRender->SetScale(m_scale);
 	}
 
 	SkinModelRender* GetSkinModelRender() { return m_skinModelRender; }

@@ -77,4 +77,5 @@ void BG::InitModelFromInitData()
 void BG::Update()
 {
 
+
 }

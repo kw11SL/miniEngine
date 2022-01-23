@@ -34,7 +34,7 @@ const int GameDirector::CalcDestructionBonus()
 	if (CalcDestructionRate() > 0.0f && CalcDestructionRate() < 100.0f) {
 		return 5000;
 	}
-	if (CalcDestructionRate() == 0.0f) {
+	if (CalcDestructionRate() <= 0.0f) {
 		return 100000;
 	}
 }

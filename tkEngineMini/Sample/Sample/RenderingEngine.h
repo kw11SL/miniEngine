@@ -101,14 +101,35 @@ public:
 	/// @param fontData 
 	void AddFontDataToFonts(SFontData& fontData)
 	{
-		m_fontDataVector.push_back(&fontData);
+		std::vector<SFontData*>::iterator itr;
+		itr = std::find(m_fontDataVector.begin(), m_fontDataVector.end(), &fontData);
+
+		//途中で見つかった場合は配列に追加しない
+		if (itr != m_fontDataVector.end()) {
+			return;
+		}
+		//途中で見つからなかった場合(イテレータが終端)まだないので追加
+		else if (itr == m_fontDataVector.end()) {
+			m_fontDataVector.push_back(&fontData);
+		}
 	}
 
 	/// @brief スプライトの配列にスプライトを追加
 	/// @param sprite 
 	void AddSpriteToSprites(Sprite& sprite) 
 	{
-		m_sprites.push_back(&sprite);
+		std::vector<Sprite*>::iterator itr;
+		itr = std::find(m_sprites.begin(),m_sprites.end(),&sprite);
+
+		//途中で見つかった場合は配列に追加しない
+		if (itr != m_sprites.end()) {
+			return;
+		}
+		//途中で見つからなかった場合(イテレータが終端)まだないので追加
+		else if(itr == m_sprites.end()) {
+			m_sprites.push_back(&sprite);
+		}
+
 	}
 
 	/// @brief 通常描画モデルの削除処理

@@ -55,9 +55,9 @@ bool Game::Start()
 	m_ui = NewGO<UI>(0, "ui");
 	m_ui->Init();
 
-	//スカイキューブの初期化
-	m_skyCube = NewGO<SkyCube>(0, "skyCube");
-	m_skyCube->Init("Assets/modelData/skyCube/sky.tkm");
+	////スカイキューブの初期化
+	//m_skyCube = NewGO<SkyCube>(0, "skyCube");
+	//m_skyCube->Init("Assets/modelData/skyCube/sky.tkm");
 
 
 	//レベル構築
@@ -86,59 +86,58 @@ bool Game::Start()
 			return true;
 		}
 
-		//エネミー1の生成器
-		if (objData.EqualObjectName(L"enemy_01") == true) {
-			m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator01"));
-			m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
-				objData.position,
-				objData.rotation,
-				true,
-				enCommon
-			);
+		////エネミー1の生成器
+		//if (objData.EqualObjectName(L"enemy_01") == true) {
+		//	m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator01"));
+		//	m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
+		//		objData.position,
+		//		objData.rotation,
+		//		true,
+		//		enCommon
+		//	);
 
-			//敵生成器の前方、右、上ベクトルにレベルの回転を適用
-			m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
+		//	//敵生成器の前方、右、上ベクトルにレベルの回転を適用
+		//	m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
 
-			return true;
-		}
+		//	return true;
+		//}
 
-		//エネミー2の生成器
-		if (objData.EqualObjectName(L"enemy_02") == true) {
-			m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator02"));
-			m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
-				objData.position,
-				objData.rotation,
-				false,
-				enShot
-			);
+		////エネミー2の生成器
+		//if (objData.EqualObjectName(L"enemy_02") == true) {
+		//	m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator02"));
+		//	m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
+		//		objData.position,
+		//		objData.rotation,
+		//		false,
+		//		enShot
+		//	);
 
-			//敵生成器の前方、右、上ベクトルにレベルの回転を適用
-			m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
+		//	//敵生成器の前方、右、上ベクトルにレベルの回転を適用
+		//	m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
 
-			return true;
-		}
+		//	return true;
+		//}
 
-		//エネミー3の生成器
-		if (objData.EqualObjectName(L"enemy_03") == true) {
-			m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator03"));
-			m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
-				objData.position,
-				objData.rotation,
-				false,
-				enBomb
-			);
+		////エネミー3の生成器
+		//if (objData.EqualObjectName(L"enemy_03") == true) {
+		//	m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator03"));
+		//	m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
+		//		objData.position,
+		//		objData.rotation,
+		//		false,
+		//		enBomb
+		//	);
 
-			//敵生成器の前方、右、上ベクトルにレベルの回転を適用
-			m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
+		//	//敵生成器の前方、右、上ベクトルにレベルの回転を適用
+		//	m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
 
-			return true;
-		}
+		//	return true;
+		//}
 
 		//ステージ
 		if (objData.EqualObjectName(L"stageBg") == true) {
 			m_bg = NewGO<BG>(0, "bg");
 			m_bg->Init(
-				//renderingEngine,
 				*RenderingEngine::GetInstance(),
 				objData.position,
 				objData.rotation,
