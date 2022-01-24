@@ -280,7 +280,7 @@ void Player_new::FireBullet()
 				ssNormalSe->SetVolume(0.4f);
 				ssNormalSe->Play(false);
 
-			/*	m_normalShotSe->SetVolume(0.4f);
+				/*m_normalShotSe->SetVolume(0.4f);
 				m_normalShotSe->Play(false);*/
 
 			}
