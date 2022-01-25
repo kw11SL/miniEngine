@@ -13,6 +13,7 @@ enum EnGameState {
 	enStateNum			//定義した状態の総数
 };
 
+
 class GameDirector
 {
 
@@ -69,6 +70,14 @@ public:
 	void AddDestroyedEnemyCount()
 	{
 		m_totalDestroyedEnemyNum++;
+	}
+
+	/// @brief waveを1進める
+	void AddWaveNumber()
+	{
+		m_waveNumber++;
+		//wave数が変わったのでフラグをオン
+		m_isSwitchedWave = true;
 	}
 
 	/// @brief エネミー数を1減らす
@@ -174,6 +183,18 @@ public:
 		return m_waveNumber;
 	}
 
+	const int GetWaveNumberPrev() const
+	{
+		return m_waveNumberPrev;
+	}
+
+	/// @brief waveが切り替わったかどうか
+	/// @return 
+	const bool GetIsSwitchedWave() const
+	{
+		return m_isSwitchedWave;
+	}
+
 	/// @brief 残機ボーナスを取得
 	/// @return 
 	const int CalcRemainBonus()
@@ -186,6 +207,10 @@ public:
 	/// @return 
 	const float CalcDestructionRate()
 	{
+		if (m_totalDestroyedEnemyNum <= 0) {
+			return 0;
+		}
+
 		m_destructionRate = m_totalDestroyedEnemyNum;
 		m_destructionRate /= m_totalSpawnEnemyNum;
 		m_destructionRate *= 100.0f;
@@ -207,6 +232,9 @@ public:
 	/// @brief 更新処理
 	void ExecuteUpdate();
 
+	/// @brief 現フレームでのフラグや数値を記録
+	void RecordCurrentFrame();
+
 private:
 	GameDirector() {}
 	~GameDirector() {}
@@ -219,15 +247,19 @@ private:
 	int m_score = 0;							//スコア
 	int m_playerLife = 3;						//プレイヤーのライフ
 	int m_waveNumber = 1;						//現在のwave。1から開始する
+	int m_waveNumberPrev = m_waveNumber;		//前フレームのwave数
 	int m_enemyNum = 0;							//現在のエネミー数
 	int m_totalSpawnEnemyNum = 0;				//スポーンしたエネミーの総計
 	int m_totalDestroyedEnemyNum = 0;			//倒したエネミーの総数
 	float m_time = 60.0f;						//ステージの残時間
-
-	float m_destructionRate = 0.0f;
-	int m_finalScore = 0;
-
+	float m_destructionRate = 0.0f;				//敵撃破率
+	int m_finalScore = 0;						//最終スコア
 	float m_timeUpToResultCounter = 4.0f;		//タイムアップからリザルトに移行するための時間
+
+	bool m_isSwitchedWave = false;				//このフレームでwaveの切り替えが発生したかどうか
+
+	EnGameState m_enGameState = enTitle;			//ゲーム状態
+	EnGameState m_enGameStatePrevFrame = enTitle;	//前フレームのゲーム状態
 
 	//EnUseWeapon m_playerWeapon = enNormalShot;	//プレイヤーの使用している武器
 
@@ -235,7 +267,8 @@ private:
 	const int MAX_ENEMY_NUM = 15;				//エネミーの最大数
 	const int MAX_ENEMY_NUM_NEAR_TIMEUP = 25;	//エネミーの最大数(タイムアップ前)
 
-	EnGameState m_enGameState = enTitle;			//ゲーム状態
-	EnGameState m_enGameStatePrevFrame = enTitle;	//前フレームのゲーム状態
+	
+
+
 };
 

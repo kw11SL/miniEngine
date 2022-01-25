@@ -14,9 +14,12 @@ void GameDirector::ResetGame()
 	m_totalDestroyedEnemyNum = 0;
 	m_destructionRate = 0.0f;
 	m_waveNumber = 1;
+	m_waveNumberPrev = m_waveNumber;
+	m_isSwitchedWave = false;
 	m_time = 60.0f;
 	m_timeUpToResultCounter = 4.0f;
 	m_enGameState = enTitle;
+	m_enGameStatePrevFrame = enTitle;
 
 }
 
@@ -48,9 +51,34 @@ const int GameDirector::CalcFinalScore()
 	return m_finalScore;
 }
 
+void GameDirector::RecordCurrentFrame()
+{
+	//現フレームでのゲームの状態を記録
+	m_enGameStatePrevFrame = m_enGameState;
+	//wave数を記録
+	m_waveNumberPrev = m_waveNumber;
+}
 
 void GameDirector::ExecuteUpdate()
 {
+	//前フレームでwaveの切り替えが発生していたらフラグを元に戻す
+	if(m_isSwitchedWave == true){
+		m_isSwitchedWave = false;
+	}
+
+	//waveを進める処理
+	if (m_time <= 45.0f && m_waveNumberPrev == 1) {
+		AddWaveNumber();
+	}
+	if (m_time <= 30.0f && m_waveNumberPrev == 2) {
+		AddWaveNumber();
+	}
+	if (m_time <= 10.0f && m_waveNumberPrev == 3) {
+		AddWaveNumber();
+	}
+
+
+
 	//状態の遷移
 	//タイムアップでリザルト
 	if (m_time <= 0) {
@@ -74,6 +102,7 @@ void GameDirector::ExecuteUpdate()
 		SetGameState(enGameOver);
 	}
 
-	//現フレームでのゲームの状態を記録
-	m_enGameStatePrevFrame = m_enGameState;
+	//現フレームの状況を記録
+	RecordCurrentFrame();
+	
 }

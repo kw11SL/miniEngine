@@ -21,6 +21,7 @@ public:
 
 private:
 	SpriteRender* m_weaponTextSprite = nullptr;			//weaponテキストのスプライト
+	SpriteRender* m_weaponTextShadowSprite = nullptr;	//weaponテキストの影スプライト
 	SpriteRender* m_iconFrameSprite = nullptr;			//アイコンの外枠
 	SpriteRender* m_weaponSprite = nullptr;
 
