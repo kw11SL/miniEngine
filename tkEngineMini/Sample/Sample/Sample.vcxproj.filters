@@ -428,6 +428,9 @@
     <ClCompile Include="Wave.cpp">
       <Filter>ソース ファイル\UI</Filter>
     </ClCompile>
+    <ClCompile Include="WaveCutIn.cpp">
+      <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -806,6 +809,9 @@
       <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
     <ClInclude Include="Wave.h">
+      <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="WaveCutIn.h">
       <Filter>ヘッダー ファイル\UI</Filter>
     </ClInclude>
   </ItemGroup>

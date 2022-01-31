@@ -198,7 +198,7 @@ void Player_new::Move()
 	}
 
 	//自作キャラコンに移動速度を渡す
-	m_position = m_myCharaCon.Execute(m_moveSpeed,m_downVector,UPPER_OFFSET);
+	m_position = m_myCharaCon.Execute(m_moveSpeed,m_downVector,m_upperOffset);
 
 	{
 		// 上ベクトルを更新
@@ -537,6 +537,19 @@ void Player_new::Update()
 		return;
 	}
 
+	//テスト：地形からの上げ下げ
+	if (g_pad[0]->IsPress(enButtonUp)) {
+		m_upperOffset += 1.0f;
+	}
+	else if (g_pad[0]->IsPress(enButtonDown)) {
+		m_upperOffset -= 1.0f;
+		if (m_upperOffset < 0.0f) {
+			m_upperOffset = 0.0f;
+		}
+	}
+
+
+
 	float addRate = 0.0f;
 	float maxAddRate = CAMERA_ROTATE_FRACTION_ADD_RATE_MAX;
 	float minAddRate = CAMERA_ROTATE_FRACTION_ADD_RATE_MIN;
@@ -651,6 +664,7 @@ void Player_new::Update()
 
 	//	InitModelFromInitData();
 	//}
+	//////////////////////////////////
 
 	//エフェクトの更新
 	m_explosionEffect.Update();

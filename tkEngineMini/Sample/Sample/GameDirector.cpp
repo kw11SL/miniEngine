@@ -61,6 +61,11 @@ void GameDirector::RecordCurrentFrame()
 
 void GameDirector::ExecuteUpdate()
 {
+	//ゲーム中、時間を減少
+	if (GetGameState() == enGame) {
+		DecTime();
+	}
+
 	//前フレームでwaveの切り替えが発生していたらフラグを元に戻す
 	if(m_isSwitchedWave == true){
 		m_isSwitchedWave = false;
@@ -81,7 +86,7 @@ void GameDirector::ExecuteUpdate()
 
 	//状態の遷移
 	//タイムアップでリザルト
-	if (m_time <= 0) {
+	if (m_time <= 0.0f) {
 		SetGameState(enResult);
 	}
 

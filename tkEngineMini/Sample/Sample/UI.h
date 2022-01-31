@@ -7,6 +7,7 @@
 #include "WeaponIcon.h"
 #include "GameOver.h"
 #include "Result.h"
+#include "WaveCutIn.h"
 
 class UI : public IGameObject
 {
@@ -30,6 +31,7 @@ private:
 	GameOver m_gameOver;		//ゲームオーバー時のスプライト表示
 	Result m_result;			//リザルト画面
 	Wave m_wave;				//wave数表
+	WaveCutIn m_waveCutIn;		//wave開始のカットイン
 	WeaponIcon m_weaponIcon;	//使用中の武器表示
 };
 

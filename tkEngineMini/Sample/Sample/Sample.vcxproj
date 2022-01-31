@@ -358,6 +358,7 @@
     <ClCompile Include="UIOutline.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="Wave.cpp" />
+    <ClCompile Include="WaveCutIn.cpp" />
     <ClCompile Include="WaveFile.cpp" />
     <ClCompile Include="WaveFileBank.cpp" />
     <ClCompile Include="WeaponIcon.cpp" />
@@ -486,6 +487,7 @@
     <ClInclude Include="UIOutline.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Wave.h" />
+    <ClInclude Include="WaveCutIn.h" />
     <ClInclude Include="WaveFile.h" />
     <ClInclude Include="WaveFileBank.h" />
     <ClInclude Include="WeaponIcon.h" />

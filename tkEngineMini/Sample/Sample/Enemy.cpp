@@ -14,6 +14,7 @@ namespace {
 	const char16_t* DESTROY_EFFECT_FILEPATH = u"Assets/effect/destroy.efk";		//撃破エフェクトのファイルパス
 	const char16_t* HIT_EFFECT_FILEPATH = u"Assets/effect/hit.efk";				//ヒットエフェクトのファイルパス
 
+	//地形から浮かせる量
 	const float UPPER_OFFSET = 50.0f;
 	
 	//エネミーのタイプ毎の移動速度
@@ -44,7 +45,7 @@ namespace {
 	const int SCORE_SHOT = 300;
 	const int SCORE_BOMB = 1000;
 
-	const float LIFE_TIME_BOMB = 5.0f;
+	const float LIFE_TIME_BOMB = 5.0f;		//自爆型の時間寿命
 	const float ACTIVATE_COUNT = 0.7f;		//当たり判定が有効になるまでのカウンター
 
 	//シェーダーのファイルパス
@@ -70,6 +71,7 @@ Enemy::~Enemy()
 	//撃破されたらエネミー数に-1
 	GameDirector::GetInstance()->DecEnemyCount();
 	DeleteGO(m_skinModelRender);
+
 }
 
 bool Enemy::Start()
@@ -238,7 +240,7 @@ void Enemy::Hit()
 		float length = diff.Length();
 		
 		//距離が一定値以下のとき
-		if (length < 50.0f) {
+		if (length < 60.0f) {
 			
 			//無敵状態でなければ
 			if (m_isInvincible == false) {

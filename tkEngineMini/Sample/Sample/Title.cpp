@@ -23,7 +23,7 @@ void Title::Update()
 {
 	m_titleSprite.Update();
 
-	//タイトルのフェードインが完了したらpressstartのUpdateを処理し始める
+	//タイトルスプライトのフェードインが完了したらpressstartのUpdateを処理し始める
 	if (m_titleSprite.GetIsFinishFadeIn() == true) {
 		m_pressStart.Update();
 	}
@@ -47,9 +47,9 @@ void Title::Update()
 	if (m_titleSprite.GetIsFinishFadeOut() == true) {
 		//タイトルのフェードアウト完了でゲームをNewGO
 		NewGO<Game>(0, "game");
-		//ゲームの状態をゲーム中に変更
-		GameDirector::GetInstance()->SetGameState(enGame);
-		//GameDirector::GetInstance()->SetGameState(enStart);
+		//ゲームの状態を変更
+		//GameDirector::GetInstance()->SetGameState(enGame);
+		GameDirector::GetInstance()->SetGameState(enStart);
 
 		//自身を削除
 		DeleteGO(this);

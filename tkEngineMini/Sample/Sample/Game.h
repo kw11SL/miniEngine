@@ -36,7 +36,6 @@ public:
 
 private:	
 	Player_new* m_player = nullptr;					//プレイヤー
-	Enemy* m_enemy[3] = { nullptr };						//エネミー
 	BG* m_bg = nullptr;								//ステージ
 	StageBackGround* m_stageBackGround = nullptr;				//背景
 	DirectionLight* m_directionLight = nullptr;		//ディレクションライト

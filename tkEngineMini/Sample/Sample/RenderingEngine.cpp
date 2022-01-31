@@ -18,7 +18,7 @@ void RenderingEngine::Init()
 void RenderingEngine::Execute(RenderContext& rc)
 {
 	//ライトカメラの更新
-	UpdateLightCamera();
+	//UpdateLightCamera();
 
 	//シャドウマップへの描画
 	RenderToShadowMap(rc, m_lightCamera);

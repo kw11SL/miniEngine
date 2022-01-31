@@ -52,6 +52,8 @@ void BG::Init(RenderingEngine& renderingEngine,const Vector3& pos, const Quatern
 		m_skinModelRender->GetMatrix()
 	);
 
+	
+
 }
 
 void BG::RecieveDirectionLight(DirectionLight* dirLight)

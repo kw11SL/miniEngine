@@ -52,9 +52,6 @@ namespace{
 	
 	//初期座標
 	const Vector3 INIT_POINT = { 0.0f,0.0f,0.0f };
-
-	const float CHARACON_RADIUS = 50.0f;
-	const float CHARACON_HEIGHT = 120.0f;
 }
 
 
@@ -239,9 +236,9 @@ void Bullet::DecLifeTime()
 	m_lifeTime -= g_gameTime->GetFrameDeltaTime();
 
 	//弾の耐久値、時間寿命、速さのいずれかが0以下になったとき、存在フラグをオフ
-	if (m_life < 0.0f 
-		||m_lifeTime < 0.0f
-		||m_speed < 0.0f) {
+	if (m_life <= 0.0f 
+		||m_lifeTime <= 0.0f
+		||m_speed <= 0.0f) {
 		
 		m_isExist = false;
 	}

@@ -268,6 +268,7 @@ private:
 	float m_rotFraction = 1.0f;
 	float m_cameraUpFraction = 0.0f;					//カメラ上方向を回転させる補間率
 	float m_angle = 0.0f;								//回転角度
+	float m_upperOffset = 0.0f;
 
 	int m_life = 0;										//プレイヤーのライフ
 	bool m_isInvincible = false;						//無敵状態フラグ

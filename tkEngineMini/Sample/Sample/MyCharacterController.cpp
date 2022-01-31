@@ -119,7 +119,7 @@ const Vector3& MyCharacterController::Execute(Vector3& moveSpeed,Vector3& downVe
 
 	//移動先の座標が確定したのでm_positionに代入
 	m_position = nextPos;
-
+	//衝突点から下方向の反対側(=上方向)
 	m_position = nextPos + downVector * upperOffset * -1.0f;
 
 	//処理後の座標を返す

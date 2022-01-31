@@ -22,6 +22,7 @@ bool UI::Start()
 	m_timer.Init();
 	m_life.Init();
 	m_wave.Init();
+	m_waveCutIn.Init();
 	m_weaponIcon.Init();
 	m_gameOver.Init();
 	m_result.Init();
@@ -42,19 +43,18 @@ void UI::Update()
 	//	return;
 	//}
 
-	//時間を減少
-	GameDirector::GetInstance()->DecTime();
-
 	//スコアを更新
 	m_score.UpdateScore();
 	//時間を更新
 	m_timer.UpdateTime();
 	//外枠を更新
 	m_uiOutline.Update();
-	//ライフを更新
+	//ライフ表示を更新
 	m_life.Update();
 	//wave表示を更新
 	m_wave.Update();
+	//wave開始表示を更新
+	m_waveCutIn.Update();
 	//武器アイコン表示を更新
 	m_weaponIcon.Update();
 	//ゲームオーバー機能を更新

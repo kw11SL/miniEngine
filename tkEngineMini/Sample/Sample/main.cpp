@@ -116,6 +116,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 			}
 		}
 
+		//テスト：ゲーム開始からゲーム中への変更
+		if (g_pad[0]->IsTrigger(enButtonA)) {
+			if (GameDirector::GetInstance()->GetGameState() == enStart) {
+				GameDirector::GetInstance()->SetGameState(enGame);
+			}
+		}
+
 		//レンダリング開始。
 		g_engine->BeginFrame();
 
