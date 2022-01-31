@@ -47,8 +47,9 @@ void Title::Update()
 	if (m_titleSprite.GetIsFinishFadeOut() == true) {
 		//タイトルのフェードアウト完了でゲームをNewGO
 		NewGO<Game>(0, "game");
-		//ゲームの状態を変更
+		////ゲームの状態を変更
 		//GameDirector::GetInstance()->SetGameState(enGame);
+		//ゲームの状態をゲーム開始に変更
 		GameDirector::GetInstance()->SetGameState(enStart);
 
 		//自身を削除

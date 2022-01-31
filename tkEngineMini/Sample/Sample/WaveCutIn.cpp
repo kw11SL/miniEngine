@@ -11,8 +11,6 @@ namespace {
 
 	//スプライトの初期位置
 	const Vector3 WAVE_SPRITE_INIT_POS = { 320,0.0f,0.0f };
-	//スプライトの中間位置
-	const Vector3 WAVE_SPRITE_MID_POS = { 0.0f,0.0f,0.0f };
 	//スプライトの最終位置
 	const Vector3 WAVE_SPRITE_END_POS = { WAVE_SPRITE_INIT_POS.x * -1.0f,0.0f,0.0f };
 	
@@ -40,19 +38,11 @@ void WaveCutIn::Init()
 {
 	//スプライトの初期化
 	m_waveSprite = NewGO<SpriteRender>(0);
-	m_waveSprite->Init(
-		WAVE_SPRITE_FILEPATH,
-		WAVE_SPRITE_WIDTH,
-		WAVE_SPRITE_HEIGHT,
-		AlphaBlendMode_Trans
-	);
+	
+	//現在のwave数に応じたスプライトで初期化
+	SwitchingSprite();
 
-	m_waveSprite->SetPivot(SPRITE_PIVOT);
-	m_waveSprite->SetColor(WAVE_SPRITE_INIT_COLOR);
-	m_waveSprite->SetScale(WAVE_SPRITE_SCALE * WAVE_SPRITE_SCALE_RATE);
-	m_waveSprite->SetPosition(WAVE_SPRITE_INIT_POS);
-
-	//中央で停止する時間のカウンタ
+	//中央で停止する時間のカウンタを初期化
 	m_waveSpriteWaitCounter = 1.0f;
 
 }
@@ -69,7 +59,7 @@ void WaveCutIn::SwitchingSprite()
 	//できたstring型のファイルパスをconst char*型に変換
 	const char* newFilePath = convFilePath.c_str();
 
-	//本体スプライトの初期化
+	//スプライトの初期化
 	m_waveSprite->Init(
 		newFilePath,
 		WAVE_SPRITE_WIDTH,

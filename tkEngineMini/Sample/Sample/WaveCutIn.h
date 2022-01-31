@@ -8,7 +8,7 @@ public:
 	/// @brief 初期化処理
 	void Init();
 
-	/// @brief 画像の切り替え
+	/// @brief wave数に応じたスプライトの切り替え
 	void SwitchingSprite();
 
 	/// @brief スプライトの移動処理
@@ -20,15 +20,15 @@ public:
 	/// @brief 更新処理
 	void Update();
 private:
-	SpriteRender* m_waveSprite = nullptr;
+	SpriteRender* m_waveSprite = nullptr;		//カットインしてくるスプライト
 
-	Vector3 m_waveSpritePos = Vector3::Zero;
-	float m_waveSpriteAlpha = 0.0f;
+	Vector3 m_waveSpritePos = Vector3::Zero;	//スプライトの初期位置
+	float m_waveSpriteAlpha = 0.0f;				//スプライトの不等明度
 	
 	float m_waveSpriteMoveFraction = 0.0f;		//スプライトの移動用補間率
-	float m_waveSpriteWaitCounter = 0.0f;
+	float m_waveSpriteWaitCounter = 0.0f;		//スプライトが中央で停止する時間
 
-	bool m_isValidMove = true;	//移動可能かどうかフラグ
-	bool m_isFinishMoveToCenter = false;		//中央に移動したかどうか
+	bool m_isValidMove = true;					//移動可能かどうかフラグ
+	bool m_isFinishMoveToCenter = false;		//中央に移動したかどうかフラグ
 };
 

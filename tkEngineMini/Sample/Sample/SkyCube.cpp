@@ -30,7 +30,7 @@ void SkyCube::Init(const char* filePath)
 	initData.m_psEntryPointFunc = "PSMain";
 
 	//テクスチャを初期化
-	m_texture.InitFromDDSFile(TEXTURE_FILEPATH);
+	m_texture.InitFromDDSFile(TEXTURE_FILEPATH,true);
 	//SRVにテクスチャのアドレスを渡す
 	initData.m_expandShaderResoruceView[0] = &m_texture;
 	//拡張バッファに明るさの情報を渡す
@@ -68,8 +68,3 @@ void SkyCube::Update()
 		m_isDirty = false;
 	}
 }
-
-//void SkyCube::Render(RenderContext& rc)
-//{
-//	m_skinModelRender->Render(rc);
-//}

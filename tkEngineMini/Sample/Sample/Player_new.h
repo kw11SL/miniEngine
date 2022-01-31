@@ -228,6 +228,9 @@ private:
 		m_bullet.push_back(&bullet);
 	}*/
 
+	/// @brief カメラの上方向を回転させるための補間率に足す値を計算する処理
+	void CalcCameraUpFractionAddRate();
+
 	/// @brief 武器の切り替え機能
 	void ChangeWeapon();
 
@@ -261,6 +264,9 @@ private:
 	Quaternion m_rot = Quaternion::Identity;			//回転
 	Quaternion m_rotUpToGroundNormal = Quaternion::Identity;
 	
+	Quaternion m_cameraRotH = Quaternion::Identity;
+	Quaternion m_cameraRotV = Quaternion::Identity;
+
 	DirectionLight* m_directionLight = nullptr;
 	PointLight* m_pointLight = nullptr;
 	SpotLight* m_spotLight = nullptr;
@@ -269,6 +275,7 @@ private:
 	float m_cameraUpFraction = 0.0f;					//カメラ上方向を回転させる補間率
 	float m_angle = 0.0f;								//回転角度
 	float m_upperOffset = 0.0f;
+	float m_toCameraDist = 1.0f;
 
 	int m_life = 0;										//プレイヤーのライフ
 	bool m_isInvincible = false;						//無敵状態フラグ
@@ -293,7 +300,8 @@ private:
 	Effect m_reviveEffect;								//復活時のエフェクト
 	Effect m_moveTrackEffect;							//移動時の軌跡エフェクト
 	Effect m_markerEffect;								//自機位置の表示エフェクト
-	
+	Effect m_startEffect;								//ゲーム開始時の登場エフェクト
+
 	CSoundSource* m_missSe = nullptr;					//miss時の効果音
 	CSoundSource* m_normalShotSe = nullptr;
 };

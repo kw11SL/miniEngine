@@ -8,8 +8,15 @@ class SpriteRender : public IGameObject
 public:
 	SpriteRender() {};
 	~SpriteRender();
+	
+	/// @brief 開始処理 
+	/// @return trueを返すとUpdateが呼ばれるようになる
 	bool Start() override;
+	
+	/// @brief 更新処理
 	void Update() override;
+
+	//描画処理
 	void Render(RenderContext& rc) override;
 
 	void Init(const char* spriteFilePath,const UINT& width,const UINT& height,AlphaBlendMode alphaBrendMode);
@@ -49,4 +56,3 @@ private:
 	Vector4 m_color = {1.0f,1.0f,1.0f,1.0f};
 
 };
-

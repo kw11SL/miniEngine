@@ -33,9 +33,9 @@ void DirectionLight::Init(const Vector3& direction, const Vector3& color,const V
 	//方向を決定
 	m_dirLight.directionLight.direction = m_direction;
 	//カラーを決定
-	m_dirLight.directionLight.color = m_color;
+	m_dirLight.directionLight.color = MIN_COLOR;
 	//アンビエントライトを決定
-	m_dirLight.ambientLight = m_ambientLig;
+	m_dirLight.ambientLight = MIN_COLOR_AMB;
 }
 
 void DirectionLight::Rotation()
@@ -132,6 +132,10 @@ void DirectionLight::FadeIn(const float addRate)
 
 void DirectionLight::Update()
 {
+	if (GameDirector::GetInstance()->GetGameState() != enGame) {
+		return;
+	}
+
 	FadeIn(COLOR_FADEIN_RATE);
 
 	//視点を設定

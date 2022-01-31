@@ -251,12 +251,13 @@ private:
 	int m_enemyNum = 0;							//現在のエネミー数
 	int m_totalSpawnEnemyNum = 0;				//スポーンしたエネミーの総計
 	int m_totalDestroyedEnemyNum = 0;			//倒したエネミーの総数
-	float m_time = 3.0f;						//ステージの残時間
+	float m_time = 60.0f;						//ステージの残時間
 	float m_destructionRate = 0.0f;				//敵撃破率
 	int m_finalScore = 0;						//最終スコア
+	float m_startToGameCounter = 3.0f;			//スタートからゲーム中に移行するための時間
 	float m_timeUpToResultCounter = 4.0f;		//タイムアップからリザルトに移行するための時間
-
 	bool m_isSwitchedWave = false;				//このフレームでwaveの切り替えが発生したかどうか
+
 
 	EnGameState m_enGameState = enTitle;			//ゲーム状態
 	EnGameState m_enGameStatePrevFrame = enTitle;	//前フレームのゲーム状態

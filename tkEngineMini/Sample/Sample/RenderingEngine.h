@@ -85,16 +85,16 @@ public:
 
 	/// @brief 影描画用モデルを追加
 	/// @param model モデル
-	void Add3DModelToShadowModel(Model& model)
+	void Add3DModelToShadowModel(Model* model)
 	{
 		m_shadowMap.AddModel(model);
 	}
 
 	/// @brief 通常描画用モデルを追加
 	/// @param model 
-	void Add3DModelToCommonModel(Model& model)
+	void Add3DModelToCommonModel(Model* model)
 	{
-		m_commonModels.push_back(&model);
+		m_commonModels.push_back(model);
 	}
 
 	/// @brief フォントデータの配列にフォントデータを追加
@@ -116,10 +116,10 @@ public:
 
 	/// @brief スプライトの配列にスプライトを追加
 	/// @param sprite 
-	void AddSpriteToSprites(Sprite& sprite) 
+	void AddSpriteToSprites(Sprite* sprite) 
 	{
 		std::vector<Sprite*>::iterator itr;
-		itr = std::find(m_sprites.begin(),m_sprites.end(),&sprite);
+		itr = std::find(m_sprites.begin(),m_sprites.end(),sprite);
 
 		//途中で見つかった場合は配列に追加しない
 		if (itr != m_sprites.end()) {
@@ -127,25 +127,25 @@ public:
 		}
 		//途中で見つからなかった場合(イテレータが終端)まだないので追加
 		else if(itr == m_sprites.end()) {
-			m_sprites.push_back(&sprite);
+			m_sprites.push_back(sprite);
 		}
 
 	}
 
 	/// @brief 通常描画モデルの削除処理
 	/// @param model 
-	void DeleteCommonModel(Model& model);
+	void DeleteCommonModel(Model* model);
 
 	/// @brief	影描画用モデルの削除処理
 	/// @param model 
-	void DeleteShadowModel(Model& model)
+	void DeleteShadowModel(Model* model)
 	{
 		m_shadowMap.DeleteModel(model);
 	}
 
 	/// @brief スプライトを削除
 	/// @param sprite 
-	void DeleteSprite(Sprite& sprite);
+	void DeleteSprite(Sprite* sprite);
 
 	/// @brief フォントデータの削除処理
 	/// @param fontData 

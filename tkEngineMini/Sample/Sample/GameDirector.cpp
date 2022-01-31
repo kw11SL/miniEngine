@@ -4,6 +4,9 @@
 //静的メンバの初期化
 GameDirector* GameDirector::m_gameDirector = nullptr;
 
+
+
+
 void GameDirector::ResetGame()
 {
 	m_score = 0;
@@ -17,6 +20,7 @@ void GameDirector::ResetGame()
 	m_waveNumberPrev = m_waveNumber;
 	m_isSwitchedWave = false;
 	m_time = 60.0f;
+	m_startToGameCounter = 3.0f;
 	m_timeUpToResultCounter = 4.0f;
 	m_enGameState = enTitle;
 	m_enGameStatePrevFrame = enTitle;
@@ -82,9 +86,16 @@ void GameDirector::ExecuteUpdate()
 		AddWaveNumber();
 	}
 
-
-
 	//状態の遷移
+	
+	//ゲーム開始時に一定時間たつとゲームに移行する
+	if (m_enGameState == enStart) {
+		m_startToGameCounter -= g_gameTime->GetFrameDeltaTime();
+		if (m_startToGameCounter <= 0.0f) {
+			SetGameState(enGame);
+		}
+	}
+
 	//タイムアップでリザルト
 	if (m_time <= 0.0f) {
 		SetGameState(enResult);

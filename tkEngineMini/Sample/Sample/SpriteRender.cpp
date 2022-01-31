@@ -9,7 +9,7 @@ namespace
 SpriteRender::~SpriteRender()
 {
 	//レンダリングエンジンからスプライトを削除
-	m_renderingEngine->DeleteSprite(m_sprite);
+	m_renderingEngine->DeleteSprite(&m_sprite);
 }
 
 
@@ -34,7 +34,7 @@ void SpriteRender::Init(const char* spriteFilePath, const UINT& width, const UIN
 	m_sprite.Init(m_spriteInitData);
 
 	//レンダリングエンジンにスプライトを登録
-	m_renderingEngine->AddSpriteToSprites(m_sprite);
+	m_renderingEngine->AddSpriteToSprites(&m_sprite);
 }
 
 void SpriteRender::InitShader(const char* fxFilePath, const char* vsEntryPoint, const char* psEntryPoint)

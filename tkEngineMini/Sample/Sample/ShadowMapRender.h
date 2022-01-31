@@ -11,9 +11,9 @@ public:
 
 	/// @brief シャドウマップに描画するモデルを登録
 	/// @param model 
-	void AddModel(Model& model) 
+	void AddModel(Model* model) 
 	{ 
-		m_modelsArray.push_back(&model); 
+		m_modelsArray.push_back(model); 
 	}
 
 	/// @brief シャドウマップを取得
@@ -25,7 +25,7 @@ public:
 
 	/// @brief モデルを削除
 	/// @param model モデル
-	void DeleteModel(Model& model);
+	void DeleteModel(Model* model);
 
 	/*/// @brief カスケードシャドウ用のシャドウマップに描画するモデルを登録
 	/// @param model1 //近景用モデル

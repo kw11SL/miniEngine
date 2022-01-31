@@ -31,6 +31,9 @@ namespace{
 	const float CAMERA_MOVESPEED_MAX = 1000.0f;						//カメラ、注視点の追従最高速度 
 
 	//エフェクト関連
+	const char16_t* EFFECT_FILEPATH_START = u"Assets/effect/player_born.efk";		//開始エフェクトファイルパス
+	const Vector3 EFFECT_SCALE_START = { 50.0f,50.0f,50.0f };
+
 	const char16_t* EFFECT_FILEPATH_EXPLOSION = u"Assets/effect/justguard.efk";		//被弾エフェクトファイルパス
 	const Vector3 EFFECT_SCALE_EXPLOSION = { 30.0f,30.0f,30.0f };					//被弾エフェクトの拡大率
 
@@ -50,7 +53,6 @@ Player_new::~Player_new()
 	DeleteGO(m_skinModelRender);
 	DeleteGO(m_missSe);
 	DeleteGO(m_normalShotSe);
-
 }
 
 void Player_new::Init(RenderingEngine& renderingEngine)
@@ -127,6 +129,7 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 	m_gameCamera.SetTargetPosition(m_position);
 	//注視点からの相対位置で視点を設定
 	m_gameCamera.SetCameraPosition(m_position + toCamera);
+
 	//注視点目標を設定
 	m_gameCamera.SetTargetPositionTarget(m_position);
 	//カメラ目標を設定
@@ -137,10 +140,18 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 
 	//発射方向を前方にしておく
 	//m_shotDirection = m_forward;
+
+	//初期化時に開始演出用エフェクトを発生させる
+	m_startEffect.SetScale(EFFECT_SCALE_START);
+	m_startEffect.SetPosition(m_position/* + m_up * 50.0f*/);
+	m_startEffect.SetRotation(m_rot);
+	m_startEffect.Play();
+	
 }
 
 void Player_new::InitEffect()
 {
+	m_startEffect.Init(EFFECT_FILEPATH_START);
 	m_explosionEffect.Init(EFFECT_FILEPATH_EXPLOSION);
 	m_reviveEffect.Init(EFFECT_FILEPATH_REVIVE);
 	m_moveTrackEffect.Init(EFFECT_FILEPATH_TRACK);
@@ -174,9 +185,10 @@ void Player_new::Move()
 	//プレイヤーの前後(奥、手前)方向への移動
 	m_moveSpeed += forward * y * PL_MOVE_SPEED;
 
-	//ゲームディレクター側のライフが0か、存在フラグがオフなら移動速度を0に
-	if (m_isExist == false || 
-		GameDirector::GetInstance()->GetPlayerLife() <= 0) {
+	//ゲーム中以外,ライフが0、存在フラグがオフなら移動速度を0に
+	if (m_isExist == false 
+		|| GameDirector::GetInstance()->GetPlayerLife() <= 0
+		|| GameDirector::GetInstance()->GetGameState() != enGame) {
 		m_moveSpeed *= 0.0f;
 	}
 
@@ -200,27 +212,27 @@ void Player_new::Move()
 	//自作キャラコンに移動速度を渡す
 	m_position = m_myCharaCon.Execute(m_moveSpeed,m_downVector,m_upperOffset);
 
-	{
-		// 上ベクトルを更新
-		//下向きベクトル(=レイを飛ばす方向)* -1.0　= プレイヤーの上ベクトル
-		Vector3 newUp = m_downVector * -1.0f;
-		// 現在の上ベクトルから、新しい上ベクトルに向けるための回転クォータニオンを計算
-		//		→　カメラの計算で使う。
-		m_rotUpToGroundNormal.SetRotation(m_up, newUp);
+	//{
+	//	// 上ベクトルを更新
+	//	//下向きベクトル(=レイを飛ばす方向)* -1.0　= プレイヤーの上ベクトル
+	//	Vector3 newUp = m_downVector * -1.0f;
+	//	// 現在の上ベクトルから、新しい上ベクトルに向けるための回転クォータニオンを計算
+	//	//		→　カメラの計算で使う。
+	//	m_rotUpToGroundNormal.SetRotation(m_up, newUp);
 
-		//自身の上ベクトルを更新
-		m_up = newUp;
+	//	//自身の上ベクトルを更新
+	//	m_up = newUp;
 
-		//更新した上ベクトルと前方ベクトルの外積　=　右ベクトル
-		//m_right = g_camera3D->GetRight();
-		m_right.Cross(m_up, m_forward);
-		//求めた右ベクトルと更新した上ベクトルの外積　=　前方ベクトル
-		m_forward.Cross(m_right, m_up);
-	}
-	////※上記まとめ
-	//Vector3 oldUp = m_up;
-	//m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
-	//m_rotUpToGroundNormal.SetRotation(oldUp, m_up);
+	//	//更新した上ベクトルと前方ベクトルの外積　=　右ベクトル
+	//	//m_right = g_camera3D->GetRight();
+	//	m_right.Cross(m_up, m_forward);
+	//	//求めた右ベクトルと更新した上ベクトルの外積　=　前方ベクトル
+	//	m_forward.Cross(m_right, m_up);
+	//}
+	//※上記まとめ
+	Vector3 oldUp = m_up;
+	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
+	m_rotUpToGroundNormal.SetRotation(oldUp, m_up);
 	
 	//モデルの座標更新
 	m_skinModelRender->SetPosition(m_position);
@@ -260,9 +272,10 @@ void Player_new::RotateShotDirection()
 
 void Player_new::FireBullet()
 {
-	//ゲームディレクター側のライフが0か、存在フラグがオフならreturn
-	if (m_isExist == false
-		|| GameDirector::GetInstance()->GetPlayerLife() <= 0) {
+	//ゲーム中以外、ライフが0、存在フラグがオフならreturn
+	if (m_isExist == false 
+		|| GameDirector::GetInstance()->GetPlayerLife() <= 0
+		|| GameDirector::GetInstance()->GetGameState() != enGame) {
 		return;
 	}
 
@@ -530,12 +543,56 @@ void Player_new::ReviveReady()
 	}
 }
 
+void Player_new::CalcCameraUpFractionAddRate()
+{
+	//プレイヤーの上方向とカメラの上方向の内積から、カメラの上方向を回転させる補間率に足す値を調整する処理
+	//内積が0に近いほど足す値は大きくなり(速く回転する)、内積が1に近いほど足す値は小さくなる(ゆっくり回転する)
+
+	//足す値の最大値と最小値を作る
+	float addRate = 0.0f;
+	float maxAddRate = CAMERA_ROTATE_FRACTION_ADD_RATE_MAX;
+	float minAddRate = CAMERA_ROTATE_FRACTION_ADD_RATE_MIN;
+	//一度ベクトルに格納する
+	Vector3 addRateVec = { 0.0f,0.0f,0.0f, };
+	Vector3 maxAddRateVec = { maxAddRate,0.0f,0.0f };
+	Vector3 minAddRateVec = { minAddRate,0.0f,0.0f };
+
+	//プレイヤーの上方向とカメラの上方向で内積をとる
+	float dotVec = Dot(m_cameraUp, m_up);
+	//1を足し2で割ることで-1.0f～1.0fを0.0f～1.0fに変換する
+	dotVec += 1.0f;
+	dotVec /= 2.0f;
+	//内積の結果が1に近いほど足す値が小さくなる
+	addRateVec.Lerp(dotVec, maxAddRateVec * 0.9f, minAddRateVec * 0.5f);
+	//ベクトルからfloat値に変換
+	addRate = addRateVec.Length();
+
+	//カメラの上を補完する係数を加算
+	m_cameraUpFraction += addRate;
+	//1を超えたら1に補正
+	if (m_cameraUpFraction > 1.0f) {
+		m_cameraUpFraction = 1.0f;
+	}
+
+}
+
 void Player_new::Update()
 {
 	//ゲーム中以外なら処理しない
-	if (GameDirector::GetInstance()->GetGameState() != enGame) {
+	if (GameDirector::GetInstance()->GetGameState() != enGame &&
+		GameDirector::GetInstance()->GetGameState() != enStart) {
 		return;
 	}
+
+	//テスト
+	if (g_pad[0]->IsTrigger(enButtonY)) {
+		
+		m_startEffect.SetScale(EFFECT_SCALE_START);
+		m_startEffect.SetPosition(m_position + m_up * 50.0f);
+		m_startEffect.SetRotation(m_rot);
+		m_startEffect.Play();
+	}
+
 
 	//テスト：地形からの上げ下げ
 	if (g_pad[0]->IsPress(enButtonUp)) {
@@ -548,31 +605,7 @@ void Player_new::Update()
 		}
 	}
 
-
-
-	float addRate = 0.0f;
-	float maxAddRate = CAMERA_ROTATE_FRACTION_ADD_RATE_MAX;
-	float minAddRate = CAMERA_ROTATE_FRACTION_ADD_RATE_MIN;
-
-	Vector3 addRateVec = { 0.0f,0.0f,0.0f, };
-	Vector3 maxAddRateVec = { maxAddRate,0.0f,0.0f };
-	Vector3 minAddRateVec = { minAddRate,0.0f,0.0f };
-
-	float dotVec = Dot(m_cameraUp,m_up);
-	dotVec += 1.0f;
-	dotVec /= 2.0f;
-
-	addRateVec.Lerp(dotVec, maxAddRateVec, minAddRateVec);
-	addRate = addRateVec.Length();
-
-	//カメラの上を補完する係数を加算
-	//m_cameraUpFraction += CAMERA_ROTATE_FRACTION_ADD_RATE;
-	m_cameraUpFraction += addRate;
-	//1を超えたら1に補正
-	if (m_cameraUpFraction > 1.0f) {
-		m_cameraUpFraction = 1.0f;
-	}
-
+	CalcCameraUpFractionAddRate();
 	Move();
 	Rotation();
 	RotateShotDirection();
@@ -583,6 +616,7 @@ void Player_new::Update()
 	ReviveReady();
 	Revive();
 	DecInvTime();
+
 
 	
 	if (m_skinModelRender != nullptr) {
@@ -596,14 +630,36 @@ void Player_new::Update()
 		m_cameraUpFraction = 0.0f;
 	}
 
+
+
 	//カメラ追従
 	////カメラ注視点から視点へのベクトルを作成
 	//Vector3 toCamera = m_gameCamera.GetCameraPosition() - m_gameCamera.GetTargetPosition();
 	//注視点目標からカメラ目標へのベクトルを作成
 	Vector3 toCamera = m_gameCamera.GetCameraPositionTarget() - m_gameCamera.GetTargetPositionTarget();
+	
+	/*if (g_pad[0]->IsPress(enButtonRB2)) {
+		m_toCameraDist += 0.001f;
+		toCamera *= m_toCameraDist;
+	}
+	if (g_pad[0]->IsPress(enButtonLB2)) {
+		m_toCameraDist -= 0.001f;
+		toCamera *= m_toCameraDist;
+	}*/
+
+	/*Quaternion mulRot = Quaternion::Identity;
+
+	float y = g_pad[0]->GetRStickYF();
+	float x = g_pad[0]->GetRStickXF();
+	m_cameraRotH.SetRotationDeg(m_up, x);
+	m_cameraRotV.SetRotationDeg(Cross(m_up,m_forward), y);
+	mulRot.Multiply(m_cameraRotH, m_cameraRotV);*/
 
 	//ベクトルにクォータニオンを適用
 	m_rotUpToGroundNormal.Apply(toCamera);
+	/*m_cameraRot.Apply(toCamera);
+	m_cameraRot.Apply(toCamera);*/
+	//mulRot.Apply(toCamera);
 
 	////注視点を自身に設定
 	//m_gameCamera.SetTargetPosition(m_position);
@@ -666,10 +722,19 @@ void Player_new::Update()
 	//}
 	//////////////////////////////////
 
+
+
 	//エフェクトの更新
+	//m_startEffect.SetScale(EFFECT_SCALE_START);
+	m_startEffect.SetPosition(m_position + m_up * 50.0f);
+	//m_startEffect.SetRotation(m_rot);
+
+	m_startEffect.Update();
 	m_explosionEffect.Update();
 	m_reviveEffect.Update();
 	m_moveTrackEffect.Update();
 	m_markerEffect.Update();
+
+	
 
 }

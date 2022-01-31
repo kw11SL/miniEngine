@@ -78,6 +78,12 @@
     <Filter Include="ヘッダー ファイル\Title">
       <UniqueIdentifier>{3fca34d5-3c9f-4ddf-91f4-53a8876c5294}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Render">
+      <UniqueIdentifier>{7280b1f2-2960-44c8-a92e-cfc5bb4279cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Render">
+      <UniqueIdentifier>{a93442a2-0707-4d19-8b69-40927b307cfe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -272,9 +278,6 @@
     <ClCompile Include="DirectionLight.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="SkinModelRender.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Player_new.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -290,9 +293,6 @@
     <ClCompile Include="SpotLight.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteRender.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="GaussianBlur.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -303,9 +303,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="RenderingEngine.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ShadowMapRender.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="MyCharacterController.cpp">
@@ -430,6 +427,15 @@
     </ClCompile>
     <ClCompile Include="WaveCutIn.cpp">
       <Filter>ソース ファイル\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRender.cpp">
+      <Filter>ソース ファイル\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinModelRender.cpp">
+      <Filter>ソース ファイル\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowMapRender.cpp">
+      <Filter>ソース ファイル\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -655,9 +661,6 @@
     <ClInclude Include="DirectionLight.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="SkinModelRender.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Player_new.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -673,9 +676,6 @@
     <ClInclude Include="SpotLight.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteRender.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="GaussianBlur.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -686,9 +686,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="RenderingEngine.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ShadowMapRender.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="MyCharacterController.h">
@@ -813,6 +810,15 @@
     </ClInclude>
     <ClInclude Include="WaveCutIn.h">
       <Filter>ヘッダー ファイル\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRender.h">
+      <Filter>ヘッダー ファイル\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="SkinModelRender.h">
+      <Filter>ヘッダー ファイル\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowMapRender.h">
+      <Filter>ヘッダー ファイル\Render</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

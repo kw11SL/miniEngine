@@ -27,11 +27,11 @@ namespace
 SkinModelRender::~SkinModelRender()
 {
 	//レンダリングエンジンからモデルを削除
-	m_renderingEngine->DeleteCommonModel(m_model);
+	m_renderingEngine->DeleteCommonModel(&m_model);
 	
 	//シャドウキャスターフラグが立っていたら影用モデルも削除
 	if (m_isShadowCaster) {
-		m_renderingEngine->DeleteShadowModel(m_shadowModel);
+		m_renderingEngine->DeleteShadowModel(&m_shadowModel);
 	}
 
 }
@@ -114,11 +114,11 @@ void SkinModelRender::Init(
 	}
 
 	//通常モデルをレンダリングエンジンに追加
-	m_renderingEngine->Add3DModelToCommonModel(m_model);
+	m_renderingEngine->Add3DModelToCommonModel(&m_model);
 
 	//シャドウキャスターフラグが立っていたら影用モデルをレンダリングエンジンに追加
 	if (m_isShadowCaster == true) {
-		m_renderingEngine->Add3DModelToShadowModel(m_shadowModel);
+		m_renderingEngine->Add3DModelToShadowModel(&m_shadowModel);
 	}
 	
 }

@@ -18,7 +18,7 @@ void RenderingEngine::Init()
 void RenderingEngine::Execute(RenderContext& rc)
 {
 	//ライトカメラの更新
-	//UpdateLightCamera();
+	UpdateLightCamera();
 
 	//シャドウマップへの描画
 	RenderToShadowMap(rc, m_lightCamera);
@@ -160,7 +160,7 @@ void RenderingEngine::InitBloom(RenderTarget& mainRT)
 	m_bloom.Init(mainRT);
 }
 
-void RenderingEngine::DeleteCommonModel(Model& model)
+void RenderingEngine::DeleteCommonModel(Model* model)
 {
 	//イテレータを作成
 	std::vector<Model*>::iterator itr;
@@ -169,7 +169,7 @@ void RenderingEngine::DeleteCommonModel(Model& model)
 	itr = std::find(
 		m_commonModels.begin(),
 		m_commonModels.end(),
-		&model
+		model
 	);
 
 	//モデルが見つかったら削除
@@ -178,7 +178,7 @@ void RenderingEngine::DeleteCommonModel(Model& model)
 	}
 }
 
-void RenderingEngine::DeleteSprite(Sprite& sprite)
+void RenderingEngine::DeleteSprite(Sprite* sprite)
 {
 	//イテレータを作成
 	std::vector<Sprite*>::iterator itr;
@@ -187,7 +187,7 @@ void RenderingEngine::DeleteSprite(Sprite& sprite)
 	itr = std::find(
 		m_sprites.begin(),
 		m_sprites.end(),
-		&sprite
+		sprite
 	);
 
 	//スプライトが見つかったら削除

@@ -89,7 +89,7 @@ void ShadowMapRender::Render(RenderContext& rc, Camera& lightCamera)
 	rc.WaitUntilFinishDrawingToRenderTarget(m_shadowMap);
 }
 
-void ShadowMapRender::DeleteModel(Model& model)
+void ShadowMapRender::DeleteModel(Model* model)
 {
 	//イテレータを作成
 	std::vector<Model*>::iterator itr;
@@ -98,7 +98,7 @@ void ShadowMapRender::DeleteModel(Model& model)
 	itr = std::find(
 		m_modelsArray.begin(),
 		m_modelsArray.end(),
-		&model
+		model
 	);
 
 	//見つかったら削除
