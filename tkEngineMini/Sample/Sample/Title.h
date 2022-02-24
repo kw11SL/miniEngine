@@ -6,7 +6,7 @@ class Title : public IGameObject
 {
 public:
 	Title();
-	~Title(){}
+	~Title();
 	bool Start() override;
 	void Update() override;
 

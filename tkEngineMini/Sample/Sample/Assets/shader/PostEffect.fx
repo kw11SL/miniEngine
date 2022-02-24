@@ -66,7 +66,5 @@ float4 PSBloomFinal(PSInput In) : SV_Target0
 	combineColor.a = 1.0f;
 
 	return combineColor;
-
-
 }
 

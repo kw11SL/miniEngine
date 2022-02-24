@@ -123,7 +123,6 @@ void Bullet::Init(
 	/*m_skinModelRender->Init(
 		modelPath,
 		enModelUpAxisZ,
-		renderingEngine,
 		true,
 		false
 	);*/

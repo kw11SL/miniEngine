@@ -33,7 +33,6 @@ public:
 	void Init(
 		const char* modelFilePath, 
 		EnModelUpAxis upAxis, 
-		RenderingEngine& renderingEngine, 
 		bool shadowCasterFlag = false, 
 		bool shadowRecieverFlag = false,
 		const char* skeletonFilePath = nullptr

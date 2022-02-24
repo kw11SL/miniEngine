@@ -29,7 +29,6 @@ public:
 	/// @param initUp 
 	/// @param enemyType 
 	void Init(
-		RenderingEngine& renderingEngine,
 		const Vector3& initPoint,
 		const Vector3& initUp,
 		const EnEnemyType& enemyType);

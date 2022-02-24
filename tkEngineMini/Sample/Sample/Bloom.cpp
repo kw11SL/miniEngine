@@ -3,11 +3,16 @@
 
 namespace
 {
+	//幅、高さ
 	const int WINDOW_WIDTH = 1280;	//幅
 	const int WINDOW_HEIGHT = 720;	//高さ
+	
+	//ファイルパス
+	const char* POSTEFFECT_FILEPATH = "Assets/shader/PostEffect.fx";				//シェーダーのファイルパス
+	const char* GAUSSIAN_BLUR_EFFECT_FILEPATH = "Assets/shader/GaussianBlur.fx";	//ガウシアンブラー用シェーダーのファイルパス
 
-	const char* POSTEFFECT_FILEPATH = "Assets/shader/PostEffect.fx";
-	const char* GAUSSIAN_BLUR_EFFECT_FILEPATH = "Assets/shader/GaussianBlur.fx";
+	//ぼかしの強度
+	const float GAUSSIAN_BLUR_POW = 5.0f;
 }
 
 void Bloom::Init(RenderTarget& mainRenderTarget)
@@ -83,10 +88,10 @@ void Bloom::Render(RenderContext& rc, RenderTarget& mainRenderTarget)
 	rc.WaitUntilFinishDrawingToRenderTarget(m_luminanceRenderTarget);
 
 	//ガウシアンブラーを複数回実行する
-	m_gaussBlur[0].ExecuteOnGPU(rc, 20.0f);
-	m_gaussBlur[1].ExecuteOnGPU(rc, 20.0f);
-	m_gaussBlur[2].ExecuteOnGPU(rc, 20.0f);
-	m_gaussBlur[3].ExecuteOnGPU(rc, 20.0f);
+	m_gaussBlur[0].ExecuteOnGPU(rc, GAUSSIAN_BLUR_POW);
+	m_gaussBlur[1].ExecuteOnGPU(rc, GAUSSIAN_BLUR_POW);
+	m_gaussBlur[2].ExecuteOnGPU(rc, GAUSSIAN_BLUR_POW);
+	m_gaussBlur[3].ExecuteOnGPU(rc, GAUSSIAN_BLUR_POW);
 
 	//ブラー画像をメインレンダリングターゲットに加算合成
 	//レンダリングターゲットとして利用できるまで待つ

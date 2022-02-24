@@ -12,7 +12,7 @@ public:
 	~BG();
 	bool Start() override;
 	void Update() override;
-	void Init(RenderingEngine& renderingEngine,const Vector3& pos,const Quaternion& rot,const Vector3& scale);
+	void Init(const Vector3& pos,const Quaternion& rot,const Vector3& scale);
 
 	void RecieveDirectionLight(DirectionLight* dirLight);
 	void RecievePointLight(PointLight* ptLight);
@@ -34,7 +34,10 @@ public:
 		m_scale = scale;
 	}
 
-	SkinModelRender* GetSkinModelRender() { return m_skinModelRender; }
+	SkinModelRender* GetSkinModelRender()
+	{ 
+		return m_skinModelRender; 
+	}
 
 private:
 	SkinModelRender* m_skinModelRender = nullptr;		//ÉÇÉfÉãÉåÉìÉ_Å[

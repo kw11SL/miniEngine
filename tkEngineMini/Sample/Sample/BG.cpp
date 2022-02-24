@@ -13,7 +13,7 @@ namespace
 
 BG::BG()
 {
-	
+	m_skinModelRender = NewGO<SkinModelRender>(0);
 }
 
 BG::~BG()
@@ -26,11 +26,10 @@ bool BG::Start()
 	return true;
 }
 
-void BG::Init(RenderingEngine& renderingEngine,const Vector3& pos, const Quaternion& rot,const Vector3& scale)
+void BG::Init(const Vector3& pos, const Quaternion& rot,const Vector3& scale)
 {
-	m_skinModelRender = NewGO<SkinModelRender>(0);
 	//背景には影を落としたいのでシャドウレシーバーフラグをオンにする
-	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisY,renderingEngine , false ,true);
+	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisY, false, true);
 
 	//モデル拡大
 	//m_scale *= MODEL_INIT_SCALE_RATIO;
@@ -51,8 +50,6 @@ void BG::Init(RenderingEngine& renderingEngine,const Vector3& pos, const Quatern
 		m_skinModelRender->GetModel(),
 		m_skinModelRender->GetMatrix()
 	);
-
-	
 
 }
 

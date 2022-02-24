@@ -9,6 +9,7 @@
 #include "SpriteRender.h"
 #include "FontRender.h"
 #include "Game.h"
+#include "BG.h"
 #include "DirectionLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"

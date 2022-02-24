@@ -2,7 +2,7 @@
 class SkyCube:public IGameObject
 {
 public:
-	SkyCube(){}
+	SkyCube();
 	~SkyCube();
 	bool Start()override;
 	void Update()override;
@@ -51,9 +51,10 @@ private:
 	Texture m_texture;
 	const wchar_t* m_textureFilePaths;
 	Vector3 m_position = g_vec3Zero;
-	Vector3 m_scale = g_vec3One * 500.0f;
+	Vector3 m_scale = g_vec3One * 10000.0f;
 	Quaternion m_rot = Quaternion::Identity;
-	float m_luminance = 3.8f;
+	float m_luminance = 1.0f;
 	bool m_isDirty = false;
+
 };
 

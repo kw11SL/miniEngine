@@ -8,7 +8,6 @@ namespace {
 
 UI::UI()
 {
-
 }
 
 UI::~UI()

@@ -84,6 +84,24 @@
     <Filter Include="ソース ファイル\Render">
       <UniqueIdentifier>{a93442a2-0707-4d19-8b69-40927b307cfe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Light">
+      <UniqueIdentifier>{47a4c5ef-0849-414c-8b30-256cc8375d58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Light">
+      <UniqueIdentifier>{c30b17cf-5836-41ce-a584-6e9f485ec1a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SphericalMove">
+      <UniqueIdentifier>{b4261aa1-ff3b-4d36-8177-2cc1331174c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\SphericalMove">
+      <UniqueIdentifier>{06550d7e-b097-4cde-aeab-7313dda403de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Director">
+      <UniqueIdentifier>{4d048c1d-2ca5-4e56-8b9d-df7bbeaf6f31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Director">
+      <UniqueIdentifier>{8ab933d0-22d1-4096-a11a-dd6a3f7122e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -239,12 +257,6 @@
     <ClCompile Include="..\..\MiniEngine\font\Font.cpp">
       <Filter>MiniEngine\font</Filter>
     </ClCompile>
-    <ClCompile Include="HelloFont.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Hello2D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ExEngine\level2D\CaslFile.cpp">
       <Filter>ExEngine\level2D</Filter>
     </ClCompile>
@@ -254,17 +266,8 @@
     <ClCompile Include="..\..\ExEngine\level2D\MapChip2D.cpp">
       <Filter>ExEngine\level2D</Filter>
     </ClCompile>
-    <ClCompile Include="HelloLevel2D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ExEngine\physics\SphereCollider.cpp">
       <Filter>ExEngine\physics</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsBall.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Seesaw.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ExEngine\physics\BoxCollider.cpp">
       <Filter>ExEngine\physics</Filter>
@@ -275,22 +278,13 @@
     <ClCompile Include="..\..\ExEngine\effect\Effect.cpp">
       <Filter>ExEngine\effect</Filter>
     </ClCompile>
-    <ClCompile Include="DirectionLight.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Player_new.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="PointLight.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="BG.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="SpotLight.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="GaussianBlur.cpp">
@@ -305,22 +299,10 @@
     <ClCompile Include="RenderingEngine.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="MyCharacterController.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="GameCamera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="SphericalMove.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Bullet.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GameDirector.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="FontRender.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="TklFile.cpp">
@@ -436,6 +418,27 @@
     </ClCompile>
     <ClCompile Include="ShadowMapRender.cpp">
       <Filter>ソース ファイル\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="FontRender.cpp">
+      <Filter>ソース ファイル\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionLight.cpp">
+      <Filter>ソース ファイル\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>ソース ファイル\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>ソース ファイル\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="MyCharacterController.cpp">
+      <Filter>ソース ファイル\SphericalMove</Filter>
+    </ClCompile>
+    <ClCompile Include="SphericalMove.cpp">
+      <Filter>ソース ファイル\SphericalMove</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDirector.cpp">
+      <Filter>ソース ファイル\Director</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -616,12 +619,6 @@
     <ClInclude Include="..\..\MiniEngine\font\Font.h">
       <Filter>MiniEngine\font</Filter>
     </ClInclude>
-    <ClInclude Include="HelloFont.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Hello2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ExEngine\level2D\MapChip2D.h">
       <Filter>ExEngine\level2D</Filter>
     </ClInclude>
@@ -631,23 +628,14 @@
     <ClInclude Include="..\..\ExEngine\level2D\Level2D.h">
       <Filter>ExEngine\level2D</Filter>
     </ClInclude>
-    <ClInclude Include="HelloLevel2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ExEngine\physics\SphereCollider.h">
       <Filter>ExEngine\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsBall.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\..\MiniEngine\time\Stopwatch.h">
       <Filter>MiniEngine\time</Filter>
     </ClInclude>
     <ClInclude Include="..\..\MiniEngine\time\GameTime.h">
       <Filter>MiniEngine\time</Filter>
-    </ClInclude>
-    <ClInclude Include="Seesaw.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ExEngine\physics\BoxCollider.h">
       <Filter>ExEngine\physics</Filter>
@@ -658,22 +646,13 @@
     <ClInclude Include="..\..\ExEngine\effect\Effect.h">
       <Filter>ExEngine\effect</Filter>
     </ClInclude>
-    <ClInclude Include="DirectionLight.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Player_new.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="PointLight.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="BG.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="SpotLight.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="GaussianBlur.h">
@@ -688,22 +667,10 @@
     <ClInclude Include="RenderingEngine.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="MyCharacterController.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="GameCamera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="SphericalMove.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Bullet.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="GameDirector.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="FontRender.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="TklFile.h">
@@ -819,6 +786,27 @@
     </ClInclude>
     <ClInclude Include="ShadowMapRender.h">
       <Filter>ヘッダー ファイル\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="FontRender.h">
+      <Filter>ヘッダー ファイル\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionLight.h">
+      <Filter>ヘッダー ファイル\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>ヘッダー ファイル\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>ヘッダー ファイル\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="MyCharacterController.h">
+      <Filter>ヘッダー ファイル\SphericalMove</Filter>
+    </ClInclude>
+    <ClInclude Include="SphericalMove.h">
+      <Filter>ヘッダー ファイル\SphericalMove</Filter>
+    </ClInclude>
+    <ClInclude Include="GameDirector.h">
+      <Filter>ヘッダー ファイル\Director</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

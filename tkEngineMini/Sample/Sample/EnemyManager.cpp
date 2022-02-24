@@ -16,7 +16,6 @@ void EnemyManager::InitEnemies(
 
 	//ì¬Žž‚É‰Šú‰»
 	m_enemies[m_enemies.size() - 1]->Init(
-		*RenderingEngine::GetInstance(),
 		initPoint,
 		initUp,
 		enemyType

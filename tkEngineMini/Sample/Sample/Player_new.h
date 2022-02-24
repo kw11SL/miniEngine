@@ -9,7 +9,7 @@ enum EnUseWeapon {
 class Player_new : public IGameObject
 {
 public:
-	Player_new(){}
+	Player_new();
 	~Player_new();
 
 	//ゲッター
@@ -137,7 +137,7 @@ public:
 	
 	/// @brief 初期化処理
 	/// @param renderingEngine　レンダリングエンジン 
-	void Init(RenderingEngine& renderingEngine);
+	void Init();
 
 	//ライトを渡すための関数
 	

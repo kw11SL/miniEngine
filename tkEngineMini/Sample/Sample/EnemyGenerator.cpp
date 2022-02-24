@@ -108,7 +108,6 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 			
 			//初期化するのは可変長配列のサイズ - 1の要素
 			m_enemies[m_enemies.size() - 1]->Init(
-				*RenderingEngine::GetInstance(),
 				m_position,
 				m_up,
 				enemyType
@@ -160,6 +159,12 @@ void EnemyGenerator::Rotation()
 
 void EnemyGenerator::DeleteEnemy()
 {
+	//エネミーの存在フラグがオフだったらDeleteGO
+	for (auto& enemy : m_enemies) {
+		if (enemy->GetIsExist() == false) {
+			DeleteGO(enemy);
+		}
+	}
 
 	//配列からエネミーを消すための条件を記述した関数オブジェクト
 	auto func = [&](Enemy* enemy)->bool {
@@ -190,13 +195,10 @@ void EnemyGenerator::Update()
 
 	//生成器のアクティベート処理
 	Activate();
-
 	Move();
 	Rotation();
-
 	AddCounter();
 	AddSpawnEffectPlayCounter();
-
 	GenerateEnemy(m_spawnEnemyType);
 	DeleteEnemy();
 	//PlaySpawnEffect();

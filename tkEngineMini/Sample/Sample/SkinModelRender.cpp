@@ -45,13 +45,12 @@ bool SkinModelRender::Start()
 void SkinModelRender::Init(
 	const char* modelFilePath, 
 	EnModelUpAxis upAxis, 
-	RenderingEngine& renderingEngine, 
 	bool shadowCasterFlag, 
 	bool shadowRecieverFlag, 
 	const char* skeletonFilePath)
 {
-	m_renderingEngine = &renderingEngine;
-	
+	m_renderingEngine = RenderingEngine::GetInstance();
+
 	//シャドウキャスターフラグをつける
 	SetShadowChastarFlag(shadowCasterFlag);
 	
@@ -100,24 +99,28 @@ void SkinModelRender::Init(
 		m_model.Init(m_modelInitData);
 	}
 
-	//影用モデルを初期化
-	{
-		m_shadowModelInitData.m_tkmFilePath = modelFilePath;
-
-		m_shadowModelInitData.m_fxFilePath = MODEL_FX_FILEPATH_SHADOWMAP;
-		m_shadowModelInitData.m_vsEntryPointFunc = VS_ENTRYPOINT_NAME;
-		m_shadowModelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
-
-		m_shadowModelInitData.m_modelUpAxis = upAxis;
-
-		m_shadowModel.Init(m_shadowModelInitData);
-	}
+	
 
 	//通常モデルをレンダリングエンジンに追加
 	m_renderingEngine->Add3DModelToCommonModel(&m_model);
 
 	//シャドウキャスターフラグが立っていたら影用モデルをレンダリングエンジンに追加
 	if (m_isShadowCaster == true) {
+
+		//影用モデルを初期化
+		{
+			m_shadowModelInitData.m_tkmFilePath = modelFilePath;
+
+			m_shadowModelInitData.m_fxFilePath = MODEL_FX_FILEPATH_SHADOWMAP;
+			m_shadowModelInitData.m_vsEntryPointFunc = VS_ENTRYPOINT_NAME;
+			m_shadowModelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
+
+			m_shadowModelInitData.m_modelUpAxis = upAxis;
+
+			m_shadowModel.Init(m_shadowModelInitData);
+		}
+
+
 		m_renderingEngine->Add3DModelToShadowModel(&m_shadowModel);
 	}
 	

@@ -60,6 +60,9 @@ namespace {
 
 Enemy::Enemy()
 {
+
+	m_skinModelRender = NewGO<SkinModelRender>(0);
+
 	//発生したらエネミー数に+1
 	GameDirector::GetInstance()->AddEnemyCount();
 	//エネミー総数に+1
@@ -80,12 +83,10 @@ bool Enemy::Start()
 }
 
 void Enemy::Init(
-	RenderingEngine& renderingEngine,
 	const Vector3& initPoint,
 	const Vector3& initUp,
 	const EnEnemyType& enemyType)
 {
-	m_skinModelRender = NewGO<SkinModelRender>(0);
 
 	const char* modelPath = "hoge";
 	
@@ -134,7 +135,6 @@ void Enemy::Init(
 		break;
 	}
 
-	m_skinModelRender->Init(modelPath, enModelUpAxisZ, renderingEngine, true, false);
 
 	m_position = initPoint;
 
@@ -151,8 +151,10 @@ void Enemy::Init(
 	RecievePointLight(m_pointLight);
 	RecieveSpotLight(m_spotLight);
 
-	//モデルを更新
-	InitModelFromInitData();
+	m_skinModelRender->Init(modelPath, enModelUpAxisZ, false, false);
+
+	////モデルを更新
+	//InitModelFromInitData();
 
 	//上方向を設定
 	m_up = initUp;

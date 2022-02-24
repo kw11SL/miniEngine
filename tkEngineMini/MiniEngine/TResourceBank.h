@@ -24,6 +24,12 @@ public:
 			);
 		}
 	}
+	/// @brief バンク内の要素を全消去
+	void ClearBank()
+	{
+		m_resourceMap.erase(m_resourceMap.begin(), m_resourceMap.end());
+	}
+
 private:
 	using TResourcePtr = std::unique_ptr<TResource> ;
 	std::map<std::string, TResourcePtr> m_resourceMap;

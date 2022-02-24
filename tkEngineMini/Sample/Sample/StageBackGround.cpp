@@ -11,6 +11,11 @@ namespace
 	const float MODEL_INIT_SCALE_RATIO = 5.0f;
 }
 
+StageBackGround::StageBackGround()
+{
+	m_skinModelRender = NewGO<SkinModelRender>(0);
+}
+
 StageBackGround::~StageBackGround()
 {
 	DeleteGO(m_skinModelRender);
@@ -21,11 +26,9 @@ bool StageBackGround::Start()
 	return true;
 }
 
-void StageBackGround::Init(RenderingEngine& renderingEngine, const Vector3& pos, const Quaternion& rot, const Vector3& scale)
+void StageBackGround::Init(const Vector3& pos, const Quaternion& rot, const Vector3& scale)
 {
-	m_skinModelRender = NewGO<SkinModelRender>(0);
-
-	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisZ, renderingEngine, false, false);
+	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisZ, false, false);
 
 	//ƒ‚ƒfƒ‹Šg‘å
 	//m_scale *= MODEL_INIT_SCALE_RATIO;

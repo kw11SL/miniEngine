@@ -4,7 +4,11 @@
 namespace {
 	const char* MODEL_FILEPATH = "Assets/modelData/skyCube/sky.tkm";
 	const char* SHADER_FILEPATH = "Assets/shader/skyCubeMap.fx";
-	const wchar_t* TEXTURE_FILEPATH = L"Assets/modelData/skyCube/skyCubeMap.dds";
+	const wchar_t* TEXTURE_FILEPATH = L"Assets/modelData/skyCube/skyCubeMapDay_Toon_02.dds";
+}
+
+SkyCube::SkyCube()
+{
 }
 
 SkyCube::~SkyCube()
@@ -44,23 +48,27 @@ void SkyCube::Init(const char* filePath)
 	m_skinModelRender->Init(
 		filePath,
 		enModelUpAxisY,
-		*RenderingEngine::GetInstance(),
 		false,
 		false,
 		nullptr
 	);
 
-	
-	////‰Šú‰»
-	//m_skinModelRender->InitModel();
-
-	m_skinModelRender->UpdateWorldMatrix(m_position, m_rot, m_scale);
-
-	m_skinModelRender->Update();
+	//À•WA‰ñ“]AŠg‘å—¦‚ðÝ’è
+	m_skinModelRender->SetPosition(m_position);
+	m_skinModelRender->SetRotation(m_rot);
+	m_skinModelRender->SetScale(m_scale);
 }
 
 void SkyCube::Update()
 {
+	if (g_pad[0]->IsPress(enButtonLeft)) {
+		m_luminance -= 0.01f;
+	}
+	if (g_pad[0]->IsPress(enButtonRight)) {
+		m_luminance += 0.01f;
+	}
+
+
 	if (m_isDirty)
 	{
 		m_skinModelRender->UpdateWorldMatrix(m_position, m_rot, m_scale);

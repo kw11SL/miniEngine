@@ -184,5 +184,4 @@ private:
 	Bloom m_bloom;								//ブルーム
 
 	Camera m_lightCamera;						//ライトカメラ
-
 };

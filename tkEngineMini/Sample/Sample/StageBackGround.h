@@ -2,7 +2,7 @@
 class StageBackGround : public IGameObject
 {
 public:
-	StageBackGround() {}
+	StageBackGround();
 	~StageBackGround();
 
 	bool Start() override;
@@ -13,7 +13,7 @@ public:
 	/// @param pos À•W
 	/// @param rot ‰ñ“]
 	/// @param scale Šg‘å—¦
-	void Init(RenderingEngine& renderingEngine, const Vector3& pos, const Quaternion& rot, const Vector3& scale);
+	void Init(const Vector3& pos, const Quaternion& rot, const Vector3& scale);
 
 	/// @brief À•W‚ğİ’è
 	/// @param pos 
@@ -68,8 +68,8 @@ public:
 	SkinModelRender* GetSkinModelRender() { return m_skinModelRender; }
 
 private:
+	RenderingEngine* m_renderingEngine = nullptr;
 	SkinModelRender* m_skinModelRender = nullptr;		//ƒ‚ƒfƒ‹ƒŒƒ“ƒ_[
-
 	Vector3 m_position = Vector3::Zero;					//À•W
 	Quaternion m_rotation = Quaternion::Identity;		//‰ñ“]
 	Vector3 m_scale = Vector3::One;						//Šg‘å—¦

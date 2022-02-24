@@ -22,6 +22,7 @@ public:
 	/// DDSファイルからテクスチャを初期化する。
 	/// </summary>
 	/// <param name="filePath">ロードするテクスチャのファイルパス。</param>
+	/// <param name="isCubeMap">キューブマップ用にするかどうか。</param>
 	void InitFromDDSFile(const wchar_t* filePath,bool isCubeMap = false);
 	/// <summary>
 	/// メモリからテクスチャを初期化する。
@@ -80,6 +81,7 @@ private:
 	/// DDSファイルからテクスチャをロード。
 	/// </summary>
 	/// <param name="filePath">ファイルパス。</param>
+	/// <param name="isCubeMap">キューブマップ用にするかどうか。</param>
 	void LoadTextureFromDDSFile(const wchar_t* filePath,bool isCubeMap = false);
 	/// <summary>
 	/// メモリからテクスチャをロード。

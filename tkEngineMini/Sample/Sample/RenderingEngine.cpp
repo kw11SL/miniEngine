@@ -125,17 +125,20 @@ void RenderingEngine::InitLightCamera()
 	m_lightCamera.SetPosition(0.0f, 2000.0f, 0.0f);
 	m_lightCamera.SetTarget(0.0f, 0.0f, 0.0f);
 	m_lightCamera.SetUp({ 1.0f,0.0f,0.0f });
-	m_lightCamera.SetViewAngle(Math::DegToRad(60.0f));
+	m_lightCamera.SetNear(1.0f);
+	m_lightCamera.SetFar(20000.0f);
+	m_lightCamera.SetUpdateProjMatrixFunc(Camera::enUpdateProjMatrixFunc_Ortho);
+	m_lightCamera.SetViewAngle(Math::DegToRad(120.0f));
 	m_lightCamera.Update();
 }
 
 void RenderingEngine::UpdateLightCamera()
 {
 	m_lightCamera.SetPosition(g_camera3D->GetPosition());
-	m_lightCamera.SetTarget(g_camera3D->GetTarget());
+	//m_lightCamera.SetTarget(g_camera3D->GetTarget());
+	m_lightCamera.SetTarget({ 0.0f,0.0f,0.0f });
 	m_lightCamera.SetUp(g_camera3D->GetUp());
 	m_lightCamera.Update();
-
 }
 
 void RenderingEngine::InitMainRenderTarget()

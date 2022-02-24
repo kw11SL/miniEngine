@@ -4,6 +4,7 @@
 #include "TResourceBank.h"
 #include "tkFile/TkmFile.h"
 #include "Shader.h"
+//#include "Texture.h"
 #include <MiniEngine.h>
 
 
@@ -45,6 +46,35 @@ public:
 	{
 		m_tkmFileBank.Regist(filePath, tkmFile);
 	}
+
+	/// @brief tkmファイルバンク内を全消去
+	void ClearTkmFileBank()
+	{
+		m_tkmFileBank.ClearBank();
+	}
+
+	/*/// @brief テクスチャをバンクから取得
+	/// @param filePath ファイルパス
+	/// @return テクスチャのポインタ
+	Texture* GetTextureFromBank(const char* filePath)
+	{
+		return m_textureBank.Get(filePath);
+	}
+
+	/// @brief テクスチャをバンクに登録
+	/// @param filePath ファイルパス
+	/// @param texture テクスチャのポインタ
+	void RegistTextureToBank(const char* filePath, Texture* texture) 
+	{
+		m_textureBank.Regist(filePath, texture);
+	}
+
+	/// @brief テクスチャバンク内を全消去
+	void ClearTextureBank()
+	{
+		m_textureBank.ClearBank();
+	}*/
+
 	/// <summary>
 	/// シェーダーファイルバンクからシェーダーを取得。
 	/// </summary>
@@ -67,10 +97,25 @@ public:
 		programName += entryPointFuncName;
 		m_shaderBank.Regist(programName.c_str(), shader);
 	}
+
+	/// @brief シェーダーバンク内を全消去
+	void ClearShaderBank()
+	{
+		m_shaderBank.ClearBank();
+	}
+
+	/// @brief 各種バンクから要素を削除
+	void ClearFileBank()
+	{
+		ClearTkmFileBank();
+		ClearShaderBank();
+	}
+
 private:
 	GraphicsEngine* m_graphicsEngine = nullptr;		//グラフィックエンジン。
 	TResourceBank<TkmFile> m_tkmFileBank;			//tkmファイルバンク。
 	TResourceBank<Shader> m_shaderBank;				//シェーダーバンク
+	//TResourceBank<Texture> m_textureBank;
 	GamePad m_pad[GamePad::CONNECT_PAD_MAX];		//ゲームパッド。
 	GameTime m_gameTime;							//ゲームタイム。
 	

@@ -48,6 +48,11 @@ namespace{
 	const float MARKER_PLAY_INTERVAL = 0.02f;										//当たり判定エフェクトの発生間隔
 }
 
+Player_new::Player_new()
+{
+	m_skinModelRender = NewGO<SkinModelRender>(0);
+}
+
 Player_new::~Player_new()
 {
 	DeleteGO(m_skinModelRender);
@@ -55,7 +60,7 @@ Player_new::~Player_new()
 	DeleteGO(m_normalShotSe);
 }
 
-void Player_new::Init(RenderingEngine& renderingEngine)
+void Player_new::Init()
 {
 	//エフェクトを初期化
 	InitEffect();
@@ -67,20 +72,18 @@ void Player_new::Init(RenderingEngine& renderingEngine)
 	m_normalShotSe = NewGO<CSoundSource>(0);
 	m_normalShotSe->Init(L"Assets/wav/normalShotSe_1.wav");
 
-	//ライトを検索
-	m_directionLight = FindGO<DirectionLight>("directionlight");
-	m_pointLight = FindGO<PointLight>("pointlight");
-	m_spotLight = FindGO<SpotLight>("spotlight");
+	////ライトを検索
+	//m_directionLight = FindGO<DirectionLight>("directionlight");
+	//m_pointLight = FindGO<PointLight>("pointlight");
+	//m_spotLight = FindGO<SpotLight>("spotlight");
 
 	//弾の管理クラスのポインタを取得
 	m_bulletManager = BulletManager::GetInstance();
-
-	m_skinModelRender = NewGO<SkinModelRender>(0);
 	
+	//モデルを初期化
 	m_skinModelRender->Init(
 		MODELPATH_UTC, 
 		enModelUpAxisZ,
-		renderingEngine,
 		true,
 		false,
 		SKELETON_PATH_UTC
@@ -384,8 +387,8 @@ void Player_new::Hit()
 				//ゲームディレクターの保持するライフを減らす
 				GameDirector::GetInstance()->DecPlayerLife();
 				
-				//モデルを消す
-				DeleteGO(m_skinModelRender);
+				////モデルを消す
+				//DeleteGO(m_skinModelRender);
 
 				//生存フラグをオフ
 				SetIsExist(false);
@@ -432,8 +435,8 @@ void Player_new::Hit()
 				//ゲームディレクターの保持するライフを減らす
 				GameDirector::GetInstance()->DecPlayerLife();
 
-				//モデルを消す
-				DeleteGO(m_skinModelRender);
+				////モデルを消す
+				//DeleteGO(m_skinModelRender);
 
 				//生存フラグをオフ
 				SetIsExist(false);
@@ -496,26 +499,21 @@ void Player_new::Revive()
 		//復活準備はすでに完了しているのでフラグをオフ
 		m_isReviveReady = false;
 
-		m_skinModelRender = NewGO<SkinModelRender>(0);
-		
-		m_skinModelRender->Init(
-					MODELPATH_UTC,
-					enModelUpAxisZ,
-					*RenderingEngine::GetInstance(),
-					true,
-					false,
-					SKELETON_PATH_UTC
-				);
+		//m_skinModelRender = NewGO<SkinModelRender>(0);
+		//
+		////ライトの受け取り処理
+		//RecieveDirectionLight(m_directionLight);
+		//RecievePointLight(m_pointLight);
+		//RecieveSpotLight(m_spotLight);
 
-		m_skinModelRender->SetPosition(m_position);
-		m_skinModelRender->SetScale(m_scale);
-
-		//ライトの受け取り処理
-		RecieveDirectionLight(m_directionLight);
-		RecievePointLight(m_pointLight);
-		RecieveSpotLight(m_spotLight);
-
-		InitModelFromInitData();
+		//m_skinModelRender->Init(
+		//			MODELPATH_UTC,
+		//			enModelUpAxisZ,
+		//			true,
+		//			false,
+		//			SKELETON_PATH_UTC
+		//		);
+	
 	}
 }
 
@@ -584,14 +582,14 @@ void Player_new::Update()
 		return;
 	}
 
-	//テスト
-	if (g_pad[0]->IsTrigger(enButtonY)) {
-		
-		m_startEffect.SetScale(EFFECT_SCALE_START);
-		m_startEffect.SetPosition(m_position + m_up * 50.0f);
-		m_startEffect.SetRotation(m_rot);
-		m_startEffect.Play();
-	}
+	////テスト
+	//if (g_pad[0]->IsTrigger(enButtonY)) {
+	//	
+	//	m_startEffect.SetScale(EFFECT_SCALE_START);
+	//	m_startEffect.SetPosition(m_position + m_up * 50.0f);
+	//	m_startEffect.SetRotation(m_rot);
+	//	m_startEffect.Play();
+	//}
 
 
 	//テスト：地形からの上げ下げ
@@ -734,7 +732,5 @@ void Player_new::Update()
 	m_reviveEffect.Update();
 	m_moveTrackEffect.Update();
 	m_markerEffect.Update();
-
-	
 
 }

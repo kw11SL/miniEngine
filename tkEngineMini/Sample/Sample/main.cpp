@@ -37,7 +37,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	RootSignature rs;
 	InitRootSignature(rs);
 
-	g_camera3D->SetFar(50000.0f);
+	g_camera3D->SetFar(500000.0f);
 
 	//ゲームオブジェクトマネージャーのインスタンスを作成する。
 	GameObjectManager::CreateInstance();
@@ -76,9 +76,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//タイトルの作成
 	NewGO<Title>(0, "title");
 
-	////ゲームシーンの作成
-	//NewGO<Game>(0, "game");
-
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
 	//////////////////////////////////////
@@ -95,6 +92,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 				DeleteGO(gameScene);
 				//ゲームを初期状態に戻す
 				GameDirector::GetInstance()->ResetGame();
+				//バンク内ファイルを消去
+				//g_engine->ClearFileBank();
+
 				//タイトルをNewGO
 				NewGO<Title>(0, "title");
 
@@ -106,15 +106,15 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 			BulletManager::GetInstance()->DeleteBullets();
 		}
 
-		// テスト：ポーズ状態の切り替え
-		if (g_pad[0]->IsTrigger(enButtonSelect)) {
-			if (GameDirector::GetInstance()->GetGameState() == enGame) {
-				GameDirector::GetInstance()->SetGameState(enPause);
-			}
-			else if(GameDirector::GetInstance()->GetGameState() == enPause) {
-				GameDirector::GetInstance()->SetGameState(enGame);
-			}
-		}
+		//// テスト：ポーズ状態の切り替え
+		//if (g_pad[0]->IsTrigger(enButtonSelect)) {
+		//	if (GameDirector::GetInstance()->GetGameState() == enGame) {
+		//		GameDirector::GetInstance()->SetGameState(enPause);
+		//	}
+		//	else if(GameDirector::GetInstance()->GetGameState() == enPause) {
+		//		GameDirector::GetInstance()->SetGameState(enGame);
+		//	}
+		//}
 
 		////テスト：ゲーム開始からゲーム中への変更
 		//if (g_pad[0]->IsTrigger(enButtonA)) {

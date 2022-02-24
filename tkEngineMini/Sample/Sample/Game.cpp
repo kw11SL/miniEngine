@@ -22,14 +22,13 @@ Game::~Game()
 {
 	DeleteGO(m_player);
 	DeleteGO(m_bg);
-	DeleteGO(m_directionLight);
-	DeleteGO(m_pointLight);
-	DeleteGO(m_spotLight);
 	DeleteGO(m_ui);
 	DeleteGO(m_skyCube);
 	DeleteGO(m_stageBackGround);
 	DeleteGenerators();
-
+	DeleteGO(m_directionLight);
+	DeleteGO(m_pointLight);
+	DeleteGO(m_spotLight);
 }
 
 bool Game::Start()
@@ -50,7 +49,6 @@ bool Game::Start()
 	float spEmitAngle = Math::DegToRad(25.0f);
 	m_spotLight->Init({ 0.0f,0.0f,200.0f }, { 2.0f,2.0f,2.0f }, 1000.0f, spDir, spEmitAngle);
 
-
 	//UIの初期化
 	m_ui = NewGO<UI>(0, "ui");
 	m_ui->Init();
@@ -60,19 +58,11 @@ bool Game::Start()
 	m_skyCube->Init("Assets/modelData/skyCube/sky.tkm");
 
 
-	//レベル構築
+	////レベル構築
 	m_level.Init("Assets/level3D/level00_a.tkl", [&](LevelObjectData& objData) {
 		//プレイヤー
 		if (objData.EqualObjectName(L"player") == true) {
 			m_player = NewGO<Player_new>(0, "player");
-
-			//m_player->Init(renderingEngine);
-			m_player->Init(*RenderingEngine::GetInstance());
-			m_player->SetPostion(objData.position);
-			m_player->SetRotation(objData.rotation);
-			////プレイヤーの前方、右、上ベクトルにレベルの回転を適用
-			//m_player->SetVectorFromQuaternion(objData.rotation);
-			m_player->InitCharaCon();
 
 			//ライトを渡す処理
 			if (m_player->GetSkinModelRender() != nullptr) {
@@ -80,8 +70,17 @@ bool Game::Start()
 				m_player->RecievePointLight(m_pointLight);
 				m_player->RecieveSpotLight(m_spotLight);
 
-				m_player->InitModelFromInitData();
+				//m_player->InitModelFromInitData();
 			}
+
+			m_player->Init();
+			m_player->SetPostion(objData.position);
+			m_player->SetRotation(objData.rotation);
+			////プレイヤーの前方、右、上ベクトルにレベルの回転を適用
+			//m_player->SetVectorFromQuaternion(objData.rotation);
+			m_player->InitCharaCon();
+
+			
 
 			return true;
 		}
@@ -137,11 +136,6 @@ bool Game::Start()
 		//ステージ
 		if (objData.EqualObjectName(L"stageBg") == true) {
 			m_bg = NewGO<BG>(0, "bg");
-			m_bg->Init(
-				*RenderingEngine::GetInstance(),
-				objData.position,
-				objData.rotation,
-				Vector3::One);
 
 			//ステージにライトを渡す処理
 			if (m_bg->GetSkinModelRender() != nullptr) {
@@ -149,30 +143,36 @@ bool Game::Start()
 				m_bg->RecievePointLight(m_pointLight);
 				m_bg->RecieveSpotLight(m_spotLight);
 
-				m_bg->InitModelFromInitData();
+				//m_bg->InitModelFromInitData();
 			}
+
+			m_bg->Init(
+				objData.position,
+				objData.rotation,
+				Vector3::One
+			);
+
+			
 			return true;
 		}
 
 		//背景
 		if (objData.EqualObjectName(L"backGround") == true) {
 			m_stageBackGround = NewGO<StageBackGround>(0, "stageBackGround");
-			m_stageBackGround->Init(
-				//renderingEngine,
-				*RenderingEngine::GetInstance(),
-				objData.position,
-				objData.rotation,
-				Vector3::One);
-
-
+			
 			//背景にライトを渡す処理
 			if (m_stageBackGround->GetSkinModelRender() != nullptr) {
 				m_stageBackGround->RecieveDirectionLight(m_directionLight);
 				m_stageBackGround->RecievePointLight(m_pointLight);
 				m_stageBackGround->RecieveSpotLight(m_spotLight);
 
-				m_stageBackGround->InitModelFromInitData();
+				//m_stageBackGround->InitModelFromInitData();
 			}
+			
+			m_stageBackGround->Init(
+				objData.position,
+				objData.rotation,
+				Vector3::One);
 			return true;
 		}
 

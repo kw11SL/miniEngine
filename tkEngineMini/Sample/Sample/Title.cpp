@@ -4,12 +4,17 @@
 
 Title::Title()
 {
-	//初期化処理を行う
-	Init();
+
+}
+
+Title::~Title()
+{
+
 }
 
 bool Title::Start()
 {
+	Init();
 	return true;
 }
 
@@ -34,6 +39,7 @@ void Title::Update()
 		//ゲーム開始フラグをオン
 		m_gameReady = true;
 
+		//ボタンを押したときの音を再生
 		CSoundSource* ss = NewGO<CSoundSource>(0);
 		ss->Init(L"Assets/wav/decide_2.wav", false);
 		ss->SetVolume(0.5f);
@@ -47,8 +53,6 @@ void Title::Update()
 	if (m_titleSprite.GetIsFinishFadeOut() == true) {
 		//タイトルのフェードアウト完了でゲームをNewGO
 		NewGO<Game>(0, "game");
-		////ゲームの状態を変更
-		//GameDirector::GetInstance()->SetGameState(enGame);
 		//ゲームの状態をゲーム開始に変更
 		GameDirector::GetInstance()->SetGameState(enStart);
 

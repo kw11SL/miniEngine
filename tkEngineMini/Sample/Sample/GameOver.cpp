@@ -84,6 +84,8 @@ void GameOver::Update()
 			GameDirector::GetInstance()->ResetGame();
 			//ゲームの状態をタイトル画面にする
 			GameDirector::GetInstance()->SetGameState(enTitle);
+			//バレットマネージャ内から弾を削除
+			BulletManager::GetInstance()->DeleteBullets();
 
 			//タイトルをNewGO
 			NewGO<Title>(0, "title");
