@@ -27,20 +27,30 @@ void NullTextureMaps::Init()
 	};
 
 	//アルベドマップをロード。
+	m_albedoMapFilePath = "Assets/modelData/preset/NullAlbedoMap.DDS";
 	TexLoad(
-		"Assets/modelData/preset/NullAlbedoMap.DDS",
+		m_albedoMapFilePath,
 		m_albedoMap,
 		m_albedoMapSize);
 
 	//法線マップをロード。
+	m_normalMapFilePath = "Assets/modelData/preset/NullNormalMap.DDS";
 	TexLoad(
-		"Assets/modelData/preset/NullNormalMap.DDS",
+		m_normalMapFilePath,
 		m_normalMap,
 		m_normalMapSize);
 
-	//０の値を格納しているマップをロード。
+	m_specMapFilePath = "Assets/modelData/preset/specMap_None.DDS";
+	//スペキュラマップマップをロード。
 	TexLoad(
-		"Assets/modelData/preset/ZeroValueMap.DDS",
+		m_specMapFilePath,
+		m_specMap,
+		m_specMapSize);
+
+	//０の値を格納しているマップをロード。
+	m_zeroValueMapFilePath = "Assets/modelData/preset/ZeroValueMap.DDS";
+	TexLoad(
+		m_zeroValueMapFilePath,
 		m_zeroValueMap,
 		m_zeroValueMapSize);
 

@@ -4,11 +4,11 @@
 #include "TResourceBank.h"
 #include "tkFile/TkmFile.h"
 #include "Shader.h"
-//#include "Texture.h"
 #include <MiniEngine.h>
 
 
 class GraphicsEngine;
+class Texture;
 
 class TkEngine {
 public:
@@ -53,7 +53,7 @@ public:
 		m_tkmFileBank.ClearBank();
 	}
 
-	/*/// @brief テクスチャをバンクから取得
+	/// @brief テクスチャをバンクから取得
 	/// @param filePath ファイルパス
 	/// @return テクスチャのポインタ
 	Texture* GetTextureFromBank(const char* filePath)
@@ -73,7 +73,7 @@ public:
 	void ClearTextureBank()
 	{
 		m_textureBank.ClearBank();
-	}*/
+	}
 
 	/// <summary>
 	/// シェーダーファイルバンクからシェーダーを取得。
@@ -115,7 +115,7 @@ private:
 	GraphicsEngine* m_graphicsEngine = nullptr;		//グラフィックエンジン。
 	TResourceBank<TkmFile> m_tkmFileBank;			//tkmファイルバンク。
 	TResourceBank<Shader> m_shaderBank;				//シェーダーバンク
-	//TResourceBank<Texture> m_textureBank;
+	TResourceBank<Texture> m_textureBank;
 	GamePad m_pad[GamePad::CONNECT_PAD_MAX];		//ゲームパッド。
 	GameTime m_gameTime;							//ゲームタイム。
 	

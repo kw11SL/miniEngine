@@ -2,6 +2,8 @@
  * @brief	シンプルなモデルシェーダー。
  */
 
+static const float PI = 3.1415926f;		//正規化ランバート拡散反射用の除算値
+
 //ディレクションライト用構造体
 struct DirectionLight
 {
@@ -301,7 +303,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	
 	//ディレクションライトによるリムライト
 	//サーフェスの法線とディレクションライトの入射方向に依存するリムの強さを求める
-	//max関数:受け取った引数のうち、値が大きい方を返す(if分より速いことがある)
+	//max関数:受け取った引数のうち、値が大きい方を返す(if文より速いことがある)
 	float power1 = 1.0f - max(0.0f, dot(directionLight.direction, psIn.normal));
 	//サーフェスの法線と視線の方向に依存するリムの強さを求める
 	float power2 = 1.0f - max(0.0f, psIn.normalInView.z * -1.0f);
@@ -366,12 +368,14 @@ float3 CalcLambertDiffuse(float3 lightDirection, float3 lightColor, float3 norma
 {
 	// ピクセルの法線とライトの方向の内積を計算する
 	float t = dot(normal, lightDirection) * -1.0f;
+	//float t = saturate(dot(normal, -lightDirection));
+
 
 	// 内積の値を0以上の値にする
 	t = max(0.0f, t);
 
 	// 拡散反射光を計算する
-	return lightColor * t;
+	return lightColor * t / PI;
 }
 
 /// <summary>
