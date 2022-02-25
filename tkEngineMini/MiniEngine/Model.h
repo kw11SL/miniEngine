@@ -125,6 +125,21 @@ public:
 		//return m_tkmFile;
 		return *m_tkmFile;
 	}
+
+	/// @brief 描画フラグをセット
+	/// @param isDraw 
+	void SetIsDraw(bool isDraw)
+	{
+		m_isDraw = isDraw;
+	}
+
+	/// @brief 描画フラグを取得
+	/// @return 描画フラグ
+	const bool GetIsDraw()
+	{
+		return m_isDraw;
+	}
+
 private:
 
 	Matrix m_world;										//ワールド行列。
@@ -133,4 +148,6 @@ private:
 	Skeleton m_skeleton;								//スケルトン。
 	MeshParts m_meshParts;								//メッシュパーツ。
 	EnModelUpAxis m_modelUpAxis = enModelUpAxisY;		//モデルの上方向。
+	bool m_isDraw = true;								//描画フラグ
+
 };

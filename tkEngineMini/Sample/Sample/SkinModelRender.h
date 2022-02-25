@@ -67,6 +67,18 @@ public:
 	/// @param rot 回転
 	void SetRotation(const Quaternion& rot);
 
+	/// @brief 描画フラグを設定
+	/// @param isDraw 描画するかどうか
+	void SetIsDraw(bool isDraw) 
+	{
+		m_model.SetIsDraw(isDraw);
+
+		//シャドウキャスターフラグがオンだったら影も描画
+		if (m_isShadowCaster) {
+			m_shadowModel.SetIsDraw(isDraw);
+		}
+	}
+
 	/// @brief シャドウキャスターフラグをセット
 	/// @param isShadowchaster シャドウキャスターにするかどうか
 	void SetShadowChastarFlag(const bool isShadowcaster) 
@@ -97,6 +109,13 @@ public:
 	/// @brief 回転を取得
 	/// @return 回転
 	Quaternion& GetRotation() { return m_rot; }
+
+	/// @brief モデルの描画フラグを取得
+	/// @return 描画フラグ
+	const bool GetIsDraw()
+	{
+		return m_model.GetIsDraw();
+	}
 
 	/// @brief モデルを取得
 	/// @return モデル

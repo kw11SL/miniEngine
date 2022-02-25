@@ -387,8 +387,10 @@ void Player_new::Hit()
 				//ゲームディレクターの保持するライフを減らす
 				GameDirector::GetInstance()->DecPlayerLife();
 				
-				////モデルを消す
-				//DeleteGO(m_skinModelRender);
+				//描画フラグをオフにする
+				if (m_skinModelRender->GetIsDraw() == true) {
+					m_skinModelRender->SetIsDraw(false);
+				}
 
 				//生存フラグをオフ
 				SetIsExist(false);
@@ -435,8 +437,10 @@ void Player_new::Hit()
 				//ゲームディレクターの保持するライフを減らす
 				GameDirector::GetInstance()->DecPlayerLife();
 
-				////モデルを消す
-				//DeleteGO(m_skinModelRender);
+				//描画フラグをオフにする
+				if (m_skinModelRender->GetIsDraw() == true) {
+					m_skinModelRender->SetIsDraw(false);
+				}
 
 				//生存フラグをオフ
 				SetIsExist(false);
@@ -499,21 +503,11 @@ void Player_new::Revive()
 		//復活準備はすでに完了しているのでフラグをオフ
 		m_isReviveReady = false;
 
-		//m_skinModelRender = NewGO<SkinModelRender>(0);
-		//
-		////ライトの受け取り処理
-		//RecieveDirectionLight(m_directionLight);
-		//RecievePointLight(m_pointLight);
-		//RecieveSpotLight(m_spotLight);
+		//モデルの描画フラグをオン
+		if (m_skinModelRender->GetIsDraw() == false) {
+			m_skinModelRender->SetIsDraw(true);
+		}
 
-		//m_skinModelRender->Init(
-		//			MODELPATH_UTC,
-		//			enModelUpAxisZ,
-		//			true,
-		//			false,
-		//			SKELETON_PATH_UTC
-		//		);
-	
 	}
 }
 
@@ -581,6 +575,13 @@ void Player_new::Update()
 		GameDirector::GetInstance()->GetGameState() != enStart) {
 		return;
 	}
+
+	/*if (g_pad[0]->IsTrigger(enButtonB) && m_skinModelRender->GetIsDraw() == true) {
+		m_skinModelRender->SetIsDraw(false);
+	}
+	else if (g_pad[0]->IsTrigger(enButtonB) && m_skinModelRender->GetIsDraw() == false) {
+		m_skinModelRender->SetIsDraw(true);
+	}*/
 
 	////テスト
 	//if (g_pad[0]->IsTrigger(enButtonY)) {

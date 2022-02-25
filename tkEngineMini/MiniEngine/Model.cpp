@@ -91,6 +91,11 @@ void Model::ChangeAlbedoMap(const char* materialName, Texture& albedoMap)
 }
 void Model::Draw(RenderContext& rc)
 {
+	//描画フラグがオフだったら処理しない
+	if (m_isDraw == false) {
+		return;
+	}
+
 	m_meshParts.Draw(
 		rc, 
 		m_world, 
@@ -100,10 +105,20 @@ void Model::Draw(RenderContext& rc)
 }
 void Model::Draw(RenderContext& rc, Camera& camera)
 {
+	//描画フラグがオフだったら処理しない
+	if (m_isDraw == false) {
+		return;
+	}
+
 	Draw(rc, camera.GetViewMatrix(), camera.GetProjectionMatrix());
 }
 void Model::Draw(RenderContext& rc, const Matrix& viewMatrix, const Matrix& projMatrix)
 {
+	//描画フラグがオフだったら処理しない
+	if (m_isDraw == false) {
+		return;
+	}
+
 	m_meshParts.Draw(
 		rc,
 		m_world,
