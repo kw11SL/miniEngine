@@ -4,7 +4,7 @@
 
 Title::Title()
 {
-
+	
 }
 
 Title::~Title()
@@ -14,6 +14,16 @@ Title::~Title()
 
 bool Title::Start()
 {
+	//ゲームの初期化処理
+	{
+		//ゲームを初期状態に戻す
+		GameDirector::GetInstance()->ResetGame();
+		//ゲームの状態をタイトル画面にする
+		GameDirector::GetInstance()->SetGameState(enTitle);
+		//バレットマネージャ内から弾を削除
+		BulletManager::GetInstance()->DeleteBullets();
+	}
+
 	Init();
 	return true;
 }

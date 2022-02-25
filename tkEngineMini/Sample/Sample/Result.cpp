@@ -152,8 +152,6 @@ void Result::Init()
 	m_finalScoreTextSprite->SetScale(RESULT_SPRITE_SCALE);
 	m_finalScoreTextSprite->SetColor(RESULT_SPRITE_INIT_COLOR);
 
-	
-
 	////////////////////////////////////////////////////////////////////////////////
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -559,12 +557,6 @@ void Result::Update()
 
 				//ゲームを削除
 				DeleteGO(gameScene);
-				//ゲームを初期状態に戻す
-				GameDirector::GetInstance()->ResetGame();
-				//ゲームの状態をタイトル画面にする
-				GameDirector::GetInstance()->SetGameState(enTitle);
-				//バレットマネージャ内から弾を削除
-				BulletManager::GetInstance()->DeleteBullets();
 
 				//タイトルをNewGO
 				NewGO<Title>(0, "title");

@@ -24,7 +24,6 @@ void GameDirector::ResetGame()
 	m_timeUpToResultCounter = 4.0f;
 	m_enGameState = enTitle;
 	m_enGameStatePrevFrame = enTitle;
-
 }
 
 const int GameDirector::CalcDestructionBonus()

@@ -36,7 +36,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	RootSignature rs;
 	InitRootSignature(rs);
-
+	
+	//カメラの遠平面を設定
 	g_camera3D->SetFar(500000.0f);
 
 	//ゲームオブジェクトマネージャーのインスタンスを作成する。
