@@ -40,14 +40,14 @@ bool Game::Start()
 
 	//ポイントライトの初期化
 	m_pointLight = NewGO<PointLight>(0, "pointlight");
-	m_pointLight->Init({ 0.0f,0.0f,100.0f }, { 1.0f,0.0f,0.0f }, 500.0f);
+	m_pointLight->Init({ 0.0f,0.0f,100.0f }, { 0.0f,0.0f,6.0f }, 500.0f);
 
 	//スポットライトの初期化
 	m_spotLight = NewGO<SpotLight>(0, "spotlight");
 	Vector3 spDir = { 0.0f,0.0f,-1.0f };
 	spDir.Normalize();
-	float spEmitAngle = Math::DegToRad(25.0f);
-	m_spotLight->Init({ 0.0f,0.0f,200.0f }, { 2.0f,2.0f,2.0f }, 1000.0f, spDir, spEmitAngle);
+	float spEmitAngle = Math::DegToRad(90.0f);
+	m_spotLight->Init({ 0.0f,0.0f,200.0f }, { 0.0f,1.0f,0.0f }, 1000.0f, spDir, spEmitAngle);
 
 	//UIの初期化
 	m_ui = NewGO<UI>(0, "ui");
@@ -197,35 +197,12 @@ void Game::DeleteGenerators()
 void Game::Update()
 {
 
-	//m_pointLight->SetPosition(m_player->GetPosition()/* + m_player->GetUp()*100.0f*/);
+	m_pointLight->SetPosition(m_player->GetPosition() + m_player->GetUp()*100.0f);
+	/*m_spotLight->SetPosition(m_player->GetPosition() + m_player->GetUp() * 200.0f);
+	m_spotLight->SetDirection(m_player->GetPosition() - m_spotLight->GetPosition());*/
 
 	/*m_spotLight->SetPosition(m_player->GetPosition() + m_player->GetUp() * 20.0f);
 	m_spotLight->SetDirection(m_player->GetPosition() - m_spotLight->GetPosition());*/
 
-	////テスト：プレイヤーの削除
-	//if (g_pad[0]->IsTrigger(enButtonX)) {
-	//	DeleteGO(m_player);
-	//}
-
-
-	//if (g_pad[0]->IsTrigger(enButtonSelect)) {
-	//	DeleteGO(this);
-	//}
-
-	
-
-	/*m_sprite = NewGO<SpriteRender>(0,"testSprite");
-	m_sprite->Init(
-		"Assets/sprite/ui/1.dds",
-		256,
-		256,
-		AlphaBlendMode_Trans
-	);
-
-	if (m_sprite != nullptr) {
-		DeleteGO(m_sprite);
-	}*/
-	
-	
 
 }

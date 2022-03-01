@@ -4,7 +4,7 @@
 namespace {
 	const char* MODEL_FILEPATH = "Assets/modelData/skyCube/sky.tkm";
 	const char* SHADER_FILEPATH = "Assets/shader/skyCubeMap.fx";
-	const wchar_t* TEXTURE_FILEPATH = L"Assets/modelData/skyCube/skyCubeMapDay_Toon_02.dds";
+	const wchar_t* TEXTURE_FILEPATH = L"Assets/modelData/skyCube/skyCubeMapDay_Toon_04.dds";
 }
 
 SkyCube::SkyCube()

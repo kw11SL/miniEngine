@@ -128,6 +128,8 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 	else{
 		m = mWorld;
 	}
+
+	//座標変換
 	psIn.pos = mul(m, vsIn.pos);
 	psIn.worldPos = psIn.pos;
 	psIn.pos = mul(mView, psIn.pos);

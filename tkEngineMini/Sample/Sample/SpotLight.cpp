@@ -16,6 +16,8 @@ void SpotLight::Init(const Vector3& position, const Vector3& color, const float&
 	//方向ベクトルを正規化
 	m_direction = direction;
 	m_direction.Normalize();
+	
+	//射出角度を決定
 	m_angle = angle;
 
 	//座標を決定
@@ -120,16 +122,16 @@ void SpotLight::Rotation()
 
 void SpotLight::Update()
 {
-	//Move();
-	//Rotation();
+	//////Move();
+	//////Rotation();
 
 	////テスト
 	////射出角度絞り
 	//if (g_pad[0]->IsPress(enButtonLeft)) {
-	//	m_angle -= Math::DegToRad(1.0f);
+	//	m_angle -= 0.1;
 	//}
 	//else if (g_pad[0]->IsPress(enButtonRight)) {
-	//	m_angle += Math::DegToRad(1.0f);
+	//	m_angle += 0.1;
 	//}
 
 	//if (m_angle < 0.0f) {
@@ -147,10 +149,10 @@ void SpotLight::Update()
 
 	////影響範囲変化
 	//if (g_pad[0]->IsPress(enButtonUp)) {
-	//	m_range += 1.0f;
+	//	m_range += 10.0f;
 	//}
 	//else if (g_pad[0]->IsPress(enButtonDown)) {
-	//	m_range -= 1.0f;
+	//	m_range -= 10.0f;
 	//}
 	//
 	//if (m_range < 0.0f) {

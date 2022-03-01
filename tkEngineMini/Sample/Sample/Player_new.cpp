@@ -16,7 +16,7 @@ namespace{
 	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
 	
 	const Vector3 INIT_POINT = {0.0f,700.0f,0.0f};			//初期位置
-	const float UPPER_OFFSET = 10.0f;						//地形から浮かせる距離
+	const float UPPER_OFFSET = 20.0f;						//地形から浮かせる距離
 
 	const float PL_MOVE_SPEED = -12.0f;			//移動速度
 	const float FIRECOUNTER_NORMAL = 0.075f;	//通常弾の発射間隔
@@ -142,9 +142,6 @@ void Player_new::Init()
 	//カメラの上方向を自身の上にしておく
 	m_cameraUp = m_up;
 
-	//発射方向を前方にしておく
-	//m_shotDirection = m_forward;
-
 	//初期化時に開始演出用エフェクトを発生させる
 	m_startEffect.SetScale(EFFECT_SCALE_START);
 	m_startEffect.SetPosition(m_position/* + m_up * 50.0f*/);
@@ -235,7 +232,11 @@ void Player_new::Move()
 	//}
 	//※上記まとめ
 	Vector3 oldUp = m_up;
+	//前方、上、右を更新
 	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
+	//ショット方向の基準となる前方を更新
+	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_fixedForward, m_up, m_right);
+
 	m_rotUpToGroundNormal.SetRotation(oldUp, m_up);
 	
 	//モデルの座標更新
@@ -246,6 +247,8 @@ void Player_new::Rotation()
 {
 	//前方、右、上から回転を計算する
 	m_sphericalMove.Rotation(m_forward, m_right, m_up, m_rot);
+	//ショットの基準になるベクトルを基に回転を計算する
+	m_sphericalMove.Rotation(m_downVector, m_right, m_up, m_fixedRot);
 
 	//スティックによる回転処理
 	float stickX, stickY = 0.0f;
@@ -268,10 +271,8 @@ void Player_new::Rotation()
 
 void Player_new::RotateShotDirection()
 {
-	//ショットの方向はプレイヤーの前方
-	//m_shotDirection = m_forward;
-	//発射方向のベース
-	m_shotDirection = g_camera3D->GetForward();
+	//射撃方向は固定の上方向
+	m_shotDirection = m_fixedForward * -1.0f;
 
 	//回転軸は上ベクトル
 	Vector3 axis = m_up;
@@ -282,6 +283,9 @@ void Player_new::RotateShotDirection()
 	//右スティックの入力を受け取り
 	float x = g_pad[0]->GetRStickXF();
 	float y = g_pad[0]->GetRStickYF();
+	//左スティックの入力を受け取り
+	float xL = g_pad[0]->GetLStickXF();
+	float yL = g_pad[0]->GetLStickYF();
 
 	//入力値から角度を求める
 	float angle = atan2f(x, y);
@@ -289,8 +293,30 @@ void Player_new::RotateShotDirection()
 	//軸周りの回転を求める
 	rot.SetRotation(axis, angle);
 
-	//ベクトルを回転
-	rot.Apply(m_shotDirection);
+	//ショットの射出方向の決定
+	//移動中
+	if (fabsf(xL) > 0.001f || fabsf(yL) > 0.001f) {
+		//かつ、右スティックの入力があるとき、右スティックの方へ射撃
+		if (fabsf(x) > 0.001f || fabsf(y) > 0.001f) {
+			rot.Apply(m_shotDirection);
+		}
+		//右スティックの入力がないとき、自機の向いている方向へ射撃
+		else {
+			m_shotDirection = m_forward * -1.0f;
+		}
+	}
+	//停止中
+	else {
+		//かつ右スティックの入力があるとき、右スティックの方へ射撃
+		if (fabsf(x) > 0.001f || fabsf(y) > 0.001f) {
+			rot.Apply(m_shotDirection);
+		}
+		//右スティックの入力がないとき、自機の向いている方向へ射撃
+		else {
+			m_shotDirection = m_forward * -1.0f;
+		}
+	}
+
 }
 
 void Player_new::FireBullet()

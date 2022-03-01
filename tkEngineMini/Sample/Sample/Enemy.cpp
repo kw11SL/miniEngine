@@ -151,7 +151,7 @@ void Enemy::Init(
 	RecievePointLight(m_pointLight);
 	RecieveSpotLight(m_spotLight);
 
-	m_skinModelRender->Init(modelPath, enModelUpAxisZ, false, false);
+	m_skinModelRender->Init(modelPath, enModelUpAxisZ, true, false);
 
 	////ƒ‚ƒfƒ‹‚ğXV
 	//InitModelFromInitData();

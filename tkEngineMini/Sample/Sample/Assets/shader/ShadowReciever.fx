@@ -1,5 +1,5 @@
 /*!
- * @brief	シンプルなモデルシェーダー。
+ * @brief	シャドウレシーバーとして使用するシェーダー。
  */
 
 static const float PI = 3.1415926f;		//正規化ランバート拡散反射用の除算値
@@ -144,7 +144,9 @@ SPSIn VSMainCore(SVSIn vsIn, uniform bool hasSkin)
 	psIn.pos = mul(mProj, psIn.pos);*/
 
 	//通常の座標変換
-	psIn.worldPos = vsIn.pos;
+	psIn.pos = mul(m, vsIn.pos);
+	//psIn.worldPos = vsIn.pos;
+	psIn.worldPos = psIn.pos;
 	float4 worldPos = mul(m, vsIn.pos);
 	psIn.pos = mul(mView, worldPos);
 	psIn.pos = mul(mProj, psIn.pos);
