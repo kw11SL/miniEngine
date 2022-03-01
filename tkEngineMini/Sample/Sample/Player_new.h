@@ -271,6 +271,9 @@ private:
 	PointLight* m_pointLight = nullptr;
 	SpotLight* m_spotLight = nullptr;
 
+	Quaternion m_rotAxisUp = Quaternion::Identity;
+	float m_angleAxisUp = 0.0f;
+
 	float m_rotFraction = 1.0f;
 	float m_cameraUpFraction = 0.0f;					//ƒJƒƒ‰ã•ûŒü‚ğ‰ñ“]‚³‚¹‚é•âŠÔ—¦
 	float m_angle = 0.0f;								//‰ñ“]Šp“x

@@ -5,7 +5,8 @@
 
 namespace{
 	//const char* MODELPATH_UTC = "Assets/modelData/unityChan.tkm";
-	const char* MODELPATH_UTC = "Assets/modelData/player/player_object.tkm";
+	//const char* MODELPATH_UTC = "Assets/modelData/player/player_object.tkm";
+	const char* MODELPATH_UTC = "Assets/modelData/player/player_object_c.tkm";
 	//const char* MODELPATH_UTC = "Assets/modelData/player_a.tkm";
 	const char* SKELETON_PATH_UTC = "Assets/modelData/unityChan.tks";
 	const float UTC_RADIUS = 40.0f;
@@ -15,7 +16,7 @@ namespace{
 	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
 	
 	const Vector3 INIT_POINT = {0.0f,700.0f,0.0f};			//初期位置
-	const float UPPER_OFFSET = 0.0f;						//地形から浮かせる距離
+	const float UPPER_OFFSET = 10.0f;						//地形から浮かせる距離
 
 	const float PL_MOVE_SPEED = -12.0f;			//移動速度
 	const float FIRECOUNTER_NORMAL = 0.075f;	//通常弾の発射間隔
@@ -171,7 +172,6 @@ void Player_new::Move()
 {
 	//m_markerCounter += g_gameTime->GetFrameDeltaTime();
 
-	//テスト：移動
 	//パッドのスティックからx成分とy成分を受け取る
 	float x = g_pad[0]->GetLStickXF();
 	float y = g_pad[0]->GetLStickYF();
@@ -192,6 +192,7 @@ void Player_new::Move()
 	if (m_isExist == false 
 		|| GameDirector::GetInstance()->GetPlayerLife() <= 0
 		|| GameDirector::GetInstance()->GetGameState() != enGame) {
+		
 		m_moveSpeed *= 0.0f;
 	}
 
@@ -243,32 +244,51 @@ void Player_new::Move()
 
 void Player_new::Rotation()
 {
+	//前方、右、上から回転を計算する
 	m_sphericalMove.Rotation(m_forward, m_right, m_up, m_rot);
+
+	//スティックによる回転処理
+	float stickX, stickY = 0.0f;
+	stickX = g_pad[0]->GetLStickXF();
+	stickY = g_pad[0]->GetLStickYF();
+
+	//入力があったら回転する
+	if (fabs(stickX) >= 0.001f || fabsf(stickY) >= 0.001f){
+		m_angleAxisUp = atan2f(stickX, stickY);
+		m_rotAxisUp.SetRotation(m_up, m_angleAxisUp);
+	}
+
+	//クォータニオンを合成し、前方ベクトルを回転
+	m_rot.Multiply(m_rotAxisUp);
+	m_rotAxisUp.Apply(m_forward);
+
+	//モデルに回転を適用する
+	m_skinModelRender->SetRotation(m_rot);
 }
 
 void Player_new::RotateShotDirection()
 {
 	//ショットの方向はプレイヤーの前方
-	m_shotDirection = m_forward;
-
-	////発射方向を上方向とカメラの右方向の外積にしておく
-	//m_shotDirection = Cross(m_up, g_camera3D->GetRight());
-	//m_shotDirection.Normalize();
+	//m_shotDirection = m_forward;
+	//発射方向のベース
+	m_shotDirection = g_camera3D->GetForward();
 
 	//回転軸は上ベクトル
 	Vector3 axis = m_up;
+	
 	//軸周りの回転クォータニオンを作成
 	Quaternion rot;
 
 	//右スティックの入力を受け取り
-	float x = g_pad[0]->GetRStickXF() * -1.0f;
-	float y = g_pad[0]->GetRStickYF() * -1.0f;
+	float x = g_pad[0]->GetRStickXF();
+	float y = g_pad[0]->GetRStickYF();
 
 	//入力値から角度を求める
 	float angle = atan2f(x, y);
 
 	//軸周りの回転を求める
 	rot.SetRotation(axis, angle);
+
 	//ベクトルを回転
 	rot.Apply(m_shotDirection);
 }
@@ -576,34 +596,6 @@ void Player_new::Update()
 		return;
 	}
 
-	/*if (g_pad[0]->IsTrigger(enButtonB) && m_skinModelRender->GetIsDraw() == true) {
-		m_skinModelRender->SetIsDraw(false);
-	}
-	else if (g_pad[0]->IsTrigger(enButtonB) && m_skinModelRender->GetIsDraw() == false) {
-		m_skinModelRender->SetIsDraw(true);
-	}*/
-
-	////テスト
-	//if (g_pad[0]->IsTrigger(enButtonY)) {
-	//	
-	//	m_startEffect.SetScale(EFFECT_SCALE_START);
-	//	m_startEffect.SetPosition(m_position + m_up * 50.0f);
-	//	m_startEffect.SetRotation(m_rot);
-	//	m_startEffect.Play();
-	//}
-
-
-	//テスト：地形からの上げ下げ
-	if (g_pad[0]->IsPress(enButtonUp)) {
-		m_upperOffset += 1.0f;
-	}
-	else if (g_pad[0]->IsPress(enButtonDown)) {
-		m_upperOffset -= 1.0f;
-		if (m_upperOffset < 0.0f) {
-			m_upperOffset = 0.0f;
-		}
-	}
-
 	CalcCameraUpFractionAddRate();
 	Move();
 	Rotation();
@@ -616,12 +608,6 @@ void Player_new::Update()
 	Revive();
 	DecInvTime();
 
-
-	
-	if (m_skinModelRender != nullptr) {
-		m_skinModelRender->SetRotation(m_rot);
-	}
-
 	//前フレームの上方向が現フレームの上と変わっていたら補間係数を0にする
 	if (m_upPrev.x != m_up.x
 		|| m_upPrev.y != m_up.y
@@ -629,30 +615,11 @@ void Player_new::Update()
 		m_cameraUpFraction = 0.0f;
 	}
 
-
-
 	//カメラ追従
 	////カメラ注視点から視点へのベクトルを作成
 	//Vector3 toCamera = m_gameCamera.GetCameraPosition() - m_gameCamera.GetTargetPosition();
 	//注視点目標からカメラ目標へのベクトルを作成
 	Vector3 toCamera = m_gameCamera.GetCameraPositionTarget() - m_gameCamera.GetTargetPositionTarget();
-	
-	/*if (g_pad[0]->IsPress(enButtonRB2)) {
-		m_toCameraDist += 0.001f;
-		toCamera *= m_toCameraDist;
-	}
-	if (g_pad[0]->IsPress(enButtonLB2)) {
-		m_toCameraDist -= 0.001f;
-		toCamera *= m_toCameraDist;
-	}*/
-
-	/*Quaternion mulRot = Quaternion::Identity;
-
-	float y = g_pad[0]->GetRStickYF();
-	float x = g_pad[0]->GetRStickXF();
-	m_cameraRotH.SetRotationDeg(m_up, x);
-	m_cameraRotV.SetRotationDeg(Cross(m_up,m_forward), y);
-	mulRot.Multiply(m_cameraRotH, m_cameraRotV);*/
 
 	//ベクトルにクォータニオンを適用
 	m_rotUpToGroundNormal.Apply(toCamera);
@@ -689,39 +656,7 @@ void Player_new::Update()
 	m_isInvinciblePrev = m_isInvincible;
 	//現フレームの存在フラグを記録
 	m_isExistPrev = m_isExist;
-
 	m_isReviveReadyPrev = m_isReviveReady;
-	
-	//////////////////////////////////
-	
-	////テスト　モデルの削除
-	//if (g_pad[0]->IsTrigger(enButtonY)) {
-	//	DeleteGO(m_skinModelRender);
-	//}
-
-	////テスト　モデルの出現
-	//if (g_pad[0]->IsTrigger(enButtonX)) {
-	//	m_skinModelRender = NewGO<SkinModelRender>(0);
-	//	
-	//	m_skinModelRender->Init(
-	//		MODELPATH_UTC,
-	//		enModelUpAxisZ,
-	//		*RenderingEngine::GetInstance(),
-	//		true,
-	//		false,
-	//		SKELETON_PATH_UTC
-	//	);
-
-	//	//ライトの受け取り処理
-	//	RecieveDirectionLight(m_directionLight);
-	//	RecievePointLight(m_pointLight);
-	//	RecieveSpotLight(m_spotLight);
-
-	//	InitModelFromInitData();
-	//}
-	//////////////////////////////////
-
-
 
 	//エフェクトの更新
 	//m_startEffect.SetScale(EFFECT_SCALE_START);
