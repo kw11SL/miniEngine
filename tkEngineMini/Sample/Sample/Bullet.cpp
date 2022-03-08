@@ -42,6 +42,7 @@ namespace{
 	const char16_t* EFFECT_FILEPATH_PLAYER_SPREAD_BOMB = u"Assets/effect/shot_pl_spread.efk";
 	const char16_t* EFFECT_FILEPATH_PLAYER_SPREAD_BOMB_BURST = u"Assets/effect/shot_spread_burst.efk";
 	const char16_t* EFFECT_FILEPATH_ENEMY_NORMAL = u"Assets/effect/shot_pl1.efk";
+	const char16_t* EFFECT_FILEPATH_PLAYER_NORMAL_BANISH = u"Assets/effect/bullet_banish_normal.efk";
 
 	//シェーダーのファイルパス
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
@@ -59,7 +60,8 @@ Bullet::~Bullet()
 {
 	//エフェクトを停止
 	m_shotEffect.Stop();
-	DeleteGO(m_skinModelRender);
+	
+	//DeleteGO(m_skinModelRender);
 }
 
 bool Bullet::Start()
@@ -248,6 +250,13 @@ void Bullet::Destroy()
 	//存在フラグがオフになったとき
 	if (m_isExist == false) {
 
+		if (m_enBulletType == enPlayerNormal) {
+			//消滅エフェクトを再生
+			m_normalBanishEffect.SetPosition(m_position);
+			m_normalBanishEffect.SetScale({ 4.0f,4.0f,4.0f });
+			m_normalBanishEffect.Play(false);
+		}
+
 		//自身がスプレッドボムのとき
 		if (m_enBulletType == enPlayerSpreadBomb) {
 
@@ -268,6 +277,7 @@ void Bullet::InitEffect(const EnBulletType& bulletType)
 	{
 	case enPlayerNormal:
 		m_shotEffect.Init(EFFECT_FILEPATH_PLAYER_NORMAL);
+		m_normalBanishEffect.Init(EFFECT_FILEPATH_PLAYER_NORMAL_BANISH);
 		break;
 	case enPlayerSpreadBomb:
 		m_shotEffect.Init(EFFECT_FILEPATH_PLAYER_SPREAD_BOMB);
@@ -309,5 +319,6 @@ void Bullet::Update()
 
 	//エフェクトの更新
 	m_shotEffect.Update();
+	m_normalBanishEffect.Update();
 
 }

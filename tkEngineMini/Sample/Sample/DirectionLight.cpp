@@ -142,8 +142,8 @@ void DirectionLight::Update()
 	m_eyePos = g_camera3D->GetPosition();
 	SetEyePos(m_eyePos);
 
-	m_direction = g_camera3D->GetPosition() - g_camera3D->GetTarget();
-	//m_direction = g_camera3D->GetTarget() - g_camera3D->GetPosition();
+	//m_direction = g_camera3D->GetPosition() - g_camera3D->GetTarget();
+	m_direction = g_camera3D->GetTarget() - g_camera3D->GetPosition();
 	SetDirection(m_direction);
 
 

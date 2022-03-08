@@ -255,15 +255,19 @@ private:
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル
 	Vector3 m_downVector = { 0.0f,-10.0f,0.0f };		//レイを飛ばす方向ベクトル
+	
 	Vector3 m_forward = Vector3::Front;					//前方
 	Vector3 m_fixedForward = Vector3::Front;			//ショットの基準になる固定の上方向。
+	
 	Vector3 m_right	= Vector3::Right;					//右
+	
 	Vector3 m_up = Vector3::Up;							//上
 	Vector3 m_upPrev = Vector3::Zero;					//前フレームの上
 	Vector3 m_cameraUp = Vector3::Zero;					//カメラの上(カメラに反映する上方向)
+
 	Vector3 m_scale = Vector3::One;						//拡大率
+
 	Quaternion m_rot = Quaternion::Identity;			//回転クォータニオン
-	Quaternion m_fixedRot = Quaternion::Identity;		//ショットの基準になる上方向を決めるための回転クォータニオン
 	Quaternion m_rotUpToGroundNormal = Quaternion::Identity;
 	
 	Quaternion m_cameraRotH = Quaternion::Identity;
@@ -306,6 +310,7 @@ private:
 	Effect m_moveTrackEffect;							//移動時の軌跡エフェクト
 	Effect m_markerEffect;								//自機位置の表示エフェクト
 	Effect m_startEffect;								//ゲーム開始時の登場エフェクト
+	Effect m_shotDirectionEffect;						//ショットの方向を示すマーカーエフェクト
 
 	CSoundSource* m_missSe = nullptr;					//miss時の効果音
 	CSoundSource* m_normalShotSe = nullptr;

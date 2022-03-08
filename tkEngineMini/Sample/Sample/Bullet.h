@@ -239,9 +239,10 @@ private:
 	Vector3 m_direction = Vector3::Zero;				//最初の発射方向
 	bool m_isDecideDirection = false;					//発射方向を前方ベクトルにしたかどうか
 
-	//テスト　ショットエフェクト
+	//ショットエフェクト
 	Effect m_shotEffect;
 	Effect m_spreadBurstEffect;
+	Effect m_normalBanishEffect;
 
 	//スキンモデルレンダーの削除フラグ
 	bool m_isModelDeleted = false;

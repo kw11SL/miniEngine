@@ -44,9 +44,14 @@ namespace{
 	const char16_t* EFFECT_FILEPATH_TRACK = u"Assets/effect/moveTrack.efk";			//軌跡エフェクトのファイルパス
 	const Vector3 EFFECT_SCALE_TRACK = { 10.0f,10.0f,10.0f };						//軌跡エフェクトの拡大率
 
+	const char16_t* EFFECT_FILEPATH_DIRECTION = u"Assets/effect/shotDirection.efk";			//方向エフェクトのファイルパス
+	const Vector3 EFFECT_SCALE_DIRECTION = { 10.0f,10.0f,10.0f };						//方向エフェクトの拡大率
+
 	const char16_t* EFFECT_FILEPATH_MARKER = u"Assets/effect/positionMarker.efk";	//当たり判定エフェクトのファイルパス
 	const Vector3 EFFECT_SCALE_MARKER = { 30.0f,30.0f,30.0f };						//当たり判定エフェクトの拡大率
 	const float MARKER_PLAY_INTERVAL = 0.02f;										//当たり判定エフェクトの発生間隔
+
+
 }
 
 Player_new::Player_new()
@@ -157,6 +162,7 @@ void Player_new::InitEffect()
 	m_reviveEffect.Init(EFFECT_FILEPATH_REVIVE);
 	m_moveTrackEffect.Init(EFFECT_FILEPATH_TRACK);
 	m_markerEffect.Init(EFFECT_FILEPATH_MARKER);
+	m_shotDirectionEffect.Init(EFFECT_FILEPATH_DIRECTION);
 }
 
 bool Player_new::Start()
@@ -234,9 +240,16 @@ void Player_new::Move()
 	Vector3 oldUp = m_up;
 	//前方、上、右を更新
 	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
+	
+	//上、右ベクトルの書き換え防止用
+	Vector3 fixedUp = m_up;
+	Vector3 fixedRight = m_right;
 	//ショット方向の基準となる前方を更新
-	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_fixedForward, m_up, m_right);
+	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_fixedForward, fixedUp, fixedRight);
+	
 
+	// 現在の上ベクトルから、新しい上ベクトルに向けるための回転クォータニオンを計算
+	// →　カメラの計算で使う。
 	m_rotUpToGroundNormal.SetRotation(oldUp, m_up);
 	
 	//モデルの座標更新
@@ -247,8 +260,6 @@ void Player_new::Rotation()
 {
 	//前方、右、上から回転を計算する
 	m_sphericalMove.Rotation(m_forward, m_right, m_up, m_rot);
-	//ショットの基準になるベクトルを基に回転を計算する
-	m_sphericalMove.Rotation(m_downVector, m_right, m_up, m_fixedRot);
 
 	//スティックによる回転処理
 	float stickX, stickY = 0.0f;
@@ -267,16 +278,16 @@ void Player_new::Rotation()
 
 	//モデルに回転を適用する
 	m_skinModelRender->SetRotation(m_rot);
+
 }
 
 void Player_new::RotateShotDirection()
 {
-	//射撃方向は固定の上方向
+	//射撃方向の基準は固定の上方向
 	m_shotDirection = m_fixedForward * -1.0f;
 
 	//回転軸は上ベクトル
 	Vector3 axis = m_up;
-	
 	//軸周りの回転クォータニオンを作成
 	Quaternion rot;
 
@@ -289,7 +300,6 @@ void Player_new::RotateShotDirection()
 
 	//入力値から角度を求める
 	float angle = atan2f(x, y);
-
 	//軸周りの回転を求める
 	rot.SetRotation(axis, angle);
 
@@ -354,26 +364,6 @@ void Player_new::FireBullet()
 				m_shotDirection,
 				m_enBulletType
 			);
-			
-			/*m_bullet.push_back(NewGO<Bullet>(0, "bullet"));
-			
-			m_bullet[m_bullet.size()-1]->Init(
-				*RenderingEngine::GetInstance(),
-				m_position,
-				m_up,
-				m_shotDirection,
-				m_enBulletType
-			);*/
-
-			/*m_bullet = NewGO<Bullet>(0, "bullet");
-
-			m_bullet->Init(
-				*RenderingEngine::GetInstance(),
-				m_position,
-				m_up,
-				m_shotDirection,
-				m_enBulletType
-			); */
 
 			//発射後、カウンターを0にリセット
 			m_fireCounter = 0.0f;
@@ -454,7 +444,7 @@ void Player_new::Hit()
 				m_missSe->Play(false);*/
 
 
-				//爆散エフェクトを発生
+				//被弾エフェクトを発生
 				m_explosionEffect.Init(EFFECT_FILEPATH_EXPLOSION);
 				m_explosionEffect.SetPosition(m_position);
 				m_explosionEffect.SetRotation(m_rot);
@@ -616,7 +606,7 @@ void Player_new::CalcCameraUpFractionAddRate()
 
 void Player_new::Update()
 {
-	//ゲーム中以外なら処理しない
+	//ゲーム中、スタート時以外なら処理しない
 	if (GameDirector::GetInstance()->GetGameState() != enGame &&
 		GameDirector::GetInstance()->GetGameState() != enStart) {
 		return;
@@ -685,8 +675,13 @@ void Player_new::Update()
 	m_isReviveReadyPrev = m_isReviveReady;
 
 	//エフェクトの更新
-	//m_startEffect.SetScale(EFFECT_SCALE_START);
 	m_startEffect.SetPosition(m_position + m_up * 50.0f);
+	m_shotDirectionEffect.SetPosition(m_position);
+	m_shotDirectionEffect.SetScale(EFFECT_SCALE_DIRECTION);
+	//m_shotDirectionEffect.SetRotation(m_rot);
+	if (m_shotDirectionEffect.IsPlay() != true) {
+		m_shotDirectionEffect.Play();
+	}
 	//m_startEffect.SetRotation(m_rot);
 
 	m_startEffect.Update();
@@ -694,5 +689,6 @@ void Player_new::Update()
 	m_reviveEffect.Update();
 	m_moveTrackEffect.Update();
 	m_markerEffect.Update();
+	m_shotDirectionEffect.Update();
 
 }

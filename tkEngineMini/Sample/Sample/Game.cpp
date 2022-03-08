@@ -40,7 +40,7 @@ bool Game::Start()
 
 	//ポイントライトの初期化
 	m_pointLight = NewGO<PointLight>(0, "pointlight");
-	m_pointLight->Init({ 0.0f,0.0f,100.0f }, { 0.0f,0.0f,6.0f }, 500.0f);
+	m_pointLight->Init({ 0.0f,0.0f,100.0f }, { 0.0f,0.0f,6.0f }, 1500.0f);
 
 	//スポットライトの初期化
 	m_spotLight = NewGO<SpotLight>(0, "spotlight");
@@ -60,6 +60,7 @@ bool Game::Start()
 
 	////レベル構築
 	m_level.Init("Assets/level3D/level00_a.tkl", [&](LevelObjectData& objData) {
+		
 		//プレイヤー
 		if (objData.EqualObjectName(L"player") == true) {
 			m_player = NewGO<Player_new>(0, "player");
@@ -69,8 +70,6 @@ bool Game::Start()
 				m_player->RecieveDirectionLight(m_directionLight);
 				m_player->RecievePointLight(m_pointLight);
 				m_player->RecieveSpotLight(m_spotLight);
-
-				//m_player->InitModelFromInitData();
 			}
 
 			m_player->Init();
@@ -79,8 +78,6 @@ bool Game::Start()
 			////プレイヤーの前方、右、上ベクトルにレベルの回転を適用
 			//m_player->SetVectorFromQuaternion(objData.rotation);
 			m_player->InitCharaCon();
-
-			
 
 			return true;
 		}

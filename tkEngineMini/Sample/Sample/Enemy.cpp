@@ -410,6 +410,7 @@ void Enemy::Update()
 		DecLifeTime();
 	}
 
+	//エフェクトの更新
 	m_destroyEffect.Update();
 	m_hitEffect.Update();
 

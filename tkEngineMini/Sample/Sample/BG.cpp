@@ -6,6 +6,7 @@ namespace
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
 	const char* VS_ENTRYPOINT_NAME = "VSMain";
 	const char* MODEL_FILEPATH = "Assets/modelData/bg/stage_cupsule3.tkm";
+	//const char* MODEL_FILEPATH = "Assets/modelData/bg/stage_cupsule4.tkm";
 	const Vector3 INIT_POINT = { 0.0f,0.0f,0.0f };
 
 	const float MODEL_INIT_SCALE_RATIO = 5.0f;
@@ -29,7 +30,7 @@ bool BG::Start()
 void BG::Init(const Vector3& pos, const Quaternion& rot,const Vector3& scale)
 {
 	//背景には影を落としたいのでシャドウレシーバーフラグをオンにする
-	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisY, false, true);
+	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisY, false, false);
 
 	//モデル拡大
 	//m_scale *= MODEL_INIT_SCALE_RATIO;
