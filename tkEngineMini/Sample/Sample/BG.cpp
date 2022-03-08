@@ -30,7 +30,7 @@ bool BG::Start()
 void BG::Init(const Vector3& pos, const Quaternion& rot,const Vector3& scale)
 {
 	//背景には影を落としたいのでシャドウレシーバーフラグをオンにする
-	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisY, false, false);
+	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisY, false, true);
 
 	//モデル拡大
 	//m_scale *= MODEL_INIT_SCALE_RATIO;

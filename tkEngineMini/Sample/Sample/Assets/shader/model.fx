@@ -206,7 +206,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	float3 toEye = eyePos - psIn.worldPos;
 	toEye = normalize(toEye);
 
-	//ライトの強さ
+	//光の強さ
 	float3 lig = float3(0.0f,0.0f,0.0f);
 	///////////////////////////////////////////////////////////////////////////////////////
 
