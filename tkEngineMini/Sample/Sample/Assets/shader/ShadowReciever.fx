@@ -339,7 +339,9 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 	//金属度が高い　→　鏡面反射はスペキュラカラー
 	//金属度が低い　→　白っぽい色を返す
-	specDir *= lerp(float3(1.0f,1.0f,1.0f),specColor,metallic);
+	//specDir *= lerp(float3(1.0f,1.0f,1.0f),specColor,metallic);
+	specDir *= lerp(directionLight.color,specColor,metallic);
+
 
 	//ポイントライト
 	float3 specPt = CookTorranceSpecular(
@@ -351,7 +353,9 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 	//金属度が高い　→　鏡面反射はスペキュラカラー
 	//金属度が低い　→　白っぽい色を返す
-	specPt *= lerp(float3(1.0f,1.0f,1.0f),specColor,metallic);
+	//specPt *= lerp(float3(1.0f,1.0f,1.0f),specColor,metallic);
+	specPt *= lerp(pointLight.color,specColor,metallic);
+
 	//距離による減衰を行う
 	specPt *= affectPt;
 

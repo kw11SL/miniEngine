@@ -193,10 +193,11 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	//アルベドカラー、スペキュラカラー、金属度、滑さをサンプル
 	//アルベドカラー
 	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
-	float alpha = g_albedo.Sample(g_sampler, psIn.uv).a;
+	//float alpha = g_albedo.Sample(g_sampler, psIn.uv).a;
 
 	//スペキュラをアルベドカラーと同じにする
 	float3 specColor = albedoColor;
+	
 	//金属度はメタリックスムースのr成分(r)
 	float metallic = g_metallicSmooth.Sample(g_sampler,psIn.uv).r;
 	//滑らかさメタリックスムースのa成分(a)
@@ -291,9 +292,10 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		smooth
 	) * directionLight.color;
 
-	//金属度が高い　→　鏡面反射はスペキュラカラー
-	//金属度が低い　→　白っぽい色を返す
-	specDir *= lerp(float3(1.0f,1.0f,1.0f),specColor,metallic);
+	//金属度が高い　→　スペキュラカラー(=アルベドカラー = 物体の色)を返す
+	//金属度が低い　→　ディレクションライトの色を返す
+	//specDir *= lerp(float3(1.0f, 1.0f, 1.0f), specColor, metallic);
+	specDir *= lerp(directionLight.color,specColor,metallic);
 
 	//ポイントライト
 	float3 specPt = CookTorranceSpecular(
@@ -303,9 +305,11 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		smooth
 	) * pointLight.color;
 
-	//金属度が高い　→　鏡面反射はスペキュラカラー
-	//金属度が低い　→　白っぽい色を返す
-	specPt *= lerp(float3(1.0f,1.0f,1.0f),specColor,metallic);
+	//金属度が高い　→　スペキュラカラー(=アルベドカラー = 物体の色)を返す
+	//金属度が低い　→　ポイントライトの色を返す
+	//specPt *= lerp(float3(1.0f,1.0f,1.0f),specColor,metallic);
+	specPt *= lerp(pointLight.color,specColor,metallic);
+
 	//距離による減衰を行う
 	specPt *= affectPt;
 

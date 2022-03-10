@@ -80,7 +80,7 @@ void Material::InitTexture(const TkmFile::SMaterial& tkmMat)
 	{
 		if (tkmMat.specularMap != nullptr) {
 			//m_specularMap.InitFromMemory(tkmMat.specularMap.get(), tkmMat.specularMapSize);
-			filePath = tkmMat.normalMapFilePath.c_str();
+			filePath = tkmMat.specularMapFilePath.c_str();
 			map = tkmMat.specularMap.get();
 			mapSize = tkmMat.specularMapSize;
 		}
