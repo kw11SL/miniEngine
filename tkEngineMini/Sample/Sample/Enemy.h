@@ -57,75 +57,6 @@ public:
 		return m_skinModelRender;
 	}
 
-	//セッター
-	/// @brief	座標を設定 
-	/// @param pos 座標
-	void SetPostion(const Vector3& pos) 
-	{ 
-		m_position = pos;
-		m_skinModelRender->SetPosition(m_position);
-	}
-
-	/// @brief 拡大率を設定
-	/// @param scale 拡大率
-	void SetScale(const Vector3& scale) 
-	{ 
-		m_scale = scale;
-		m_skinModelRender->SetScale(m_scale);
-	}
-
-	/// @brief 回転を設定
-	/// @param rot	回転
-	void SetRotation(const Quaternion rot) 
-	{ 
-		m_rot = rot;
-		m_skinModelRender->SetRotation(m_rot);
-	}
-
-	/// @brief 角度を設定
-	/// @param angle 角度
-	void SetAngle(const float angle) { m_angle = angle;}
-
-	/// @brief プレイヤーに対する当たり判定を有効にするかどうか
-	/// @param isActive 
-	void SetActive(const bool isActive) { m_isActive = isActive; }
-
-	//ライトを渡すための関数
-
-	/// @brief ディレクションライトを受けとる
-	/// @param dirLight ディレクションライト
-	void RecieveDirectionLight(DirectionLight* dirLight) 
-	{
-		m_skinModelRender->InitDirectionLight(dirLight);
-	}
-
-	/// @brief ポイントライトを受け取る
-	/// @param ptLight ポイントライト
-	void RecievePointLight(PointLight* ptLight)
-	{
-		m_skinModelRender->InitPointLight(ptLight);
-	}
-
-	/// @brief スポットライトを受け取る
-	/// @param spLight スポットライト
-	void RecieveSpotLight(SpotLight* spLight)
-	{
-		m_skinModelRender->InitSpotLight(spLight);
-	}
-
-	/// @brief モデルの初期化
-	void InitModelFromInitData() 
-	{
-		m_skinModelRender->InitModel();
-	}
-
-	/// @brief エネミーの種類を設定
-	/// @param type 
-	void SetType(const EnEnemyType& type)
-	{
-		m_enEnemyType = type;
-	}
-
 	/// @brief エネミーの種類を取得
 	/// @return 
 	EnEnemyType& GetType()
@@ -161,12 +92,83 @@ public:
 		return m_isExist;
 	}
 
+	//セッター
+	/// @brief	座標を設定 
+	/// @param pos 座標
+	void SetPostion(const Vector3& pos) 
+	{ 
+		m_position = pos;
+		m_skinModelRender->SetPosition(m_position);
+	}
+
+	/// @brief 拡大率を設定
+	/// @param scale 拡大率
+	void SetScale(const Vector3& scale) 
+	{ 
+		m_scale = scale;
+		m_skinModelRender->SetScale(m_scale);
+	}
+
+	/// @brief 回転を設定
+	/// @param rot	回転
+	void SetRotation(const Quaternion rot) 
+	{ 
+		m_rot = rot;
+		m_skinModelRender->SetRotation(m_rot);
+	}
+
+	/// @brief 角度を設定
+	/// @param angle 角度
+	void SetAngle(const float angle) { m_angle = angle;}
+
+	/// @brief プレイヤーに対する当たり判定を有効にするかどうか
+	/// @param isActive 
+	void SetActive(const bool isActive) { m_isActive = isActive; }
+
+	/// @brief エネミーの種類を設定
+	/// @param type 
+	void SetType(const EnEnemyType& type)
+	{
+		m_enEnemyType = type;
+	}
+
 	/// @brief 無敵時間を設定
 	/// @param invTime 無敵時間
 	void SetInvincibleTime(const float invTime)
 	{
 		m_invTime = invTime;
 	}
+
+	//ライトを渡すための関数
+
+	/// @brief ディレクションライトを受けとる
+	/// @param dirLight ディレクションライト
+	void RecieveDirectionLight(DirectionLight* dirLight) 
+	{
+		m_skinModelRender->InitDirectionLight(dirLight);
+	}
+
+	/// @brief ポイントライトを受け取る
+	/// @param ptLight ポイントライト
+	void RecievePointLight(PointLight* ptLight)
+	{
+		m_skinModelRender->InitPointLight(ptLight);
+	}
+
+	/// @brief スポットライトを受け取る
+	/// @param spLight スポットライト
+	void RecieveSpotLight(SpotLight* spLight)
+	{
+		m_skinModelRender->InitSpotLight(spLight);
+	}
+
+	/// @brief モデルの初期化
+	void InitModelFromInitData() 
+	{
+		m_skinModelRender->InitModel();
+	}
+
+
 
 	/// @brief プレイヤーに点数を加点せず即座に自滅させる
 	void SelfDestroy();

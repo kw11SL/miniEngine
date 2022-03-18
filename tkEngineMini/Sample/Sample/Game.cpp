@@ -35,12 +35,13 @@ bool Game::Start()
 {
 	//ディレクションライトの初期化
 	m_directionLight = NewGO<DirectionLight>(0, "directionlight");
-	m_directionLight->Init(/*{ 1.0f,0.0f,1.0f }*/g_camera3D->GetPosition() - g_camera3D->GetTarget(), { 0.25f,0.25f,0.25f }, { 0.7f,0.7f,0.7f });
+	m_directionLight->Init({ 1.0f,0.0f,0.0f }/*g_camera3D->GetPosition() - g_camera3D->GetTarget()*/, { 0.25f,0.25f,0.25f }, { 0.7f,0.7f,0.7f });
 	m_directionLight->SetEyePos(g_camera3D->GetPosition());
 
 	//ポイントライトの初期化
 	m_pointLight = NewGO<PointLight>(0, "pointlight");
 	m_pointLight->Init({ 0.0f,0.0f,100.0f }, { 0.0f,0.0f,6.0f }, 1500.0f);
+	//m_pointLight->Init({ 0.0f,0.0f,100.0f }, { 0.0f,0.0f,0.0f }, 1500.0f);
 
 	//スポットライトの初期化
 	m_spotLight = NewGO<SpotLight>(0, "spotlight");

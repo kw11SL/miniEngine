@@ -6,7 +6,6 @@ public:
 	~SkyCube();
 	bool Start()override;
 	void Update()override;
-	//void Render(RenderContext& rc)override;
 
 	/// @brief 初期化処理
 	/// @param filePath 
@@ -46,14 +45,18 @@ public:
 		m_luminance = lum;
 	}
 
+	/// @brief 明るさを徐々に上げる処理
+	/// @param addRate 上げる割合
+	void FadeIn(const float addRate);
+
 private:
-	SkinModelRender* m_skinModelRender = nullptr;
-	Texture m_texture;
-	const wchar_t* m_textureFilePaths;
-	Vector3 m_position = g_vec3Zero;
-	Vector3 m_scale = g_vec3One * 10000.0f;
-	Quaternion m_rot = Quaternion::Identity;
-	float m_luminance = 1.0f;
+	SkinModelRender* m_skinModelRender = nullptr;	//モデルレンダー
+	Texture m_texture;								//テクスチャ
+	const wchar_t* m_textureFilePaths;				//テクスチャのファイルパス格納用
+	Vector3 m_position = g_vec3Zero;				//座標
+	Vector3 m_scale = g_vec3One * 10000.0f;			//拡大率
+	Quaternion m_rot = Quaternion::Identity;		//回転
+	float m_luminance = 0.0f;						//明るさ
 	bool m_isDirty = false;
 
 };

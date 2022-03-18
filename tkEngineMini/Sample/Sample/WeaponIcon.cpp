@@ -24,6 +24,7 @@ namespace {
 	const Vector4 TEXT_INIT_COLOR = { 0.9f,0.65f,0.4f,1.0f };
 	const Vector4 TEXT_SHADOW_COLOR = { 0.9f*0.3f,0.65f*0.3f,0.4f*0.3f,1.0f*0.7f };
 	const Vector4 ICON_FRAME_INIT_COLOR = { 0.9f,0.65f,0.4f,1.0f };
+	const Vector4 ICON_CLEAR_COLOR = { 0.0f,0.0f,0.0f,0.0f };
 	const Vector4 ICON_INIT_COLOR = { 1.0f,1.0f,1.0f,1.0f };
 
 	//ピボット
@@ -44,7 +45,8 @@ WeaponIcon::~WeaponIcon()
 	DeleteGO(m_weaponTextSprite);
 	DeleteGO(m_weaponTextShadowSprite);
 	DeleteGO(m_iconFrameSprite);
-	DeleteGO(m_weaponSprite);
+	DeleteGO(m_weaponSpriteNormal);
+	DeleteGO(m_weaponSpriteSpread);
 	/*DeleteGO(m_normalShotSprite);
 	DeleteGO(m_spreadBombSprite);*/
 }
@@ -105,58 +107,58 @@ void WeaponIcon::Init()
 
 	///////////////////////////////////////////////////////////
 	//武器アイコンスプライトを初期化
-	m_weaponSprite = NewGO<SpriteRender>(0);
-	m_weaponSprite->Init(
+	//通常ショット
+	m_weaponSpriteNormal = NewGO<SpriteRender>(0);
+	m_weaponSpriteNormal->Init(
 		SHOT_NORMAL_SPRITE_FILEPATH,
 		ICON_SPRITE_WIDTH,
 		ICON_SPRITE_HEIGHT,
 		AlphaBlendMode_Trans
 	);
 
-	m_weaponSprite->SetPivot(SPRITE_PIVOT);
-	m_weaponSprite->SetScale(SPRITE_SCALE * ICON_SPRITE_SCALE_RATE);
-	m_weaponSprite->SetPosition(SPRITE_INIT_POS);
-	m_weaponSprite->SetColor(ICON_INIT_COLOR);
+	m_weaponSpriteNormal->SetPivot(SPRITE_PIVOT);
+	m_weaponSpriteNormal->SetScale(SPRITE_SCALE * ICON_SPRITE_SCALE_RATE);
+	m_weaponSpriteNormal->SetPosition(SPRITE_INIT_POS);
+	m_weaponSpriteNormal->SetColor(ICON_INIT_COLOR);
+
+	//スプレッド
+	m_weaponSpriteSpread = NewGO<SpriteRender>(0);
+	m_weaponSpriteSpread->Init(
+		SHOT_SPREAD_SPRITE_FILEPATH,
+		ICON_SPRITE_WIDTH,
+		ICON_SPRITE_HEIGHT,
+		AlphaBlendMode_Trans
+	);
+
+	m_weaponSpriteSpread->SetPivot(SPRITE_PIVOT);
+	m_weaponSpriteSpread->SetScale(SPRITE_SCALE * ICON_SPRITE_SCALE_RATE);
+	m_weaponSpriteSpread->SetPosition(SPRITE_INIT_POS);
+	m_weaponSpriteSpread->SetColor(ICON_INIT_COLOR);
+
 	///////////////////////////////////////////////////////////
 }
 
 void WeaponIcon::Update()
 {
-	//スプライトの切り替え
+	//状態の切り替え
 	if (g_pad[0]->IsTrigger(enButtonLB1)) {
 		if (m_weaponState == enNormal) {
-			
 			m_weaponState = enSpread;
-
-			m_weaponSprite->Init(
-				SHOT_SPREAD_SPRITE_FILEPATH,
-				ICON_SPRITE_WIDTH,
-				ICON_SPRITE_HEIGHT,
-				AlphaBlendMode_Trans
-			);
-
-			m_weaponSprite->SetPivot(SPRITE_PIVOT);
-			m_weaponSprite->SetScale(SPRITE_SCALE * ICON_SPRITE_SCALE_RATE);
-			m_weaponSprite->SetPosition(SPRITE_INIT_POS);
-			m_weaponSprite->SetColor(ICON_INIT_COLOR);
 		}
 		else if (m_weaponState == enSpread){
-
 			m_weaponState = enNormal;
-
-			m_weaponSprite->Init(
-				SHOT_NORMAL_SPRITE_FILEPATH,
-				ICON_SPRITE_WIDTH,
-				ICON_SPRITE_HEIGHT,
-				AlphaBlendMode_Trans
-			);
-
-			m_weaponSprite->SetPivot(SPRITE_PIVOT);
-			m_weaponSprite->SetScale(SPRITE_SCALE * ICON_SPRITE_SCALE_RATE);
-			m_weaponSprite->SetPosition(SPRITE_INIT_POS);
-			m_weaponSprite->SetColor(ICON_INIT_COLOR);
 		}
+	}
 
+	//状態に応じてカラーを変更
+	if (m_weaponState == enNormal) {
+		m_weaponSpriteNormal->SetColor(ICON_INIT_COLOR);
+		m_weaponSpriteSpread->SetColor(ICON_CLEAR_COLOR);
+
+	}
+	else if (m_weaponState == enSpread) {
+		m_weaponSpriteSpread->SetColor(ICON_INIT_COLOR);
+		m_weaponSpriteNormal->SetColor({ 0.0f,0.0f,0.0f,0.0f });
 	}
 
 }

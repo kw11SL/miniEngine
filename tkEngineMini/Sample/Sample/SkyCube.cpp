@@ -2,13 +2,20 @@
 #include "SkyCube.h"
 
 namespace {
-	const char* MODEL_FILEPATH = "Assets/modelData/skyCube/sky.tkm";
-	const char* SHADER_FILEPATH = "Assets/shader/skyCubeMap.fx";
-	const wchar_t* TEXTURE_FILEPATH = L"Assets/modelData/skyCube/skyCubeMapDay_Toon_04.dds";
+	//ファイルパス関連
+	const char* MODEL_FILEPATH = "Assets/modelData/skyCube/sky.tkm"; //モデルのファイルパス
+	const char* SHADER_FILEPATH = "Assets/shader/skyCubeMap.fx"; //シェーダーのファイルパス
+	const wchar_t* TEXTURE_FILEPATH = L"Assets/modelData/skyCube/skyCubeMapDay_Toon_04.dds"; //テクスチャのファイルパス
+
+	//明るさ関連
+	const float MIN_LUMINANCE = 0.0f; //明るさの最低値
+	const float MAX_LUMINANCE = 1.2f; //明るさの最大値
+	const float LUMINACE_ADDRATE = 0.01f; //フェードインの割合
 }
 
 SkyCube::SkyCube()
 {
+
 }
 
 SkyCube::~SkyCube()
@@ -59,20 +66,33 @@ void SkyCube::Init(const char* filePath)
 	m_skinModelRender->SetScale(m_scale);
 }
 
+void SkyCube::FadeIn(const float addRate)
+{
+	//明るさの最大値に達していたら処理しない
+	if (m_luminance >= MAX_LUMINANCE) {
+		return;
+	}
+
+	//明るさの最大値に達するまで足していく
+	if (m_luminance <= MAX_LUMINANCE){
+		m_luminance += addRate;
+	}
+}
+
 void SkyCube::Update()
 {
-	if (g_pad[0]->IsPress(enButtonLeft)) {
-		m_luminance -= 0.01f;
-	}
-	if (g_pad[0]->IsPress(enButtonRight)) {
-		m_luminance += 0.01f;
+	//ゲーム中でなければ処理しない
+	if (GameDirector::GetInstance()->GetGameState() != enGame) {
+		return;
 	}
 
+	//ステージ開始時のフェードイン処理
+	FadeIn(LUMINACE_ADDRATE);
 
-	if (m_isDirty)
+	/*if (m_isDirty)
 	{
 		m_skinModelRender->UpdateWorldMatrix(m_position, m_rot, m_scale);
 		m_skinModelRender->Update();
 		m_isDirty = false;
-	}
+	}*/
 }

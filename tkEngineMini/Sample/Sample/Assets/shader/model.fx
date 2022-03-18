@@ -197,7 +197,6 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 	//スペキュラをアルベドカラーと同じにする
 	float3 specColor = albedoColor;
-	
 	//金属度はメタリックスムースのr成分(r)
 	float metallic = g_metallicSmooth.Sample(g_sampler,psIn.uv).r;
 	//滑らかさメタリックスムースのa成分(a)
@@ -232,6 +231,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 	
 	//フレネル反射を考慮した拡散反射を計算
+	//ディレクションライト
 	float diffuseFromFresnelDir = CalcDiffuseFromFresnel(
 		normal,
 		-directionLight.direction,
@@ -260,6 +260,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 
 	//ポイントライトからサーフェスへのベクトルを計算
 	float3 ptLigDir = normalize(psIn.worldPos - pointLight.position);
+	
 	//フレネル反射を考慮した拡散反射を計算
 	float diffuseFromFresnelPt = CalcDiffuseFromFresnel(
 		normal,
@@ -537,7 +538,7 @@ float3 CalcPhongSpecular(float3 lightDirection, float3 lightColor, float3 worldP
 float Beckmann(float m, float t)
 {
 	float t2 = t * t;
-	float t4 = t * t * t;
+	float t4 = t * t * t * t;
 	float m2 = m * m;
 	float D = 1.0f / (4.0f * m2 * t4);
 	D *= exp((-1.0f / m2) * (1.0f - t2) / t2);
@@ -573,7 +574,7 @@ float CalcDiffuseFromFresnel(float3 N, float3 L, float3 V)
 
 	//法線と光源に向かうベクトルwを利用して拡散反射率を求める
 	float dotNL = saturate(dot(N, L));
-	float FL = (1 + (Fd90 - 1));
+	float FL = (1 + (Fd90 - 1) * pow(1 - dotNL, 5));
 
 	//法線と視点に向かうベクトルwを利用して拡散反射率を求める
 	float dotNV = saturate(dot(N, L));

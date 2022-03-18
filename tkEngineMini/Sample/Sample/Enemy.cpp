@@ -60,9 +60,6 @@ namespace {
 
 Enemy::Enemy()
 {
-
-	m_skinModelRender = NewGO<SkinModelRender>(0);
-
 	//発生したらエネミー数に+1
 	GameDirector::GetInstance()->AddEnemyCount();
 	//エネミー総数に+1
@@ -87,6 +84,7 @@ void Enemy::Init(
 	const Vector3& initUp,
 	const EnEnemyType& enemyType)
 {
+	m_skinModelRender = NewGO<SkinModelRender>(0);
 
 	const char* modelPath = "hoge";
 	
@@ -134,7 +132,6 @@ void Enemy::Init(
 	default:
 		break;
 	}
-
 
 	m_position = initPoint;
 
@@ -374,6 +371,7 @@ void Enemy::DecToActivateTime()
 {
 	m_toActivateCounter -= g_gameTime->GetFrameDeltaTime();
 
+	//自機との接触判定を有効にする
 	if (m_toActivateCounter <= 0.0f) {
 		m_toActivateCounter = 0.0f;
 		m_isActive = true;
@@ -384,6 +382,7 @@ void Enemy::DecLifeTime()
 {
 	m_lifeTime -= g_gameTime->GetFrameDeltaTime();
 
+	//時間寿命を減少
 	if (m_lifeTime <= 0.0f) {
 		m_lifeTime = 0.0f;
 		SelfDestroy();

@@ -213,7 +213,7 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 	//アルベドカラー、スペキュラカラー、金属度、滑さをサンプル
 	//アルベドカラー
 	float4 albedoColor = g_albedo.Sample(g_sampler, psIn.uv);
-	float alpha = g_albedo.Sample(g_sampler, psIn.uv).a;
+	//float alpha = g_albedo.Sample(g_sampler, psIn.uv).a;
 
 	//スペキュラをアルベドカラーと同じにする
 	float3 specColor = albedoColor;
@@ -337,8 +337,8 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		smooth
 	) * directionLight.color;
 
-	//金属度が高い　→　鏡面反射はスペキュラカラー
-	//金属度が低い　→　白っぽい色を返す
+	//金属度が高い　→　スペキュラカラー(=アルベドカラー = 物体の色)を返す
+	//金属度が低い　→　ディレクションライトの色を返す
 	//specDir *= lerp(float3(1.0f,1.0f,1.0f),specColor,metallic);
 	specDir *= lerp(directionLight.color,specColor,metallic);
 
@@ -351,8 +351,8 @@ float4 PSMain(SPSIn psIn) : SV_Target0
 		smooth
 	) * pointLight.color;
 
-	//金属度が高い　→　鏡面反射はスペキュラカラー
-	//金属度が低い　→　白っぽい色を返す
+	//金属度が高い　→　スペキュラカラー(=アルベドカラー = 物体の色)を返す
+	//金属度が低い　→　ポイントライトの色を返す
 	//specPt *= lerp(float3(1.0f,1.0f,1.0f),specColor,metallic);
 	specPt *= lerp(pointLight.color,specColor,metallic);
 
@@ -608,7 +608,7 @@ float3 GetNormal(float3 normal, float3 tangent, float3 biNormal, float2 uv)
 float Beckmann(float m, float t)
 {
 	float t2 = t * t;
-	float t4 = t * t * t;
+	float t4 = t * t * t * t;
 	float m2 = m * m;
 	float D = 1.0f / (4.0f * m2 * t4);
 	D *= exp((-1.0f / m2) * (1.0f - t2) / t2);
@@ -644,7 +644,7 @@ float CalcDiffuseFromFresnel(float3 N, float3 L, float3 V)
 
 	//法線と光源に向かうベクトルwを利用して拡散反射率を求める
 	float dotNL = saturate(dot(N, L));
-	float FL = (1 + (Fd90 - 1));
+	float FL = (1 + (Fd90 - 1) * pow(1 - dotNL, 5));
 
 	//法線と視点に向かうベクトルwを利用して拡散反射率を求める
 	float dotNV = saturate(dot(N, L));

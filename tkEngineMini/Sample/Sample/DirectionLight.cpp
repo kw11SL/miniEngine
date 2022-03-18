@@ -3,9 +3,10 @@
 #include "Light.h"
 
 namespace {
-	const Vector3 MAX_COLOR = { 0.25f,0.25f,0.25f };
+	const Vector3 MAX_COLOR = { 0.3f,0.3f,0.3f };
+	//const Vector3 MAX_COLOR = { 0.3f,0.3f,0.3f };
 	const Vector3 MIN_COLOR = { 0.0f,0.0f,0.0f };
-	const Vector3 MAX_COLOR_AMB = { 0.7f,0.7f,0.7f };
+	const Vector3 MAX_COLOR_AMB = { 0.4f,0.4f,0.4f };
 	const Vector3 MIN_COLOR_AMB = { 0.0f,0.0f,0.0f };
 
 	const float MAX_COLOR_RATE = 1.0f;
@@ -113,6 +114,7 @@ void DirectionLight::FadeIn(const float addRate)
 		m_colorRate = 1.0f;
 	}
 
+	//ライトのカラーを線形補完
 	m_color.Lerp(m_colorRate, MIN_COLOR, MAX_COLOR * MAX_COLOR_RATE);
 	SetColor(m_color);
 
@@ -125,6 +127,7 @@ void DirectionLight::FadeIn(const float addRate)
 		m_colorAmbRate = 1.0f;
 	}
 
+	//アンビエントライトのカラーを線形補完
 	m_colorAmb.Lerp(m_colorAmbRate, MIN_COLOR_AMB, MAX_COLOR_AMB * MAX_COLOR_AMB_RATE);
 	SetAmbColor(m_colorAmb);
 }
@@ -132,18 +135,20 @@ void DirectionLight::FadeIn(const float addRate)
 
 void DirectionLight::Update()
 {
+	//ゲームの状態がゲームでなければ処理しない
 	if (GameDirector::GetInstance()->GetGameState() != enGame) {
 		return;
 	}
 
+	//明るさを上げていく処理
 	FadeIn(COLOR_FADEIN_RATE);
 
 	//視点を設定
 	m_eyePos = g_camera3D->GetPosition();
 	SetEyePos(m_eyePos);
 
-	//m_direction = g_camera3D->GetPosition() - g_camera3D->GetTarget();
-	m_direction = g_camera3D->GetTarget() - g_camera3D->GetPosition();
+	m_direction = g_camera3D->GetPosition() - g_camera3D->GetTarget();
+	//m_direction = g_camera3D->GetTarget() - g_camera3D->GetPosition();
 	SetDirection(m_direction);
 
 
