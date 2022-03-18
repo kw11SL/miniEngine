@@ -16,7 +16,13 @@ namespace {
 
 	//地形から浮かせる量
 	const float UPPER_OFFSET = 50.0f;
-	
+	//当たり判定の範囲
+	const float HIT_RANGE = 100.0f;
+	//移動停止する範囲
+	const float STOP_RANGE = 60.0f;
+	//移動再開する範囲
+	const float RE_MOVE_RANGE = 70.0f;
+
 	//エネミーのタイプ毎の移動速度
 	const float MOVE_SPEED_COMMON = 5.0f;
 	const float MOVE_SPEED_POWERED = 5.0f;
@@ -210,10 +216,10 @@ void Enemy::Move()
 	Vector3 playerToMe = m_position - m_player->GetPosition();
 	
 	//プレイヤーの位置までのベクトルを取り、一定距離まで近づくと速度を0にする
-	if (toPlayerLength < 60.0f){
+	if (toPlayerLength < STOP_RANGE){
 		m_speed = 0.0f;
 	}
-	else if (toPlayerLength >= 70.0f && m_enEnemyType == enCommon) {
+	else if (toPlayerLength >= RE_MOVE_RANGE && m_enEnemyType == enCommon) {
 		m_speed = MOVE_SPEED_COMMON;
 	}
 
@@ -239,7 +245,7 @@ void Enemy::Hit()
 		float length = diff.Length();
 		
 		//距離が一定値以下のとき
-		if (length < 60.0f) {
+		if (length < HIT_RANGE) {
 			
 			//無敵状態でなければ
 			if (m_isInvincible == false) {

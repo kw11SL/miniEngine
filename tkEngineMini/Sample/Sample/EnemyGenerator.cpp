@@ -75,6 +75,12 @@ void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
 		return;
 	}
 
+	//最大数を超えていたら処理しない
+	if (GameDirector::GetInstance()->GetEnemyCount() > GameDirector::GetInstance()->GetMaxEnemyNum())
+	{
+		return;
+	}
+
 	//エネミーの最大数を超えていなかったらスポーン
 	if (GameDirector::GetInstance()->GetEnemyCount() <= GameDirector::GetInstance()->GetMaxEnemyNum()) {
 

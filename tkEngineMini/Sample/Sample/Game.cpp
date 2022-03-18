@@ -40,7 +40,7 @@ bool Game::Start()
 
 	//ポイントライトの初期化
 	m_pointLight = NewGO<PointLight>(0, "pointlight");
-	m_pointLight->Init({ 0.0f,0.0f,100.0f }, { 0.0f,0.0f,6.0f }, 1500.0f);
+	m_pointLight->Init({ 0.0f,0.0f,100.0f }, { 2.4f,2.2f,2.0f }, 1000.0f);
 	//m_pointLight->Init({ 0.0f,0.0f,100.0f }, { 0.0f,0.0f,0.0f }, 1500.0f);
 
 	//スポットライトの初期化

@@ -6,7 +6,7 @@ namespace {
 	const Vector3 MAX_COLOR = { 0.3f,0.3f,0.3f };
 	//const Vector3 MAX_COLOR = { 0.3f,0.3f,0.3f };
 	const Vector3 MIN_COLOR = { 0.0f,0.0f,0.0f };
-	const Vector3 MAX_COLOR_AMB = { 0.4f,0.4f,0.4f };
+	const Vector3 MAX_COLOR_AMB = { 0.48f,0.48f,0.48f };
 	const Vector3 MIN_COLOR_AMB = { 0.0f,0.0f,0.0f };
 
 	const float MAX_COLOR_RATE = 1.0f;

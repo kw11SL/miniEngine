@@ -5,8 +5,6 @@
 GameDirector* GameDirector::m_gameDirector = nullptr;
 
 
-
-
 void GameDirector::ResetGame()
 {
 	m_score = 0;
