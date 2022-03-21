@@ -43,6 +43,10 @@ private:
 	SkinModelRender* m_skinModelRender = nullptr;		//モデルレンダー
 	PhysicsStaticObject m_physicsStaticObject;			//静的物理オブジェクト
 
+	DirectionLight* m_directionLight = nullptr;
+	PointLight* m_pointLight = nullptr;
+	SpotLight* m_spotLight = nullptr;
+
 	Vector3 m_position = Vector3::Zero;					//座標
 	Quaternion m_rotation = Quaternion::Identity;		//回転
 	Vector3 m_scale = Vector3::One;						//拡大率

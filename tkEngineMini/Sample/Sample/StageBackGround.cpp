@@ -16,7 +16,6 @@ namespace
 
 StageBackGround::StageBackGround()
 {
-	m_skinModelRender = NewGO<SkinModelRender>(0);
 }
 
 StageBackGround::~StageBackGround()
@@ -31,6 +30,16 @@ bool StageBackGround::Start()
 
 void StageBackGround::Init(const Vector3& pos, const Quaternion& rot, const Vector3& scale)
 {
+	m_skinModelRender = NewGO<SkinModelRender>(0);
+
+	//ライトを検索、受け取り
+	m_directionLight = FindGO<DirectionLight>(DIRECTION_LIGHT_NAME);
+	m_pointLight = FindGO<PointLight>(POINT_LIGHT_NAME);
+	m_spotLight = FindGO<SpotLight>(SPOT_LIGHT_NAME);
+	if (m_directionLight != nullptr) { RecieveDirectionLight(m_directionLight); }
+	if (m_pointLight != nullptr) { RecievePointLight(m_pointLight); }
+	if (m_spotLight != nullptr) { RecieveSpotLight(m_spotLight); }
+
 	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisZ, false, false);
 
 	//モデル拡大

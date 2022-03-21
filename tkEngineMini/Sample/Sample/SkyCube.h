@@ -8,8 +8,7 @@ public:
 	void Update()override;
 
 	/// @brief ‰Šú‰»ˆ—
-	/// @param filePath 
-	void Init(const char* filePath);
+	void Init();
 
 	/// @brief À•W‚ğİ’è
 	/// @param pos À•W

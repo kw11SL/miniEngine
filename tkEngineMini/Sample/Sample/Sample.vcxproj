@@ -301,9 +301,13 @@
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="DirectionLight.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyBase.cpp" />
+    <ClCompile Include="EnemyBomb.cpp" />
     <ClCompile Include="EnemyExplosion.cpp" />
     <ClCompile Include="EnemyGenerator.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="EnemyNormal.cpp" />
+    <ClCompile Include="EnemyShot.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="ExplosionBase.cpp" />
     <ClCompile Include="FontRender.cpp" />
@@ -433,9 +437,13 @@
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="DirectionLight.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyBase.h" />
+    <ClInclude Include="EnemyBomb.h" />
     <ClInclude Include="EnemyExplosion.h" />
     <ClInclude Include="EnemyGenerator.h" />
     <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="EnemyNormal.h" />
+    <ClInclude Include="EnemyShot.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="ExplosionBase.h" />
     <ClInclude Include="FontRender.h" />

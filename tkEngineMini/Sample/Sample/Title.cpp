@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "Title.h"
 
+namespace {
+	const wchar_t* PRESS_START_SE_FILEPATH = L"Assets/wav/decide_2.wav";
+	const float PRESS_START_SE_VOLUME = 0.5f;
+}
 
 Title::Title()
 {
@@ -51,8 +55,8 @@ void Title::Update()
 
 		//ボタンを押したときの音を再生
 		CSoundSource* ss = NewGO<CSoundSource>(0);
-		ss->Init(L"Assets/wav/decide_2.wav", false);
-		ss->SetVolume(0.5f);
+		ss->Init(PRESS_START_SE_FILEPATH, false);
+		ss->SetVolume(PRESS_START_SE_VOLUME);
 		ss->Play(false);
 	}
 
@@ -62,7 +66,7 @@ void Title::Update()
 	}
 	if (m_titleSprite.GetIsFinishFadeOut() == true) {
 		//タイトルのフェードアウト完了でゲームをNewGO
-		NewGO<Game>(0, "game");
+		NewGO<Game>(0, GAME_SCENE_NAME);
 		//ゲームの状態をゲーム開始に変更
 		GameDirector::GetInstance()->SetGameState(enStart);
 

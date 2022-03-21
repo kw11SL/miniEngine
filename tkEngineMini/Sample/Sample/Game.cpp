@@ -13,9 +13,13 @@
 #include "StageBackGround.h"
 #include "SkyCube.h"
 
+
+namespace {
+	const char* CAPSULE_LEVEL_FILEPATH = "Assets/level3D/level00_a.tkl";	//レベルのファイルパス
+}
+
 Game::Game()
 {
-	
 }
 
 Game::~Game()
@@ -34,17 +38,16 @@ Game::~Game()
 bool Game::Start()
 {
 	//ディレクションライトの初期化
-	m_directionLight = NewGO<DirectionLight>(0, "directionlight");
+	m_directionLight = NewGO<DirectionLight>(0, DIRECTION_LIGHT_NAME);
 	m_directionLight->Init({ 1.0f,0.0f,0.0f }/*g_camera3D->GetPosition() - g_camera3D->GetTarget()*/, { 0.25f,0.25f,0.25f }, { 0.7f,0.7f,0.7f });
 	m_directionLight->SetEyePos(g_camera3D->GetPosition());
 
 	//ポイントライトの初期化
-	m_pointLight = NewGO<PointLight>(0, "pointlight");
+	m_pointLight = NewGO<PointLight>(0, POINT_LIGHT_NAME);
 	m_pointLight->Init({ 0.0f,0.0f,100.0f }, { 2.4f,2.2f,2.0f }, 1000.0f);
-	//m_pointLight->Init({ 0.0f,0.0f,100.0f }, { 0.0f,0.0f,0.0f }, 1500.0f);
 
 	//スポットライトの初期化
-	m_spotLight = NewGO<SpotLight>(0, "spotlight");
+	m_spotLight = NewGO<SpotLight>(0, SPOT_LIGHT_NAME);
 	Vector3 spDir = { 0.0f,0.0f,-1.0f };
 	spDir.Normalize();
 	float spEmitAngle = Math::DegToRad(90.0f);
@@ -55,25 +58,18 @@ bool Game::Start()
 	m_ui->Init();
 
 	//スカイキューブの初期化
-	m_skyCube = NewGO<SkyCube>(0, "skyCube");
-	m_skyCube->Init("Assets/modelData/skyCube/sky.tkm");
+	m_skyCube = NewGO<SkyCube>(0, SKYCUBE_NAME);
+	m_skyCube->Init();
 
 
-	////レベル構築
-	m_level.Init("Assets/level3D/level00_a.tkl", [&](LevelObjectData& objData) {
+	//レベル構築
+	m_level.Init(CAPSULE_LEVEL_FILEPATH, [&](LevelObjectData& objData) {
 		
 		//プレイヤー
 		if (objData.EqualObjectName(L"player") == true) {
-			m_player = NewGO<Player_new>(0, "player");
-
-			//ライトを渡す処理
-			if (m_player->GetSkinModelRender() != nullptr) {
-				m_player->RecieveDirectionLight(m_directionLight);
-				m_player->RecievePointLight(m_pointLight);
-				m_player->RecieveSpotLight(m_spotLight);
-			}
-
+			m_player = NewGO<Player_new>(0, PLAYER_NAME);
 			m_player->Init();
+
 			m_player->SetPostion(objData.position);
 			m_player->SetRotation(objData.rotation);
 			////プレイヤーの前方、右、上ベクトルにレベルの回転を適用
@@ -133,16 +129,7 @@ bool Game::Start()
 
 		//ステージ
 		if (objData.EqualObjectName(L"stageBg") == true) {
-			m_bg = NewGO<BG>(0, "bg");
-
-			//ステージにライトを渡す処理
-			if (m_bg->GetSkinModelRender() != nullptr) {
-				m_bg->RecieveDirectionLight(m_directionLight);
-				m_bg->RecievePointLight(m_pointLight);
-				m_bg->RecieveSpotLight(m_spotLight);
-
-				//m_bg->InitModelFromInitData();
-			}
+			m_bg = NewGO<BG>(0, STAGE_NAME);
 
 			m_bg->Init(
 				objData.position,
@@ -150,27 +137,18 @@ bool Game::Start()
 				Vector3::One
 			);
 
-			
 			return true;
 		}
 
 		//背景
 		if (objData.EqualObjectName(L"backGround") == true) {
-			m_stageBackGround = NewGO<StageBackGround>(0, "stageBackGround");
-			
-			//背景にライトを渡す処理
-			if (m_stageBackGround->GetSkinModelRender() != nullptr) {
-				m_stageBackGround->RecieveDirectionLight(m_directionLight);
-				m_stageBackGround->RecievePointLight(m_pointLight);
-				m_stageBackGround->RecieveSpotLight(m_spotLight);
-
-				//m_stageBackGround->InitModelFromInitData();
-			}
+			m_stageBackGround = NewGO<StageBackGround>(0, STAGE_BACK_GROUND_NAME);
 			
 			m_stageBackGround->Init(
 				objData.position,
 				objData.rotation,
 				Vector3::One);
+
 			return true;
 		}
 
@@ -194,8 +172,9 @@ void Game::DeleteGenerators()
 
 void Game::Update()
 {
-
+	//ポイントライトの位置をプレイヤー位置に設定
 	m_pointLight->SetPosition(m_player->GetPosition() + m_player->GetUp()*100.0f);
+	
 	/*m_spotLight->SetPosition(m_player->GetPosition() + m_player->GetUp() * 200.0f);
 	m_spotLight->SetDirection(m_player->GetPosition() - m_spotLight->GetPosition());*/
 

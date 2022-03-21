@@ -1,6 +1,5 @@
 #pragma once
 #include"Explosion.h"
-
 class Player_new;
 
 /// @brief エネミーのタイプ
@@ -168,14 +167,17 @@ public:
 		m_skinModelRender->InitModel();
 	}
 
-
-
 	/// @brief プレイヤーに点数を加点せず即座に自滅させる
 	void SelfDestroy();
 
 private:
+	//内部で行う処理
+	
+	/// @brief 生成時に1度だけ呼ばれる処理
+	/// @return 初期化終了フラグ 
 	bool Start() override;
 
+	/// @brief 更新処理
 	void Update() override;
 
 	/// @brief 移動処理
@@ -208,7 +210,7 @@ private:
 	SphericalMove m_sphericalMove;						//球面移動用クラス
 	EnEnemyType m_enEnemyType = enCommon;				//エネミーのタイプ
 
-	Player_new* m_player = nullptr;
+	Player_new* m_player = nullptr;						//プレイヤーへのポインタ
 	Explosion* m_explosion = nullptr;
 
 	float m_life = 0.0f;								//耐久値

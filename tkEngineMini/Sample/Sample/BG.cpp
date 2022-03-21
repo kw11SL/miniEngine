@@ -3,20 +3,17 @@
 
 namespace
 {
-	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
-	const char* VS_ENTRYPOINT_NAME = "VSMain";
-	const char* MODEL_FILEPATH = "Assets/modelData/bg/stage_cupsule3.tkm";
+	const char* MODEL_FILEPATH = "Assets/modelData/bg/stage_cupsule3.tkm";	//モデルのファイルパス
 	//const char* MODEL_FILEPATH = "Assets/modelData/bg/stage_cupsule4.tkm";
 	//const char* MODEL_FILEPATH = "Assets/modelData/bg/stage_cupsule5.tkm";
 
-	const Vector3 INIT_POINT = { 0.0f,0.0f,0.0f };
+	const Vector3 INIT_POINT = { 0.0f,0.0f,0.0f };							//初期位置
 
-	const float MODEL_INIT_SCALE_RATIO = 5.0f;
+	const float MODEL_INIT_SCALE_RATIO = 5.0f;								//拡大率
 }
 
 BG::BG()
 {
-	m_skinModelRender = NewGO<SkinModelRender>(0);
 }
 
 BG::~BG()
@@ -31,6 +28,17 @@ bool BG::Start()
 
 void BG::Init(const Vector3& pos, const Quaternion& rot,const Vector3& scale)
 {
+
+	m_skinModelRender = NewGO<SkinModelRender>(0);
+
+	//ライトを検索、受け取り
+	m_directionLight = FindGO<DirectionLight>(DIRECTION_LIGHT_NAME);
+	m_pointLight = FindGO<PointLight>(POINT_LIGHT_NAME);
+	m_spotLight = FindGO<SpotLight>(SPOT_LIGHT_NAME);
+	if (m_directionLight != nullptr) { RecieveDirectionLight(m_directionLight); }
+	if (m_pointLight != nullptr) { RecievePointLight(m_pointLight); }
+	if (m_spotLight != nullptr) { RecieveSpotLight(m_spotLight); }
+
 	//背景には影を落としたいのでシャドウレシーバーフラグをオンにする
 	m_skinModelRender->Init(MODEL_FILEPATH, enModelUpAxisY, false, true);
 

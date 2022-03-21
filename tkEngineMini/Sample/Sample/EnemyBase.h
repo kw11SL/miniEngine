@@ -5,6 +5,8 @@ public:
 	EnemyBase();
 	virtual ~EnemyBase(){}
 
+	/// @brief 生成時に一度だけ呼ばれる処理
+	/// @return 完了フラグ
 	bool Start() override
 	{
 		return true;
@@ -17,6 +19,11 @@ public:
 	/// @brief 初期化処理に付随する処理
 	virtual void InitSub() {};
 
+	/// @brief エフェクトの初期化処理
+	virtual void InitEffect() {}
+	
+	/// @brief エフェクトの更新処理
+	virtual void UpdateEffect(){}
 
 	//共通して行う処理
 
@@ -44,11 +51,16 @@ public:
 	/// @brief 自機との当たり判定が有効になるまでのカウンターを減少
 	void DecToActivateTime();
 
+	/// @brief 時間寿命を減少
+	void DecLifeTime();
+
 	/// @brief 撃破処理
 	void Destroy();
 
 	/// @brief 自滅処理
 	void SelfDestroy();
+	//自滅時に付随する処理
+	virtual void SelfDestroySub(){}
 
 	/// @brief タイムアップ時の自滅
 	void DestroyTimeUp();
@@ -69,10 +81,26 @@ public:
 	/// @brief 回転角度を取得
 	/// @return 回転角度
 	const float GetAngle() const { return m_angle; }
+	
+	/// @brief エネミーの撃破スコアを取得
+	/// @return 
+	const int GetScore() { return m_score; }
+
+	/// @brief プレイヤーに対する当たり判定が有効かどうか
+	/// @return アクティブフラグ
+	const bool GetIsActive() { return m_isActive; }
+
+	/// @brief 無敵状態かどうか？
+	/// @return 無敵フラグ
+	const bool GetIsInvincible() { return m_isInvincible; }
+
+	/// @brief 存在しているかどうか？
+	/// @return 存在フラグ
+	const bool GetIsExist() { return m_isExist; }
 
 	/// @brief スキンモデルレンダーを取得
 	/// @return スキンモデルレンダー
-	SkinModelRender* GetSkinModelRender(){	return m_skinModelRender; }
+	SkinModelRender* GetSkinModelRender() { return m_skinModelRender; }
 
 	//セッター
 	/// @brief	座標を設定 
@@ -137,6 +165,7 @@ protected:
 	//パラメータ各種
 	float m_life = 0.0f;								//耐久値
 	float m_lifeTime = 1.0f;							//時間寿命
+	float m_hitRange = 100.0f;							//当たり判定範囲
 	float m_speed = 0.0f;								//移動速度
 	int m_score = 0;									//エネミーの撃破スコア
 	float m_durability = 0.0f;							//弾への影響値
@@ -163,10 +192,9 @@ protected:
 	SpotLight* m_spotLight = nullptr;
 
 	//エフェクト各種
-	//撃破エフェクト
-	Effect m_destroyEffect;
-	//ヒットエフェクト
-	Effect m_hitEffect;
+	Effect m_destroyEffect;		//撃破エフェクト
+	Effect m_hitEffect;			//ヒットエフェクト
+
 
 };
 

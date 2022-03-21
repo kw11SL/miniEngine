@@ -75,7 +75,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	frameBufferSprite.Init(spriteInitData);
 
 	//タイトルの作成
-	NewGO<Title>(0, "title");
+	NewGO<Title>(0, TITLE_NAME);
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
@@ -85,27 +85,27 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{	
-		//テスト：ゲームの削除
-		if(g_pad[0]->IsTrigger(enButtonStart)){
-			QueryGOs<Game>("game", [&](Game* gameScene) {
-				
-				//ゲームを削除
-				DeleteGO(gameScene);
-				//ゲームを初期状態に戻す
-				GameDirector::GetInstance()->ResetGame();
-				//バンク内ファイルを消去
-				//g_engine->ClearFileBank();
+		////テスト：ゲームの削除
+		//if(g_pad[0]->IsTrigger(enButtonStart)){
+		//	QueryGOs<Game>(GAME_SCENE_NAME, [&](Game* gameScene) {
+		//		
+		//		//ゲームを削除
+		//		DeleteGO(gameScene);
+		//		//ゲームを初期状態に戻す
+		//		GameDirector::GetInstance()->ResetGame();
+		//		//バンク内ファイルを消去
+		//		//g_engine->ClearFileBank();
 
-				//タイトルをNewGO
-				NewGO<Title>(0, "title");
+		//		//タイトルをNewGO
+		//		NewGO<Title>(0, TITLE_NAME);
 
-				//問い合わせ終了
-				return false;
-			});
+		//		//問い合わせ終了
+		//		return false;
+		//	});
 
-			//バレットマネージャ内からすべての弾を消去
-			BulletManager::GetInstance()->DeleteBullets();
-		}
+		//	//バレットマネージャ内からすべての弾を消去
+		//	BulletManager::GetInstance()->DeleteBullets();
+		//}
 
 		//// テスト：ポーズ状態の切り替え
 		//if (g_pad[0]->IsTrigger(enButtonSelect)) {
@@ -158,7 +158,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//テスト：レンダリングエンジンの処理
 		RenderingEngine::GetInstance()->Execute(renderContext);
 
-		////step-6 エフェクトのドロー。
+		//エフェクトのドロー。
 		//EffectEngine::GetInstance()->Draw();
 
 		//メインレンダリングターゲットに描画したものをフレームバッファにコピー

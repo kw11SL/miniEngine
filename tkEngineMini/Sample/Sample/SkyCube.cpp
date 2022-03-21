@@ -28,13 +28,13 @@ bool SkyCube::Start()
 	return true;
 }
 
-void SkyCube::Init(const char* filePath)
+void SkyCube::Init()
 {
 	m_skinModelRender = NewGO<SkinModelRender>(0);
 
 	//追加の初期化情報を作成
 	ModelInitData initData;
-	initData.m_tkmFilePath = filePath;
+	initData.m_tkmFilePath = MODEL_FILEPATH;
 	initData.m_fxFilePath = SHADER_FILEPATH;
 	initData.m_modelUpAxis = enModelUpAxisY;
 	initData.m_vsEntryPointFunc = "VSMain";
@@ -53,7 +53,7 @@ void SkyCube::Init(const char* filePath)
 
 	//モデルを初期化(レンダリングエンジンに登録するため)
 	m_skinModelRender->Init(
-		filePath,
+		MODEL_FILEPATH,
 		enModelUpAxisY,
 		false,
 		false,

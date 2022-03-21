@@ -6,10 +6,15 @@ namespace
 	//シェーダのファイルパス
 	//通常描画用のシェーダーファイルパス
 	const char* MODEL_FX_FILEPATH = "Assets/shader/model.fx";
+	//非PBRのシェーダーファイルパス
+	const char* MODEL_FX_FILEPATH_NONPBR = "Assets/shader/model_nonPBR.fx";
+
 	//シャドウマップ描画用のシェーダーファイルパス
 	const char* MODEL_FX_FILEPATH_SHADOWMAP = "Assets/shader/ShadowMap.fx";
 	//シャドウレシーバー用のシェーダーファイルパス
 	const char* MODEL_FX_FILEPATH_SHADOWRECIEVER = "Assets/shader/ShadowReciever.fx";
+	//非PBRのシャドウレシーバー用のシェーダーファイルパス
+	const char* MODEL_FX_FILEPATH_SHADOWRECIEVER_NONPBR = "Assets/shader/ShadowReciever_nonPBR.fx";
 
 	//頂点シェーダのエントリーポイント名
 	//通常のエントリーポイント
@@ -79,6 +84,8 @@ void SkinModelRender::Init(
 			//すでにシェーダーが指定されているとき(≠nullptr)はそちらのシェーダーを使用する
 			if (m_modelInitData.m_fxFilePath == nullptr) {
 				m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH;
+				//m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH_NONPBR;
+
 			}
 
 		}
@@ -86,6 +93,8 @@ void SkinModelRender::Init(
 			//シャドウレシーバーフラグがオンのとき
 			//シャドウレシーバー用のシェーダーを指定
 			m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH_SHADOWRECIEVER;
+			//m_modelInitData.m_fxFilePath = MODEL_FX_FILEPATH_SHADOWRECIEVER_NONPBR;
+			
 			//シャドウマップを拡張SRV(シェーダーリソースビュー)に設定する
 			m_modelInitData.m_expandShaderResoruceView[0] = &RenderingEngine::GetInstance()->GetShadowMap().GetRenderTargetTexture();
 			//ライトビュープロジェクション行列を拡張定数バッファ―に設定する
@@ -129,25 +138,19 @@ void SkinModelRender::Init(
 void SkinModelRender::InitDirectionLight(DirectionLight* dirLight)
 {
 	m_modelInitData.m_expandConstantBuffer = dirLight->GetDirLightAddress();
-	m_modelInitData.m_expandConstantBufferSize = sizeof(dirLight->GetDirLight());
-	
-	//m_model.Init(m_modelInitData);
+	m_modelInitData.m_expandConstantBufferSize = sizeof(dirLight->GetDirLight());	
 }
 
 void SkinModelRender::InitPointLight(PointLight* ptLight)
 {
 	m_modelInitData.m_expandConstantBuffer_1 = ptLight->GetPointLightAddress();
 	m_modelInitData.m_expandConstantBufferSize_1 = sizeof(ptLight->GetPointLight());
-
-	//m_model.Init(m_modelInitData);
 }
 
 void SkinModelRender::InitSpotLight(SpotLight* spLight)
 {
 	m_modelInitData.m_expandConstantBuffer_2 = spLight->GetSpotLightAddress();
 	m_modelInitData.m_expandConstantBufferSize_2 = sizeof(spLight->GetSpotLight());
-
-	//m_model.Init(m_modelInitData);
 }
 
 void SkinModelRender::InitModel()

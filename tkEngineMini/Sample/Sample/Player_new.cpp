@@ -4,10 +4,7 @@
 
 
 namespace{
-	//const char* MODELPATH_UTC = "Assets/modelData/unityChan.tkm";
-	//const char* MODELPATH_UTC = "Assets/modelData/player/player_object.tkm";
 	const char* MODELPATH_UTC = "Assets/modelData/player/player_object_c.tkm";
-	//const char* MODELPATH_UTC = "Assets/modelData/player_a.tkm";
 	const char* SKELETON_PATH_UTC = "Assets/modelData/unityChan.tks";
 	const float UTC_RADIUS = 40.0f;
 	const float UTC_HEIHGT = 100.0f;
@@ -51,12 +48,11 @@ namespace{
 	const Vector3 EFFECT_SCALE_MARKER = { 30.0f,30.0f,30.0f };						//当たり判定エフェクトの拡大率
 	const float MARKER_PLAY_INTERVAL = 0.02f;										//当たり判定エフェクトの発生間隔
 
-
 }
 
 Player_new::Player_new()
 {
-	m_skinModelRender = NewGO<SkinModelRender>(0);
+
 }
 
 Player_new::~Player_new()
@@ -68,6 +64,8 @@ Player_new::~Player_new()
 
 void Player_new::Init()
 {
+	m_skinModelRender = NewGO<SkinModelRender>(0);
+
 	//エフェクトを初期化
 	InitEffect();
 
@@ -78,10 +76,14 @@ void Player_new::Init()
 	m_normalShotSe = NewGO<CSoundSource>(0);
 	m_normalShotSe->Init(L"Assets/wav/normalShotSe_1.wav");
 
-	////ライトを検索
-	//m_directionLight = FindGO<DirectionLight>("directionlight");
-	//m_pointLight = FindGO<PointLight>("pointlight");
-	//m_spotLight = FindGO<SpotLight>("spotlight");
+	//ライトを検索,受け取り
+	m_directionLight = FindGO<DirectionLight>(DIRECTION_LIGHT_NAME);
+	m_pointLight = FindGO<PointLight>(POINT_LIGHT_NAME);
+	m_spotLight = FindGO<SpotLight>(SPOT_LIGHT_NAME);
+	if (m_directionLight != nullptr) { RecieveDirectionLight(m_directionLight); }
+	if (m_pointLight != nullptr) { RecievePointLight(m_pointLight); }
+	if (m_pointLight != nullptr) { RecieveSpotLight(m_spotLight); }
+
 
 	//弾の管理クラスのポインタを取得
 	m_bulletManager = BulletManager::GetInstance();
@@ -127,9 +129,7 @@ void Player_new::Init()
 	toCamera.x = 0.0f;
 	toCamera.y = 700.0f;
 	toCamera.z = 1000.0f;
-	/*toCamera.x = 0.0f;
-	toCamera.y = 1600.0f;
-	toCamera.z = 2400.0f;*/
+
 	toCamera *= 1.5f;
 
 	//カメラの初期化
@@ -205,15 +205,6 @@ void Player_new::Move()
 		m_moveTrackEffect.SetRotation(m_rot);
 		m_moveTrackEffect.SetScale(EFFECT_SCALE_TRACK);
 		m_moveTrackEffect.Play(false);
-
-		/*if (m_markerCounter >= MARKER_PLAY_INTERVAL) {
-			m_markerEffect.SetPosition(m_position + m_up * 50.0f);
-			m_markerEffect.SetRotation(m_rot);
-			m_markerEffect.SetScale(EFFECT_SCALE_MARKER);
-			m_markerEffect.Play(true);
-
-			m_markerCounter = 0.0f;
-		}*/
 	}
 
 	//自作キャラコンに移動速度を渡す
@@ -351,10 +342,6 @@ void Player_new::FireBullet()
 				ssNormalSe->Init(L"Assets/wav/normalShotSe_1.wav");
 				ssNormalSe->SetVolume(0.4f);
 				ssNormalSe->Play(false);
-
-				/*m_normalShotSe->SetVolume(0.4f);
-				m_normalShotSe->Play(false);*/
-
 			}
 
 			//弾管理クラスの関数を使用して出現させる
@@ -440,9 +427,6 @@ void Player_new::Hit()
 				ssMissSe->Init(L"Assets/wav/missSe.wav");
 				ssMissSe->SetVolume(1.0f);
 				ssMissSe->Play(false);
-				/*m_missSe->SetVolume(0.8f);
-				m_missSe->Play(false);*/
-
 
 				//被弾エフェクトを発生
 				m_explosionEffect.Init(EFFECT_FILEPATH_EXPLOSION);
@@ -533,6 +517,7 @@ void Player_new::Revive()
 		return;
 	}
 
+	//現フレームで生存フラグが立ったら
 	if (m_isExist == true
 		&& m_isExistPrev == false) {
 
@@ -543,7 +528,6 @@ void Player_new::Revive()
 		if (m_skinModelRender->GetIsDraw() == false) {
 			m_skinModelRender->SetIsDraw(true);
 		}
-
 	}
 }
 
@@ -560,6 +544,7 @@ void Player_new::ReviveReady()
 		m_isReviveReady = true;
 	}
 
+	//現フレームで復活準備フラグがオンなら
 	if (m_isReviveReadyPrev == false
 		&& m_isReviveReady == true) {
 		
@@ -632,24 +617,16 @@ void Player_new::Update()
 	}
 
 	//カメラ追従
-	////カメラ注視点から視点へのベクトルを作成
-	//Vector3 toCamera = m_gameCamera.GetCameraPosition() - m_gameCamera.GetTargetPosition();
+	////////////////////////////////////////////////////////////
 	//注視点目標からカメラ目標へのベクトルを作成
 	Vector3 toCamera = m_gameCamera.GetCameraPositionTarget() - m_gameCamera.GetTargetPositionTarget();
 
 	//ベクトルにクォータニオンを適用
 	m_rotUpToGroundNormal.Apply(toCamera);
-	/*m_cameraRot.Apply(toCamera);
-	m_cameraRot.Apply(toCamera);*/
-	//mulRot.Apply(toCamera);
 
-	////注視点を自身に設定
-	//m_gameCamera.SetTargetPosition(m_position);
 	//注視点目標を自身に設定
 	m_gameCamera.SetTargetPositionTarget(m_position);
 
-	////視点を設定
-	//m_gameCamera.SetCameraPosition(m_position + toCamera);
 	//カメラ目標を設定
 	m_gameCamera.SetCameraPositionTarget(m_position + toCamera);
 
@@ -663,9 +640,11 @@ void Player_new::Update()
 	//カメラの更新
 	m_gameCamera.UpdateCamera();
 
+	////////////////////////////////////////////////////////////
+
 
 	//各種フラグの記録
-	//////////////////////////////////
+	////////////////////////////////////////////////////////////
 	//現フレームの上を記録
 	m_upPrev = m_up;
 	//現フレームの無敵フラグを記録
@@ -673,22 +652,25 @@ void Player_new::Update()
 	//現フレームの存在フラグを記録
 	m_isExistPrev = m_isExist;
 	m_isReviveReadyPrev = m_isReviveReady;
+	////////////////////////////////////////////////////////////
 
 	//エフェクトの更新
+	////////////////////////////////////////////////////////////
 	m_startEffect.SetPosition(m_position + m_up * 50.0f);
+	//m_startEffect.SetRotation(m_rot);
+	m_startEffect.Update();
+	m_explosionEffect.Update();
+	m_reviveEffect.Update();
+	m_moveTrackEffect.Update();
+	m_markerEffect.Update();
+
 	m_shotDirectionEffect.SetPosition(m_position);
 	m_shotDirectionEffect.SetScale(EFFECT_SCALE_DIRECTION);
 	//m_shotDirectionEffect.SetRotation(m_rot);
 	if (m_shotDirectionEffect.IsPlay() != true) {
 		m_shotDirectionEffect.Play();
 	}
-	//m_startEffect.SetRotation(m_rot);
+	//m_shotDirectionEffect.Update();
 
-	m_startEffect.Update();
-	m_explosionEffect.Update();
-	m_reviveEffect.Update();
-	m_moveTrackEffect.Update();
-	m_markerEffect.Update();
-	m_shotDirectionEffect.Update();
-
+	////////////////////////////////////////////////////////////
 }

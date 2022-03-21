@@ -34,4 +34,18 @@ namespace {
 	//シャドウマップの数
 	const int NUM_SHADOW_MAP = 3;
 
+	//共通で使う名前
+	const char* TITLE_NAME = "title";
+	const char* GAME_SCENE_NAME = "game";
+	const char* DIRECTION_LIGHT_NAME = "directionLight";
+	const char* POINT_LIGHT_NAME = "pointLight";
+	const char* SPOT_LIGHT_NAME = "spotLight";
+	const char* PLAYER_NAME = "player";
+	const char* SKYCUBE_NAME = "skyCube";
+	const char* UI_NAME = "ui";
+	const char* STAGE_NAME = "stage";
+	const char* STAGE_BACK_GROUND_NAME = "stageBackGround";
+	const char* EXPLOSION_PLAYER_NAME = "explosion";
+	const char* EXPLOSION_ENEMY_NAME = "enemyExplosion";
+
 }

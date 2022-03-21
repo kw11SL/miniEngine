@@ -144,15 +144,13 @@ void Enemy::Init(
 	m_skinModelRender->SetPosition(m_position);
 	m_skinModelRender->SetScale(m_scale);
 
-	//各種ライトの受け取り
-	//ライトを検索して受け取り
-	m_directionLight = FindGO<DirectionLight>("directionlight");
-	m_pointLight = FindGO<PointLight>("pointlight");
-	m_spotLight = FindGO<SpotLight>("spotlight");
-	
-	RecieveDirectionLight(m_directionLight);
-	RecievePointLight(m_pointLight);
-	RecieveSpotLight(m_spotLight);
+	//ライトを検索,受け取り
+	m_directionLight = FindGO<DirectionLight>(DIRECTION_LIGHT_NAME);
+	m_pointLight = FindGO<PointLight>(POINT_LIGHT_NAME);
+	m_spotLight = FindGO<SpotLight>(SPOT_LIGHT_NAME);
+	if (m_directionLight != nullptr) { RecieveDirectionLight(m_directionLight); }
+	if (m_pointLight != nullptr) { RecievePointLight(m_pointLight); }
+	if (m_pointLight != nullptr) { RecieveSpotLight(m_spotLight); }
 
 	m_skinModelRender->Init(modelPath, enModelUpAxisZ, true, false);
 
@@ -201,7 +199,7 @@ void Enemy::Move()
 
 	//プレイヤーを検索
 	if (m_player == nullptr) {
-		m_player = FindGO<Player_new>("player");
+		m_player = FindGO<Player_new>(PLAYER_NAME);
 	}
 
 	//プレイヤーへのベクトルを取り、その方向を移動方向にする

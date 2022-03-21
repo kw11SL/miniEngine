@@ -74,5 +74,9 @@ private:
 	Quaternion m_rotation = Quaternion::Identity;		//‰ñ“]
 	Vector3 m_scale = Vector3::One;						//Šg‘å—¦
 	float m_angle = 0.0f;								//Šp“x
+
+	DirectionLight* m_directionLight = nullptr;
+	PointLight* m_pointLight = nullptr;
+	SpotLight* m_spotLight = nullptr;
 };
 
