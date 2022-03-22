@@ -41,6 +41,7 @@ namespace {
 	const char* POINT_LIGHT_NAME = "pointLight";
 	const char* SPOT_LIGHT_NAME = "spotLight";
 	const char* PLAYER_NAME = "player";
+	const char* ENEMY_NAME = "enemy";
 	const char* SKYCUBE_NAME = "skyCube";
 	const char* UI_NAME = "ui";
 	const char* STAGE_NAME = "stage";

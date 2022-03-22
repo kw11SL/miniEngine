@@ -3,14 +3,14 @@
 
 namespace {
 	//ファイルパス関連
-	const char* MODEL_FILEPATH = "Assets/modelData/skyCube/sky.tkm"; //モデルのファイルパス
-	const char* SHADER_FILEPATH = "Assets/shader/skyCubeMap.fx"; //シェーダーのファイルパス
-	const wchar_t* TEXTURE_FILEPATH = L"Assets/modelData/skyCube/skyCubeMapDay_Toon_04.dds"; //テクスチャのファイルパス
+	const char* MODEL_FILEPATH = "Assets/modelData/skyCube/sky.tkm";							//モデルのファイルパス
+	const char* SHADER_FILEPATH = "Assets/shader/skyCubeMap.fx";								//シェーダーのファイルパス
+	const wchar_t* TEXTURE_FILEPATH = L"Assets/modelData/skyCube/skyCubeMapDay_Toon_04.dds";	//テクスチャのファイルパス
 
 	//明るさ関連
-	const float MIN_LUMINANCE = 0.0f; //明るさの最低値
-	const float MAX_LUMINANCE = 1.2f; //明るさの最大値
-	const float LUMINACE_ADDRATE = 0.01f; //フェードインの割合
+	const float MIN_LUMINANCE = 0.0f;		//明るさの最低値
+	const float MAX_LUMINANCE = 1.2f;		//明るさの最大値
+	const float LUMINACE_ADDRATE = 0.01f;	//フェードインの割合
 }
 
 SkyCube::SkyCube()

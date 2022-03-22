@@ -3,13 +3,23 @@
 #include<random>
 
 namespace {
-	const char16_t* ENEMY_SPAWN_EFFECT_FILEPATH = u"Assets/effect/enemySpawn.efk";		//エネミーがスポーンするときのエフェクトのファイルパス
-	const Vector3 ENEMY_SPAWN_EFFECT_SCALE = { 20.0f,20.0f,20.0f };
+	//エフェクト関連
+	const char16_t* ENEMY_SPAWN_EFFECT_FILEPATH = u"Assets/effect/enemySpawn.efk";		//スポーンエフェクトのファイルパス
+	const Vector3 ENEMY_SPAWN_EFFECT_SCALE = { 20.0f,20.0f,20.0f };						//スポーンエフェクトの拡大率
 
+	//カウンター関連
 	const float BORDER_TIMEUP = 10.0f;						//スポーン周期を早くする時間のボーダー
+	//通常時
+	const float GENERATE_TIME = 2.0f;						//スポーンを開始するカウンタ
 	const float ENEMY_SPAWN_TIME = 2.0f;					//エネミーのスポーン周期
 	const float EFFECT_PLAY_TIME = 1.4f;					//スポーン時のエフェクトを再生する周期
+	
+	//タイムアップ前
+	const float GENERATE_TIME_NEAR_TIMEUP = 1.0f;			//タイムアップ前のスポーン開始カウンタ
 	const float ENEMY_SPAWN_TIME_NEAR_TIMEUP = 1.0f;		//タイムアップ前のエネミーのスポーン周期
+	const float EFFECT_PLAY_TIME_NEAR_TIMEUP = 0.4f;		//タイムアップ前のスポーン時のエフェクトを再生する周期
+
+	//生成器のアクティベートまでの時間
 	const float GENERATOR_ACTIVE_COUNT_SHOT = 45.0f;		//射撃型エネミー生成器をアクティブにする時間
 	const float GENERATOR_ACTIVE_COUNT_BOMB = 30.0f;		//自爆型エネミー生成器をアクティブにする時間
 }
@@ -45,6 +55,19 @@ void EnemyGenerator::Init(const Vector3& pos, const Quaternion& rot, const bool 
 	m_spawnEffect.Init(ENEMY_SPAWN_EFFECT_FILEPATH);
 }
 
+void EnemyGenerator::SpawnEnemy()
+{
+	//自身の可変長配列の中にNewGOする
+	m_enemies.push_back(NewGO<Enemy>(0, ENEMY_NAME));
+
+	//初期化するのは可変長配列のサイズ - 1の要素
+	m_enemies[m_enemies.size() - 1]->Init(
+		m_position,
+		m_up,
+		m_spawnEnemyType
+	);
+}
+
 void EnemyGenerator::PlaySpawnEffect()
 {
 	//残り時間が0以下だったら生成しない
@@ -53,99 +76,130 @@ void EnemyGenerator::PlaySpawnEffect()
 	}
 
 	//アクティブフラグがオンなら発生
-	if (m_spawnEffectCounter > EFFECT_PLAY_TIME && m_isActive == true) {
+	if (m_isActive == true) {
 		m_spawnEffect.SetPosition(m_position);
 		m_spawnEffect.SetRotation(m_rotation);
 		m_spawnEffect.SetScale(ENEMY_SPAWN_EFFECT_SCALE);
 
 		m_spawnEffect.Play(false);
-
-		//カウンターをリセット
-		m_spawnEffectCounter = 0.0f;
 	}
 }
 
-void EnemyGenerator::GenerateEnemy(const EnEnemyType& enemyType)
+void EnemyGenerator::Generate()
 {
 
 	//残り時間が0以下だったら生成しない
 	if (GameDirector::GetInstance()->GetGameState() != enGame || 
 		GameDirector::GetInstance()->GetTime() <= 0.0f) {
-		
 		return;
 	}
 
 	//最大数を超えていたら処理しない
-	if (GameDirector::GetInstance()->GetEnemyCount() > GameDirector::GetInstance()->GetMaxEnemyNum())
-	{
+	if (GameDirector::GetInstance()->GetEnemyCount() > GameDirector::GetInstance()->GetMaxEnemyNum()){
 		return;
 	}
 
-	//エネミーの最大数を超えていなかったらスポーン
-	if (GameDirector::GetInstance()->GetEnemyCount() <= GameDirector::GetInstance()->GetMaxEnemyNum()) {
+	//乱数を生成
+	std::random_device rnd;
+	std::mt19937 mt(rnd());
+	//指定した値の範囲でランダムなfloat値を返す
+	std::uniform_real_distribution<float> randFloat(0.0f, 0.5f);
 
-		//乱数を生成
-		std::random_device rnd;
-		std::mt19937 mt(rnd());
-		//指定した値の範囲でランダムなfloat値を返す
-		std::uniform_real_distribution<float> randFloat(0.0f, 0.5f);
+	//発生間隔
+	float interval = 0.0f;
 
-		float interval = 0.0f;
+	//乱数の値をスポーン周期に加える
+	//タイムアップが迫ってきたら発生間隔を小さくする
+	if (GameDirector::GetInstance()->GetTime() <= BORDER_TIMEUP) {
+		interval = GENERATE_TIME_NEAR_TIMEUP;
+		interval += randFloat(mt);
+	}
+	else {
+		interval = GENERATE_TIME;
+		interval += randFloat(mt);
+	}
 
-		//乱数の値をスポーン周期に加える
-		//タイムアップが迫ってきたら発生間隔を小さくする
-		if (GameDirector::GetInstance()->GetTime() <= BORDER_TIMEUP) {
-			interval = ENEMY_SPAWN_TIME_NEAR_TIMEUP;
-			interval += randFloat(mt);
+	//生成準備フラグをオン。アクティブフラグがオンになるまで生成準備しない。
+	if (m_generateCounter > interval && m_isActive == true) {
+
+		//スポーン処理中フラグをオン
+		m_isSpawning = true;
+
+		if (m_isValidPlayEffect == false) {
+			m_isValidPlayEffect = true;
 		}
-		else {
-			interval = ENEMY_SPAWN_TIME;
-			interval += randFloat(mt);
+
+		if (m_isValidSpawnEnemy == false) {
+			m_isValidSpawnEnemy = true;
 		}
 
-		//スポーンエフェクトを再生
+		//生成準備カウンターをリセット
+		m_generateCounter = 0.0f;
+
+	}
+}
+
+void EnemyGenerator::SpawnEnemyWithEffect()
+{
+	float effectPlayTime = 0.0f;
+	float enemySpawnTime = 0.0f;
+
+	//タイムアップ前ならタイムアップ前の発生間隔に
+	if (GameDirector::GetInstance()->GetTime() <= BORDER_TIMEUP) {
+		effectPlayTime = EFFECT_PLAY_TIME_NEAR_TIMEUP;
+		enemySpawnTime = ENEMY_SPAWN_TIME_NEAR_TIMEUP;
+	}
+	//そうでなければ通常時の発生間隔に
+	else {
+		effectPlayTime = EFFECT_PLAY_TIME;
+		enemySpawnTime = ENEMY_SPAWN_TIME;
+	}
+
+
+	//エフェクト再生カウンターが一定に達していてエフェクト再生可能なら
+	if (m_spawnEffectCounter >= effectPlayTime 
+		&& m_isValidPlayEffect == true) {
+		
+		//エフェクトを再生
 		PlaySpawnEffect();
-
-		//エネミーを生成。アクティブになるまでは生成しない。
-		if (m_spawnCounter > interval && m_isActive == true) {
-			
-			//自身の可変長配列の中にNewGOする
-			m_enemies.push_back(NewGO<Enemy>(0, "enemy"));
-			
-			//初期化するのは可変長配列のサイズ - 1の要素
-			m_enemies[m_enemies.size() - 1]->Init(
-				m_position,
-				m_up,
-				enemyType
-			);
-
-			//カウンターを0にリセット
-			m_spawnCounter = 0.0f;
-			//エフェクト再生用カウンターも0にリセット
-			m_spawnEffectCounter = 0.0f;
-		}
+		//カウンターをリセット
+		m_spawnEffectCounter = 0.0f;
+		//そのスポーン処理中は再生しない
+		m_isValidPlayEffect = false;
 	}
-	else{
+
+	//エネミーをスポーンするカウンターが一定に達していて生成可能なら
+	if (m_spawnCounter >=  enemySpawnTime
+		&& m_isValidSpawnEnemy == true) {
+		
+		//エネミーを生成
+		SpawnEnemy();
+
+		//エネミーがスポーンし終えたのでカウンターをリセット、スポーン処理フラグをオフ
 		m_spawnCounter = 0.0f;
-		//m_spawnEffectCounter = 0.0f;
+		//そのスポーン処理中は生成しない
+		m_isValidSpawnEnemy = false;
+		m_isSpawning = false;
 	}
-
 }
 
 void EnemyGenerator::UpdateEffect()
 {
+	//エフェクトを更新
 	m_spawnEffect.Update();
 }
 
 void EnemyGenerator::Activate()
 {
 	//射撃型エネミー生成器のとき
+	//一定時間以下でアクティブフラグをオン
 	if (m_spawnEnemyType == enShot &&
 		GameDirector::GetInstance()->GetTime() <= GENERATOR_ACTIVE_COUNT_SHOT) {
 		SetActive(true);
 	}
 
 	//生成器がボムのとき
+	//一定時間以下でアクティブフラグをオン
 	if (m_spawnEnemyType == enBomb &&
 		GameDirector::GetInstance()->GetTime() <= GENERATOR_ACTIVE_COUNT_BOMB) {
 		SetActive(true);
@@ -192,6 +246,20 @@ void EnemyGenerator::DeleteEnemy()
 
 }
 
+void EnemyGenerator::AddCounter()
+{
+	//スポーン処理中でなければ各種カウンターを0にする
+	if (m_isSpawning != true) {
+		m_spawnCounter = 0.0f;
+		m_spawnEffectCounter = 0.0f;
+	}
+	//処理中はカウンターを上昇させる
+	else{
+		AddSpawnCounter();
+		AddSpawnEffectPlayCounter();
+	}
+}
+
 void EnemyGenerator::Update()
 {
 	//ゲーム中以外なら処理しない
@@ -201,14 +269,19 @@ void EnemyGenerator::Update()
 
 	//生成器のアクティベート処理
 	Activate();
+	//移動処理
 	Move();
+	//回転処理
 	Rotation();
+	//生成準備カウンターを増加
+	AddGenerateCounter();
+	//生成準備
+	Generate();
+	//エフェクト発生、エネミーのスポーンカウンターを増加させる処理
 	AddCounter();
-	AddSpawnEffectPlayCounter();
-	GenerateEnemy(m_spawnEnemyType);
+	SpawnEnemyWithEffect();
+	//生存フラグの立っていないエネミーを消去
 	DeleteEnemy();
-	//PlaySpawnEffect();
-
 	//エフェクトを更新
 	UpdateEffect();
 }

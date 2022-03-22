@@ -13,8 +13,8 @@ public:
 	}
 
 	/// @brief ‰Šú‰»ˆ—
-	/// @param initPoint 
-	/// @param initUp 
+	/// @param initPoint ‰ŠúˆÊ’u
+	/// @param initUp ã•ûŒü
 	void Init(const Vector3& initPoint, const Vector3& initUp);
 	/// @brief ‰Šú‰»ˆ—‚É•t‚·‚éˆ—
 	virtual void InitSub() {};

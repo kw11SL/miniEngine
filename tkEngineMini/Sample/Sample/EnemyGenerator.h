@@ -18,15 +18,28 @@ public:
 	void Init(const Vector3& pos,const Quaternion& rot ,const bool isActive, const EnEnemyType& enemyType);
 
 	/// @brief エネミー生成
-	/// @param enemyType スポーンさせるエネミーの種類
-	void GenerateEnemy(const EnEnemyType& enemyType);
+	void Generate();
 
+	/// @brief エフェクトの再生とエネミーの生成処理
+	void SpawnEnemyWithEffect();
+
+	/// @brief 移動処理
 	void Move();
 
+	/// @brief 回転処理
 	void Rotation();
 
+	/// @brief スポーン処理中、各種カウンターを増加
+	void AddCounter();
+
+	/// @brief エネミーの生成準備カウンターを増加
+	void AddGenerateCounter()
+	{
+		m_generateCounter += g_gameTime->GetFrameDeltaTime();
+	}
+
 	/// @brief スポーン周期用のカウンターを増加
-	void AddCounter()
+	void AddSpawnCounter()
 	{
 		m_spawnCounter += g_gameTime->GetFrameDeltaTime();
 	}
@@ -82,6 +95,9 @@ public:
 	//生成器のアクティベート処理
 	void Activate();
 
+	/// @brief エネミーの発生、初期化
+	void SpawnEnemy();
+
 	/// @brief スポーン時のエフェクト再生処理
 	void PlaySpawnEffect();
 
@@ -119,6 +135,7 @@ private:
 
 	MyCharacterController m_myCharaCon;					//球面移動用キャラコン
 	SphericalMove m_sphericalMove;						//球面移動用クラス
+
 	Vector3 m_position = Vector3::Zero;					//座標
 	Quaternion m_rotation = Quaternion::Identity;		//回転クォータニオン
 	Vector3 m_forward = Vector3::Zero;					//前方
@@ -127,12 +144,15 @@ private:
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル
 	Vector3 m_downVector = { 0.0f,-10.0f,0.0f };		//レイを飛ばす下方向ベクトル
 	EnEnemyType m_spawnEnemyType = enCommon;			//スポーンさせるエネミータイプ
+	float m_generateCounter = 0.0f;						//エネミーの生成準備カウンター
 	float m_spawnCounter = 0.0f;						//スポーン間隔用カウンター
 	float m_spawnEffectCounter = 0.0f;					//スポーンエフェクトの再生用カウンター
 	bool m_isActive = false;							//生成器がアクティブかどうか
+	bool m_isSpawning = false;							//スポーン処理中かどうか
+	bool m_isValidPlayEffect = false;					//スポーン処理中、エフェクト発生可能かどうか
+	bool m_isValidSpawnEnemy = false;					//スポーン処理中、エネミーを生成可能かどうか
 
 	EnemyManager* m_enemyManager = nullptr;				//エネミー管理クラスのオブジェクト
-
 	Effect m_spawnEffect;								//エネミーをスポーンさせるときのエフェクト
 };
 

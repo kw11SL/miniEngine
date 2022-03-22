@@ -22,7 +22,7 @@ public:
 	Enemy();
 	~Enemy();
 	
-	/// @brief 
+	/// @brief ‰Šú‰»ˆ—
 	/// @param renderingEngine 
 	/// @param initPoint 
 	/// @param initUp 
