@@ -1,6 +1,8 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
 
+//#define DEBUG_ON			//デバッグフラグ
+
 #include "MiniEngine.h"
 #include "ExEngine.h"
 #include "RenderingEngine.h"

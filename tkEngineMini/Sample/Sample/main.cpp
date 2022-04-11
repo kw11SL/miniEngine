@@ -85,66 +85,67 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここからゲームループ。
 	while (DispatchWindowMessage())
 	{	
-		////テスト：ゲームの削除
-		//if(g_pad[0]->IsTrigger(enButtonStart)){
-		//	QueryGOs<Game>(GAME_SCENE_NAME, [&](Game* gameScene) {
-		//		
-		//		//ゲームを削除
-		//		DeleteGO(gameScene);
-		//		//ゲームを初期状態に戻す
-		//		GameDirector::GetInstance()->ResetGame();
-		//		//バンク内ファイルを消去
-		//		//g_engine->ClearFileBank();
 
-		//		//タイトルをNewGO
-		//		NewGO<Title>(0, TITLE_NAME);
+#ifdef DEBUG_ON //stdafx.h内のデバッグフラグを参照
+		
+		//テスト：ゲームの削除
+		if(g_pad[0]->IsTrigger(enButtonStart)){
+			QueryGOs<Game>(GAME_SCENE_NAME, [&](Game* gameScene) {
+				
+				//ゲームを削除
+				DeleteGO(gameScene);
+				//ゲームを初期状態に戻す
+				GameDirector::GetInstance()->ResetGame();
+				//バンク内ファイルを消去
+				//g_engine->ClearFileBank();
 
-		//		//問い合わせ終了
-		//		return false;
-		//	});
+				//バレットマネージャ内からすべての弾を消去
+				BulletManager::GetInstance()->DeleteBullets();
 
-		//	//バレットマネージャ内からすべての弾を消去
-		//	BulletManager::GetInstance()->DeleteBullets();
-		//}
+				//エネミーマネージャ内からすべてのエネミーを消去
+				EnemyManager::GetInstance()->DeleteEnemies();
 
-		//// テスト：ポーズ状態の切り替え
-		//if (g_pad[0]->IsTrigger(enButtonSelect)) {
-		//	if (GameDirector::GetInstance()->GetGameState() == enGame) {
-		//		GameDirector::GetInstance()->SetGameState(enPause);
-		//	}
-		//	else if(GameDirector::GetInstance()->GetGameState() == enPause) {
-		//		GameDirector::GetInstance()->SetGameState(enGame);
-		//	}
-		//}
+				//タイトルをNewGO
+				NewGO<Title>(0, TITLE_NAME);
 
-		////テスト：ゲーム開始からゲーム中への変更
-		//if (g_pad[0]->IsTrigger(enButtonA)) {
-		//	if (GameDirector::GetInstance()->GetGameState() == enStart) {
-		//		GameDirector::GetInstance()->SetGameState(enGame);
-		//	}
-		//}
+				//問い合わせ終了
+				return false;
+			});
+
+			
+		}
+
+		// テスト：ポーズ状態の切り替え
+		if (g_pad[0]->IsTrigger(enButtonSelect)) {
+			if (GameDirector::GetInstance()->GetGameState() == enGame) {
+				GameDirector::GetInstance()->SetGameState(enPause);
+			}
+			else if(GameDirector::GetInstance()->GetGameState() == enPause) {
+				GameDirector::GetInstance()->SetGameState(enGame);
+			}
+		}
+#endif // DEBUG_ON
+
 
 		//レンダリング開始。
 		g_engine->BeginFrame();
 
+		///////////////////////////////////////////////////////////////
+		//各種更新処理
 		//登録されているゲームオブジェクトの更新関数を呼び出す。
 		GameObjectManager::GetInstance()->ExecuteUpdate();
-
 		//ゲームディレクターの更新処理
 		GameDirector::GetInstance()->ExecuteUpdate();
-
 		//バレットマネージャの更新処理
 		BulletManager::GetInstance()->ExecuteUpdate();
-
-		//エネミーマネージャの更新
+		//エネミーマネージャの更新処理
 		EnemyManager::GetInstance()->ExecuteUpdate();
-
 		//物理ワールドの更新。
 		PhysicsWorld::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
-
 		//step-5 エフェクトエンジンの更新。
 		EffectEngine::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
-		
+		///////////////////////////////////////////////////////////////
+
 		//レンダリングターゲットをメインレンダリングターゲットに変更(=オフスクリーンレンダリングにする)
 		//レンダリングターゲットとして利用できるまで待つ
 		renderContext.WaitUntilToPossibleSetRenderTarget(RenderingEngine::GetInstance()->GetRenderTarget());
