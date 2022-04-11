@@ -26,7 +26,6 @@ public:
 	virtual void UpdateEffect(){}
 
 	//共通して行う処理
-
 	/// @brief 更新処理
 	void Update() override;
 	/// @brief 更新処理に付随する処理
@@ -121,7 +120,7 @@ public:
 
 	/// @brief 回転を設定
 	/// @param rot	回転
-	void SetRotation(const Quaternion rot)
+	void SetRotation(const Quaternion& rot)
 	{
 		m_rot = rot;
 		m_skinModelRender->SetRotation(m_rot);

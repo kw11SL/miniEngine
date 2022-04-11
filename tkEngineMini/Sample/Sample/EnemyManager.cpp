@@ -22,9 +22,20 @@ void EnemyManager::InitEnemies(
 	);
 }
 
+void EnemyManager::DeleteEnemies()
+{
+	//配列内のエネミーを全てDeleteGO
+	for (auto& enemy : m_enemies) {
+		DeleteGO(enemy);
+	}
+
+	//配列内の要素を全削除する
+	m_enemies.erase(m_enemies.begin(), m_enemies.end());
+}
+
 void EnemyManager::ExecuteUpdate()
 {
-	//存在フラグを調べて、オフだったら破棄
+	//エネミーの存在フラグを調べて、オフだったらDeleteGO
 	for (auto& enemy : m_enemies) {
 		if (enemy->GetIsExist() == false) {
 			DeleteGO(enemy);

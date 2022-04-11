@@ -252,4 +252,6 @@ void EnemyBase::Update()
 	UpdateSub();
 	//継承先で決めたエフェクトの更新処理
 	UpdateEffect();
+
+	m_skinModelRender->SetRotation(m_rot);
 }

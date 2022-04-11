@@ -26,19 +26,13 @@ namespace {
 
 EnemyGenerator::~EnemyGenerator()
 {
-	//配列内の全エネミーをDeleteGO
-	for (auto& enemy : m_enemies) {
-		DeleteGO(enemy);
-	}
-
-	//配列内の要素を最初から最後まで全て消去
-	m_enemies.erase(m_enemies.begin(), m_enemies.end());
+	
 }
 
 void EnemyGenerator::Init(const Vector3& pos, const Quaternion& rot, const bool isActive ,const EnEnemyType& enemyType)
 {
-	////エネミーの管理クラスのポインタを取得
-	//m_enemyManager = EnemyManager::GetInstance();
+	//エネミー管理クラスのポインタを取得
+	m_enemyManager = EnemyManager::GetInstance();
 
 	m_position = pos;
 	m_rotation = rot;
@@ -57,11 +51,8 @@ void EnemyGenerator::Init(const Vector3& pos, const Quaternion& rot, const bool 
 
 void EnemyGenerator::SpawnEnemy()
 {
-	//自身の可変長配列の中にNewGOする
-	m_enemies.push_back(NewGO<Enemy>(0, ENEMY_NAME));
-
-	//初期化するのは可変長配列のサイズ - 1の要素
-	m_enemies[m_enemies.size() - 1]->Init(
+	//管理クラス内の可変長配列の中にNewGOし、初期化
+	m_enemyManager->InitEnemies(
 		m_position,
 		m_up,
 		m_spawnEnemyType
@@ -94,7 +85,7 @@ void EnemyGenerator::Generate()
 		return;
 	}
 
-	//最大数を超えていたら処理しない
+	//上限数を超えていたら処理しない
 	if (GameDirector::GetInstance()->GetEnemyCount() > GameDirector::GetInstance()->GetMaxEnemyNum()){
 		return;
 	}
@@ -122,13 +113,14 @@ void EnemyGenerator::Generate()
 	//生成準備フラグをオン。アクティブフラグがオンになるまで生成準備しない。
 	if (m_generateCounter > interval && m_isActive == true) {
 
-		//スポーン処理中フラグをオン
+		//スポーン処理中フラグをオン(=スポーン処理の開始)
 		m_isSpawning = true;
 
+		//エフェクトを再生可能にする
 		if (m_isValidPlayEffect == false) {
 			m_isValidPlayEffect = true;
 		}
-
+		//エネミーをスポーン可能にする
 		if (m_isValidSpawnEnemy == false) {
 			m_isValidSpawnEnemy = true;
 		}
@@ -144,7 +136,7 @@ void EnemyGenerator::SpawnEnemyWithEffect()
 	float effectPlayTime = 0.0f;
 	float enemySpawnTime = 0.0f;
 
-	//タイムアップ前ならタイムアップ前の発生間隔に
+	//タイムアップ直前ならタイムアップ前の発生間隔(短い)にする
 	if (GameDirector::GetInstance()->GetTime() <= BORDER_TIMEUP) {
 		effectPlayTime = EFFECT_PLAY_TIME_NEAR_TIMEUP;
 		enemySpawnTime = ENEMY_SPAWN_TIME_NEAR_TIMEUP;
@@ -172,20 +164,20 @@ void EnemyGenerator::SpawnEnemyWithEffect()
 	if (m_spawnCounter >=  enemySpawnTime
 		&& m_isValidSpawnEnemy == true) {
 		
-		//エネミーを生成
+		//エネミーをスポーン
 		SpawnEnemy();
-
-		//エネミーがスポーンし終えたのでカウンターをリセット、スポーン処理フラグをオフ
+		//エネミーがスポーンし終えたのでカウンターをリセット
 		m_spawnCounter = 0.0f;
 		//そのスポーン処理中は生成しない
 		m_isValidSpawnEnemy = false;
+		//スポーン処理が終わったので処理中フラグをオフ
 		m_isSpawning = false;
 	}
 }
 
 void EnemyGenerator::UpdateEffect()
 {
-	//エフェクトを更新
+	//スポーン時のエフェクトを更新
 	m_spawnEffect.Update();
 }
 
@@ -217,43 +209,14 @@ void EnemyGenerator::Rotation()
 	m_sphericalMove.Rotation(m_forward,m_right,m_up,m_rotation);
 }
 
-void EnemyGenerator::DeleteEnemy()
-{
-	//エネミーの存在フラグがオフだったらDeleteGO
-	for (auto& enemy : m_enemies) {
-		if (enemy->GetIsExist() == false) {
-			DeleteGO(enemy);
-		}
-	}
-
-	//配列からエネミーを消すための条件を記述した関数オブジェクト
-	auto func = [&](Enemy* enemy)->bool {
-		//存在フラグがfalseだったらtrueを返す(=削除対象にする)
-		if (enemy->GetIsExist() == false) {
-			return true;
-		}
-		//それ以外の場合はfalse
-		return false;
-	};
-
-	//eraseとremove_ifを組み合わせ
-	//remove_ifで配列内の先頭から終端までを調査し、関数オブジェクトがtrueを返してきた要素(=弾の存在フラグがfalse、つまり削除対象)を末尾へ移動させていく。
-	//remove_ifの戻り値は末尾に移動させた削除対象たちの先頭イテレータなのでそこから終端までをeraseすることで配列から削除される
-	m_enemies.erase(
-		std::remove_if(m_enemies.begin(), m_enemies.end(), func),
-		m_enemies.end()
-	);
-
-}
-
 void EnemyGenerator::AddCounter()
 {
-	//スポーン処理中でなければ各種カウンターを0にする
+	//スポーン処理中でなければ各カウンターを0にする
 	if (m_isSpawning != true) {
 		m_spawnCounter = 0.0f;
 		m_spawnEffectCounter = 0.0f;
 	}
-	//処理中はカウンターを上昇させる
+	//スポーン処理中は各カウンターを上昇させる
 	else{
 		AddSpawnCounter();
 		AddSpawnEffectPlayCounter();
@@ -275,13 +238,13 @@ void EnemyGenerator::Update()
 	Rotation();
 	//生成準備カウンターを増加
 	AddGenerateCounter();
-	//生成準備
+	//生成準備カウンターの数値が一定に達していたらスポーン処理を開始
 	Generate();
-	//エフェクト発生、エネミーのスポーンカウンターを増加させる処理
+	//スポーン処理中、エフェクト発生、エネミーのスポーンカウンターを増加させる
 	AddCounter();
+	//エフェクト再生、エネミー生成の各カウンターが一定に達したら、エフェクト再生、エネミーをスポーン
 	SpawnEnemyWithEffect();
-	//生存フラグの立っていないエネミーを消去
-	DeleteEnemy();
+
 	//エフェクトを更新
 	UpdateEffect();
 }

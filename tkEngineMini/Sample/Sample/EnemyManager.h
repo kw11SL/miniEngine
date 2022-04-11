@@ -38,6 +38,9 @@ public:
 		const EnEnemyType enemyType
 	);
 
+	/// @brief 配列内のエネミーを削除
+	void DeleteEnemies();
+
 	/// @brief 配列への追加
 	/// @param enemy エネミー
 	void AddEnemies(Enemy* enemy)

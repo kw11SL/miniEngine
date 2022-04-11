@@ -104,9 +104,6 @@ public:
 	/// @brief エフェクトの更新
 	void UpdateEffect();
 
-	/// @brief 生成したエネミーの削除および配列からの削除処理
-	void DeleteEnemy();
-
 	/// @brief 下方向ベクトルを上方向の反対で初期化
 	/// @param up 上方向
 	void SetDownVector(const Vector3& up)
@@ -131,8 +128,6 @@ public:
 	}
 
 private:
-	std::vector<Enemy*> m_enemies;						//エネミーの可変長配列
-
 	MyCharacterController m_myCharaCon;					//球面移動用キャラコン
 	SphericalMove m_sphericalMove;						//球面移動用クラス
 
@@ -152,7 +147,7 @@ private:
 	bool m_isValidPlayEffect = false;					//スポーン処理中、エフェクト発生可能かどうか
 	bool m_isValidSpawnEnemy = false;					//スポーン処理中、エネミーを生成可能かどうか
 
-	EnemyManager* m_enemyManager = nullptr;				//エネミー管理クラスのオブジェクト
+	EnemyManager* m_enemyManager = nullptr;				//エネミー管理クラスのポインタ
 	Effect m_spawnEffect;								//エネミーをスポーンさせるときのエフェクト
 };
 

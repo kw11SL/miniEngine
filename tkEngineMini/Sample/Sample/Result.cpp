@@ -552,11 +552,18 @@ void Result::Update()
 		}
 		//フェードアウトしきったら
 		if (m_screenTopSprite->GetColor().w >= 1.0f) {
+			
 			//ゲームを削除し、タイトルをNewGOさせる
 			QueryGOs<Game>("game", [&](Game* gameScene) {
 
 				//ゲームを削除
 				DeleteGO(gameScene);
+
+				//弾を削除
+				BulletManager::GetInstance()->DeleteBullets();
+				
+				//生成されたエネミーを削除
+				EnemyManager::GetInstance()->DeleteEnemies();
 
 				//タイトルをNewGO
 				NewGO<Title>(0, "title");

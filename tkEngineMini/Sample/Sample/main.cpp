@@ -136,6 +136,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//バレットマネージャの更新処理
 		BulletManager::GetInstance()->ExecuteUpdate();
 
+		//エネミーマネージャの更新
+		EnemyManager::GetInstance()->ExecuteUpdate();
+
 		//物理ワールドの更新。
 		PhysicsWorld::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
 
