@@ -1,6 +1,8 @@
 #pragma once
 #include "Explosion.h"
 
+class ExplosionManager;
+
 /// @brief 弾の種類
 enum EnBulletType
 {
@@ -203,23 +205,24 @@ private:
 	/// @param bulletType 弾のタイプ
 	void InitEffect(const EnBulletType& bulletType);
 
-private:
-	//BulletManager* m_bulletManager = nullptr;
-	
+private:	
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
 	SphericalMove m_sphericalMove;						//球面移動用クラス
 	EnBulletType m_enBulletType = enPlayerNormal;		//弾のタイプ
 
-	Player_new* m_player = nullptr;
-	Explosion* m_spreadExplosion = nullptr;
+	Player_new* m_player = nullptr;						//プレイヤーへのポインタ
+	ExplosionManager* m_explosionManager = nullptr;		//爆発マネージャへのポインタ
+	DirectionLight* m_directionLight = nullptr;			//ディレクションライトへのポインタ
+	PointLight* m_pointLight = nullptr;					//ポイントライトへのポインタ
+	SpotLight* m_spotLight = nullptr;					//スポットライトへのポインタ
 
-	float m_life = 0.0f;							//耐久値
-	float m_speed = 0.0f;							//速さ
-	float m_lifeTime = 0.0f;						//時間寿命
-	float m_power = 0.0f;							//弾が与えるダメージ
-	bool m_isExist = true;							//存在フラグ
-	float m_damageInterval = 0.5f;					//ダメージを与える間隔。この数値だけエネミーに無敵時間を設定する。
+	float m_life = 0.0f;								//耐久値
+	float m_speed = 0.0f;								//速さ
+	float m_lifeTime = 0.0f;							//時間寿命
+	float m_power = 0.0f;								//弾が与えるダメージ
+	bool m_isExist = true;								//存在フラグ
+	float m_damageInterval = 0.5f;						//ダメージを与える間隔。この数値だけエネミーに無敵時間を設定する。
 
 	Vector3 m_position = Vector3::Zero;					//座標
 	Vector3 m_moveSpeed = Vector3::Zero;				//速度ベクトル
@@ -232,10 +235,6 @@ private:
 	Quaternion m_rot = Quaternion::Identity;			//回転
 	float m_angle = 0.0f;								//角度
 
-	DirectionLight* m_directionLight = nullptr;
-	PointLight* m_pointLight = nullptr;
-	SpotLight* m_spotLight = nullptr;
-
 	Vector3 m_direction = Vector3::Zero;				//最初の発射方向
 	bool m_isDecideDirection = false;					//発射方向を前方ベクトルにしたかどうか
 
@@ -246,5 +245,7 @@ private:
 
 	//スキンモデルレンダーの削除フラグ
 	bool m_isModelDeleted = false;
+
+	
 };
 

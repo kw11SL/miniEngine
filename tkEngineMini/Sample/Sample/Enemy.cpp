@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Enemy.h"
 #include "Player_new.h"
+#include "ExplosionManager.h"
 
 namespace {
 	//モデル毎のファイルパス
@@ -90,6 +91,8 @@ void Enemy::Init(
 	const Vector3& initUp,
 	const EnEnemyType& enemyType)
 {
+	m_explosionManager = ExplosionManager::GetInstance();
+
 	m_skinModelRender = NewGO<SkinModelRender>(0);
 
 	const char* modelPath = "hoge";
@@ -308,8 +311,13 @@ void Enemy::SelfDestroy()
 
 	//自爆型エネミーのときは爆発を発生させる
 	if (m_enEnemyType == enBomb && GameDirector::GetInstance()->GetTime() > 0.0f) {
-		m_explosion = NewGO<Explosion>(0, "enemyExplosion");
+		/*m_explosion = NewGO<Explosion>(0, "enemyExplosion");
 		m_explosion->Init(
+			m_position,
+			10.0f,
+			enEnemy_Explosion
+		);*/
+		m_explosionManager->InitExplosion(
 			m_position,
 			10.0f,
 			enEnemy_Explosion

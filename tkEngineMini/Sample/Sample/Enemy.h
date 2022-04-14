@@ -1,6 +1,7 @@
 #pragma once
-#include"Explosion.h"
+//#include"Explosion.h"
 class Player_new;
+class ExplosionManager;
 
 /// @brief エネミーのタイプ
 enum EnEnemyType
@@ -243,6 +244,9 @@ private:
 	Effect m_destroyEffect;
 	//ヒットエフェクト
 	Effect m_hitEffect;
+
+	//爆発マネージャへのポインタ
+	ExplosionManager* m_explosionManager = nullptr;
 
 };
 

@@ -561,7 +561,8 @@ void Result::Update()
 
 				//弾を削除
 				BulletManager::GetInstance()->DeleteBullets();
-				
+				//爆発を削除
+				ExplosionManager::GetInstance()->DeleteExplosions();
 				//生成されたエネミーを削除
 				EnemyManager::GetInstance()->DeleteEnemies();
 

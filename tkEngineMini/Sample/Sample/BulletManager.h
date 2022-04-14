@@ -38,13 +38,6 @@ public:
 		const EnBulletType bulletType
 	);
 
-	/// @brief ”z—ñ‚Ö‚Ì’Ç‰Á
-	/// @param bullet 
-	void AddBullets(Bullet* bullet)
-	{
-		m_bullets.push_back(bullet);
-	}
-
 	/// @brief XVˆ— 
 	void ExecuteUpdate();
 

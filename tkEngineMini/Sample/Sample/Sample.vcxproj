@@ -310,6 +310,7 @@
     <ClCompile Include="EnemyShot.cpp" />
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="ExplosionBase.cpp" />
+    <ClCompile Include="ExplosionManager.cpp" />
     <ClCompile Include="FontRender.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
@@ -446,6 +447,7 @@
     <ClInclude Include="EnemyShot.h" />
     <ClInclude Include="Explosion.h" />
     <ClInclude Include="ExplosionBase.h" />
+    <ClInclude Include="ExplosionManager.h" />
     <ClInclude Include="FontRender.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameCamera.h" />

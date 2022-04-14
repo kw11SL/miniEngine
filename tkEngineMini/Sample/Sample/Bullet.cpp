@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Bullet.h"
-#include "BulletManager.h"
+#include "ExplosionManager.h"
 
 namespace{
 	//モデル毎のファイルパス
@@ -79,7 +79,7 @@ void Bullet::Init(
 	const Vector3& direction, 
 	const EnBulletType& bulletType)
 {
-	
+	m_explosionManager = ExplosionManager::GetInstance();
 	//m_skinModelRender = NewGO<SkinModelRender>(0);
 
 	const char* modelPath = "hoge";
@@ -260,8 +260,8 @@ void Bullet::Destroy()
 		//自身がスプレッドボムのとき
 		if (m_enBulletType == enPlayerSpreadBomb) {
 
-			m_spreadExplosion = NewGO<Explosion>(0, "explosion");
-			m_spreadExplosion->Init(
+			//爆発のマネージャー内に生成
+			m_explosionManager->InitExplosion(
 				m_position,
 				10.0f,
 				enPlayer_Spread_Bomb

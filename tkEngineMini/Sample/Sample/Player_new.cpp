@@ -395,7 +395,7 @@ void Player_new::Hit()
 
 	//被弾判定
 	//エネミーとの判定
-	QueryGOs<Enemy>("enemy", [&](Enemy* enemy) {
+	QueryGOs<Enemy>(ENEMY_NAME, [&](Enemy* enemy) {
 		//距離を計算
 		Vector3 diff = enemy->GetPosition() - m_position;
 		float length = diff.Length();
@@ -442,7 +442,7 @@ void Player_new::Hit()
 	});
 
 	//敵の爆発との判定
-	QueryGOs<Explosion>("enemyExplosion", [&](Explosion* enemyExplosion) {
+	QueryGOs<Explosion>(EXPLOSION_ENEMY_NAME, [&](Explosion* enemyExplosion) {
 		//距離を計算
 		Vector3 diff = enemyExplosion->GetPosition() - m_position;
 		float length = diff.Length();

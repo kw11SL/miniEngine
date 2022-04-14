@@ -51,6 +51,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	GameDirector::CreateInstance();
 	//バレットマネージャを作成
 	BulletManager::CreateInstance();
+	//爆発マネージャを作成
+	ExplosionManager::CreateInstance();
 	//エネミーマネージャを作成
 	EnemyManager::CreateInstance();
 
@@ -101,7 +103,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 				//バレットマネージャ内からすべての弾を消去
 				BulletManager::GetInstance()->DeleteBullets();
-
+				//爆発マネージャ内からすべての爆発を消去
+				ExplosionManager::GetInstance()->DeleteExplosions();
 				//エネミーマネージャ内からすべてのエネミーを消去
 				EnemyManager::GetInstance()->DeleteEnemies();
 
@@ -138,6 +141,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		GameDirector::GetInstance()->ExecuteUpdate();
 		//バレットマネージャの更新処理
 		BulletManager::GetInstance()->ExecuteUpdate();
+		//爆発マネージャの更新処理
+		ExplosionManager::GetInstance()->ExecuteUpdate();
 		//エネミーマネージャの更新処理
 		EnemyManager::GetInstance()->ExecuteUpdate();
 		//物理ワールドの更新。
@@ -173,8 +178,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		);
 		frameBufferSprite.Draw(renderContext);
 
-		
-
 		g_engine->EndFrame();
 	}
 
@@ -190,6 +193,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	GameDirector::DeleteInstance();
 	//バレットマネージャを削除
 	BulletManager::DeleteInstance();
+	//爆発マネージャを削除
+	ExplosionManager::DeleteInstance();
 	//エネミーマネージャを削除
 	EnemyManager::DeleteInstance();
 	////////////////////////////////////////////////////

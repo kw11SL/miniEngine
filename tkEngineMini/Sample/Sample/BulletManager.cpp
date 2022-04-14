@@ -12,7 +12,7 @@ void BulletManager::InitBullets(
 	const EnBulletType bulletType
 )
 {
-	m_bullets.push_back(NewGO<Bullet>(0, "bullet"));
+	m_bullets.push_back(NewGO<Bullet>(0, BULLET_PLAYER_NAME));
 
 	m_bullets[m_bullets.size() - 1]->Init(
 		*RenderingEngine::GetInstance(),
