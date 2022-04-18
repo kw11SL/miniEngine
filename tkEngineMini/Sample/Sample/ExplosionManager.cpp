@@ -21,6 +21,7 @@ void ExplosionManager::InitExplosion(
 		m_explosions.push_back(NewGO<Explosion>(0, EXPLOSION_ENEMY_NAME));
 	}
 
+	//上で配列に追加したものを初期化
 	m_explosions[m_explosions.size() - 1]->Init(
 		pos,
 		scaleRate,
@@ -44,7 +45,6 @@ void ExplosionManager::ExecuteUpdate()
 	//存在フラグを調べて、オフだったら破棄
 	for (auto& explosion : m_explosions) {
 		if (explosion->GetIsExist() == false) {
-			//bullet->DeleteSkinModel();
 			DeleteGO(explosion);
 		}
 	}

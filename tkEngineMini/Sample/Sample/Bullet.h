@@ -185,7 +185,11 @@ public:
 
 private:
 	//内部で使う関数
+	
+	/// @brief 生成時に1度だけ呼ばれる処理。trueで完了 
+	/// @return 
 	bool Start() override;
+
 
 	void Update() override;
 
@@ -239,9 +243,9 @@ private:
 	bool m_isDecideDirection = false;					//発射方向を前方ベクトルにしたかどうか
 
 	//ショットエフェクト
-	Effect m_shotEffect;
-	Effect m_spreadBurstEffect;
-	Effect m_normalBanishEffect;
+	Effect m_shotEffect;								//通常ショットのエフェクト
+	Effect m_spreadBurstEffect;							//スプレッドボムのエフェクト
+	Effect m_normalBanishEffect;						//通常ショットの消滅エフェクト
 
 	//スキンモデルレンダーの削除フラグ
 	bool m_isModelDeleted = false;
