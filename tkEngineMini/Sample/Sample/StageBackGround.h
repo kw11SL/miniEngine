@@ -1,4 +1,7 @@
 #pragma once
+
+//背景オブジェクト
+
 class StageBackGround : public IGameObject
 {
 public:

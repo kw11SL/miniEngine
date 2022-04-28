@@ -1,5 +1,7 @@
 #pragma once
 
+//カプセル状のステージ
+
 class SkinModelRender;
 class DirectionLight;
 class PointLight;

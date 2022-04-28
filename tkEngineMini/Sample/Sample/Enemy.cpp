@@ -276,7 +276,7 @@ void Enemy::Hit()
 	});
 
 	//”š”­‚ğŒŸõ
-	QueryGOs<Explosion>("explosion", [&](Explosion* explosion) {
+	QueryGOs<Explosion>(EXPLOSION_PLAYER_NAME, [&](Explosion* explosion) {
 		Vector3 diff = explosion->GetPosition() - m_position;
 		float length = diff.Length();
 

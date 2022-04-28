@@ -86,6 +86,10 @@ void GameOver::Update()
 			GameDirector::GetInstance()->SetGameState(enTitle);
 			//バレットマネージャ内から弾を削除
 			BulletManager::GetInstance()->DeleteBullets();
+			//爆発を削除
+			ExplosionManager::GetInstance()->DeleteExplosions();
+			//生成されたエネミーを削除
+			EnemyManager::GetInstance()->DeleteEnemies();
 
 			//タイトルをNewGO
 			NewGO<Title>(0, "title");

@@ -293,7 +293,6 @@
     <ClCompile Include="..\..\MiniEngine\tkFile\TkmFile.cpp" />
     <ClCompile Include="..\..\MiniEngine\tkFile\TksFile.cpp" />
     <ClCompile Include="..\..\MiniEngine\VertexBuffer.cpp" />
-    <ClCompile Include="Background.cpp" />
     <ClCompile Include="BG.cpp" />
     <ClCompile Include="Bloom.cpp" />
     <ClCompile Include="Bullet.cpp" />
@@ -430,7 +429,6 @@
     <ClInclude Include="..\..\MiniEngine\tkFile\TkmFile.h" />
     <ClInclude Include="..\..\MiniEngine\tkFile\TksFile.h" />
     <ClInclude Include="..\..\MiniEngine\VertexBuffer.h" />
-    <ClInclude Include="Background.h" />
     <ClInclude Include="BG.h" />
     <ClInclude Include="Bloom.h" />
     <ClInclude Include="Bullet.h" />

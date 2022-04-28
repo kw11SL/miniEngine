@@ -5,9 +5,7 @@ namespace
 {
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
 	const char* VS_ENTRYPOINT_NAME = "VSMain";
-	//const char* MODEL_FILEPATH = "Assets/modelData/backGround/backGround.tkm";
 	const char* MODEL_FILEPATH = "Assets/modelData/backGround/backGround_1.tkm";
-	//const char* MODEL_FILEPATH = "Assets/modelData/backGround/backGround_2.tkm";
 
 	const Vector3 INIT_POINT = { 0.0f,0.0f,0.0f };
 

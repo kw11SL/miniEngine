@@ -4,8 +4,6 @@
 namespace
 {
 	const char* MODEL_FILEPATH = "Assets/modelData/bg/stage_cupsule3.tkm";	//モデルのファイルパス
-	//const char* MODEL_FILEPATH = "Assets/modelData/bg/stage_cupsule4.tkm";
-	//const char* MODEL_FILEPATH = "Assets/modelData/bg/stage_cupsule5.tkm";
 
 	const Vector3 INIT_POINT = { 0.0f,0.0f,0.0f };							//初期位置
 

@@ -29,11 +29,8 @@
 #include "SoundEngine.h"
 
 
-
-
-//シャドウマップ周りの定数
 namespace {
-
+	//シャドウマップ周りの定数
 	//シャドウマップの数
 	const int NUM_SHADOW_MAP = 3;
 
@@ -53,5 +50,4 @@ namespace {
 	const char* BULLET_ENEMY_NAME = "enemyBullet";				//弾(敵)
 	const char* EXPLOSION_PLAYER_NAME = "explosion";			//爆発(プレイヤー)
 	const char* EXPLOSION_ENEMY_NAME = "enemyExplosion";		//爆発(エネミー)
-
 }

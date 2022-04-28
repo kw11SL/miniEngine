@@ -35,9 +35,4 @@ bool Explosion::Start()
 void Explosion::Update()
 {
 	m_explosionBase->Update();
-
-	if (m_explosionBase->GetIsExist() == false) {
-		DeleteGO(this);
-	}
-
 }

@@ -102,6 +102,90 @@
     <Filter Include="ヘッダー ファイル\Director">
       <UniqueIdentifier>{8ab933d0-22d1-4096-a11a-dd6a3f7122e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Manager">
+      <UniqueIdentifier>{2a814f08-9f35-40db-a762-8d4b36d51e4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Bullet">
+      <UniqueIdentifier>{a91c4df8-c48e-44a4-bd7d-8aba678c5798}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Bullet">
+      <UniqueIdentifier>{5befb4a6-52b4-41ce-aaa0-934b687452fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Manager">
+      <UniqueIdentifier>{4391bf42-14d7-42e5-8da3-aae35afeff00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Explosion">
+      <UniqueIdentifier>{5e24cf25-415b-480c-8a9e-6fe5122ed69b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Explosion">
+      <UniqueIdentifier>{8f0c35ca-e6ab-4844-89fe-c2db74d6782b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\BackGround">
+      <UniqueIdentifier>{880b92ae-6fd3-488a-a271-f76a4ce3db30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\BackGround">
+      <UniqueIdentifier>{c308906d-c083-44d0-a817-24651e804d21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Stage">
+      <UniqueIdentifier>{d5a75548-e70a-4846-91cd-07df093e7251}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Stage">
+      <UniqueIdentifier>{5256a1f7-cb25-499e-bd09-0282b800d346}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\PostEffect">
+      <UniqueIdentifier>{3b4c297c-5161-42f4-940e-da1be83bfbd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\PostEffect">
+      <UniqueIdentifier>{e300aa57-93ec-450d-ac12-1de8f6798691}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\RenderingEngine">
+      <UniqueIdentifier>{823e5f7b-bd93-4afb-b32f-e90f2c08837e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\RenderingEngine">
+      <UniqueIdentifier>{5ca5df6a-6eaf-4c2c-a9c2-029b9d65e0cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Player">
+      <UniqueIdentifier>{c99cba82-16f3-4d44-b578-4e0e29467e08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Player">
+      <UniqueIdentifier>{3850bdae-aea4-4e9f-b00f-f544da2f1962}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\SkyCube">
+      <UniqueIdentifier>{0984daab-0cdf-43da-a169-13c46f950284}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SkyCube">
+      <UniqueIdentifier>{d58e8fce-fb48-42ac-89e1-e31b6169a6f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Camera">
+      <UniqueIdentifier>{a081980e-3e43-444b-b6fc-549e8141bfaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GameScene">
+      <UniqueIdentifier>{68c338e0-5b7b-4e59-a3e1-d25373562698}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameScene">
+      <UniqueIdentifier>{8141c6b5-63f0-4ac8-bdb6-26c2e8cfe928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Camera">
+      <UniqueIdentifier>{6ad61463-6600-4be8-975a-af85b6aeec9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Level">
+      <UniqueIdentifier>{c2eded94-2148-47b8-9cfa-4b2af7d4fba6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Level">
+      <UniqueIdentifier>{0d24e50e-0588-4609-a7f1-fb45e524531d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\MapChip">
+      <UniqueIdentifier>{641f66a7-be53-44bf-a0da-bafd764cd499}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\MapChip">
+      <UniqueIdentifier>{35f9fec7-878d-4ca7-bccb-22428ff11ffe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\File">
+      <UniqueIdentifier>{8285ebc1-c921-4b5a-8a30-7dd9847d1bad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\File">
+      <UniqueIdentifier>{181d0017-0222-40da-9b87-dab6a9b27ab8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -230,9 +314,6 @@
     <ClCompile Include="..\..\MiniEngine\tkEngine.cpp">
       <Filter>MiniEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Background.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ExEngine\physics\Physics.cpp">
       <Filter>ExEngine\physics</Filter>
     </ClCompile>
@@ -278,65 +359,8 @@
     <ClCompile Include="..\..\ExEngine\effect\Effect.cpp">
       <Filter>ExEngine\effect</Filter>
     </ClCompile>
-    <ClCompile Include="Player_new.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="BG.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GaussianBlur.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\MiniEngine\RenderTarget.cpp">
       <Filter>MiniEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Bloom.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderingEngine.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GameCamera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Bullet.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="TklFile.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Explosion.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="ExplosionBase.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="SpreadBombExplosion.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="BulletManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="BulletBase.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Level_New.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="MapChip_New.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="StageBackGround.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyExplosion.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="SkyCube.cpp">
-      <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="UI.cpp">
       <Filter>ソース ファイル\UI</Filter>
@@ -360,9 +384,6 @@
       <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="EnemyGenerator.cpp">
-      <Filter>ソース ファイル\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyManager.cpp">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="WaveFileBank.cpp">
@@ -452,8 +473,68 @@
     <ClCompile Include="EnemyBomb.cpp">
       <Filter>ソース ファイル\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="BulletManager.cpp">
+      <Filter>ソース ファイル\Manager</Filter>
+    </ClCompile>
     <ClCompile Include="ExplosionManager.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyManager.cpp">
+      <Filter>ソース ファイル\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>ソース ファイル\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletBase.cpp">
+      <Filter>ソース ファイル\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyExplosion.cpp">
+      <Filter>ソース ファイル\Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="Explosion.cpp">
+      <Filter>ソース ファイル\Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="ExplosionBase.cpp">
+      <Filter>ソース ファイル\Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="SpreadBombExplosion.cpp">
+      <Filter>ソース ファイル\Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="Bloom.cpp">
+      <Filter>ソース ファイル\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="GaussianBlur.cpp">
+      <Filter>ソース ファイル\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="BG.cpp">
+      <Filter>ソース ファイル\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="StageBackGround.cpp">
+      <Filter>ソース ファイル\BackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingEngine.cpp">
+      <Filter>ソース ファイル\RenderingEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Player_new.cpp">
+      <Filter>ソース ファイル\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyCube.cpp">
+      <Filter>ソース ファイル\SkyCube</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>ソース ファイル\GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameCamera.cpp">
+      <Filter>ソース ファイル\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Level_New.cpp">
+      <Filter>ソース ファイル\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="MapChip_New.cpp">
+      <Filter>ソース ファイル\MapChip</Filter>
+    </ClCompile>
+    <ClCompile Include="TklFile.cpp">
+      <Filter>ソース ファイル\File</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -598,9 +679,6 @@
     <ClInclude Include="..\..\MiniEngine\tkEngine.h">
       <Filter>MiniEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Background.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\MiniEngine\debug\MyAssert.h">
       <Filter>MiniEngine\debug</Filter>
     </ClInclude>
@@ -661,65 +739,8 @@
     <ClInclude Include="..\..\ExEngine\effect\Effect.h">
       <Filter>ExEngine\effect</Filter>
     </ClInclude>
-    <ClInclude Include="Player_new.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="BG.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="GaussianBlur.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\MiniEngine\RenderTarget.h">
       <Filter>MiniEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="Bloom.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderingEngine.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="GameCamera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Bullet.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="TklFile.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Explosion.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ExplosionBase.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="SpreadBombExplosion.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="BulletManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="BulletBase.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Level_New.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="MapChip_New.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="StageBackGround.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyExplosion.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="SkyCube.h">
-      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>ヘッダー ファイル\UI</Filter>
@@ -743,9 +764,6 @@
       <Filter>ヘッダー ファイル\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="EnemyGenerator.h">
-      <Filter>ヘッダー ファイル\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyManager.h">
       <Filter>ヘッダー ファイル\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="NameKey.h">
@@ -835,8 +853,68 @@
     <ClInclude Include="EnemyBomb.h">
       <Filter>ヘッダー ファイル\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="BulletManager.h">
+      <Filter>ヘッダー ファイル\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyManager.h">
+      <Filter>ヘッダー ファイル\Manager</Filter>
+    </ClInclude>
     <ClInclude Include="ExplosionManager.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ヘッダー ファイル\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>ヘッダー ファイル\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletBase.h">
+      <Filter>ヘッダー ファイル\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Explosion.h">
+      <Filter>ヘッダー ファイル\Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplosionBase.h">
+      <Filter>ヘッダー ファイル\Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyExplosion.h">
+      <Filter>ヘッダー ファイル\Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="SpreadBombExplosion.h">
+      <Filter>ヘッダー ファイル\Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="BG.h">
+      <Filter>ヘッダー ファイル\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="StageBackGround.h">
+      <Filter>ヘッダー ファイル\BackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="Bloom.h">
+      <Filter>ヘッダー ファイル\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="GaussianBlur.h">
+      <Filter>ヘッダー ファイル\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingEngine.h">
+      <Filter>ヘッダー ファイル\RenderingEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Player_new.h">
+      <Filter>ヘッダー ファイル\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyCube.h">
+      <Filter>ヘッダー ファイル\SkyCube</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>ヘッダー ファイル\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameCamera.h">
+      <Filter>ヘッダー ファイル\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Level_New.h">
+      <Filter>ヘッダー ファイル\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="MapChip_New.h">
+      <Filter>ヘッダー ファイル\MapChip</Filter>
+    </ClInclude>
+    <ClInclude Include="TklFile.h">
+      <Filter>ヘッダー ファイル\File</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

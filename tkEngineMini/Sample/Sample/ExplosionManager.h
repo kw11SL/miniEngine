@@ -43,6 +43,12 @@ public:
 	void DeleteExplosions();
 
 private:
+	/// @brief 爆発のタイプごとに返す名前を決定
+	/// @param type 爆発のタイプ
+	/// @return 名前
+	const char* Naming(const EnExplosionType& type);
+
+private:
 	ExplosionManager() {}
 
 	static ExplosionManager* m_explosionManager;

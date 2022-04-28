@@ -12,14 +12,7 @@ void ExplosionManager::InitExplosion(
 )
 {
 	//爆発のタイプごとに命名を振り分け
-	//プレイヤー自機弾の爆発
-	if (explosionType == enPlayer_Spread_Bomb) {
-		m_explosions.push_back(NewGO<Explosion>(0, EXPLOSION_PLAYER_NAME));
-	}
-	//エネミーの爆発
-	else if (explosionType == enEnemy_Explosion) {
-		m_explosions.push_back(NewGO<Explosion>(0, EXPLOSION_ENEMY_NAME));
-	}
+	m_explosions.push_back(NewGO<Explosion>(0, Naming(explosionType)));
 
 	//上で配列に追加したものを初期化
 	m_explosions[m_explosions.size() - 1]->Init(
@@ -66,4 +59,16 @@ void ExplosionManager::ExecuteUpdate()
 		std::remove_if(m_explosions.begin(), m_explosions.end(), func),
 		m_explosions.end()
 	);
+}
+
+const char* ExplosionManager::Naming(const EnExplosionType& type)
+{
+	//プレイヤーの自機弾の爆発
+	if (type == enPlayer_Spread_Bomb) {
+		return EXPLOSION_PLAYER_NAME;
+	}
+	//自爆型エネミーの爆発
+	else if (type == enEnemy_Explosion) {
+		return EXPLOSION_ENEMY_NAME;
+	}
 }
