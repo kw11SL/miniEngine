@@ -441,6 +441,53 @@ void Player_new::Hit()
 		return true;
 	});
 
+	//敵弾との判定
+	QueryGOs<Bullet>(BULLET_ENEMY_NAME, [&](Bullet* enemyBullet) {
+		//距離を計算
+		Vector3 diff = enemyBullet->GetPosition() - m_position;
+		float length = diff.Length();
+
+		//エネミーに接触したとき
+		if (length < 60.0f) {
+
+			//自身が無敵状態でなければ
+			if (m_isInvincible == false) {
+				//1機減らす
+				m_life -= 1;
+				//ゲームディレクターの保持するライフを減らす
+				GameDirector::GetInstance()->DecPlayerLife();
+
+				//描画フラグをオフにする
+				if (m_skinModelRender->GetIsDraw() == true) {
+					m_skinModelRender->SetIsDraw(false);
+				}
+
+				//生存フラグをオフ
+				SetIsExist(false);
+
+				//無敵状態にする
+				SetInvincibleTime(INVINCIBLE_TIME_REVIVE);
+				SetIsInvFlag(true);
+
+				//ミス時のseを再生
+				CSoundSource* ssMissSe = NewGO<CSoundSource>(0);
+				ssMissSe->Init(L"Assets/wav/missSe.wav");
+				ssMissSe->SetVolume(1.0f);
+				ssMissSe->Play(false);
+
+				//被弾エフェクトを発生
+				m_explosionEffect.Init(EFFECT_FILEPATH_EXPLOSION);
+				m_explosionEffect.SetPosition(m_position);
+				m_explosionEffect.SetRotation(m_rot);
+				m_explosionEffect.SetScale(EFFECT_SCALE_EXPLOSION);
+				m_explosionEffect.Play();
+
+				return false;
+			}
+		}
+		return true;
+	});
+
 	//敵の爆発との判定
 	QueryGOs<Explosion>(EXPLOSION_ENEMY_NAME, [&](Explosion* enemyExplosion) {
 		//距離を計算

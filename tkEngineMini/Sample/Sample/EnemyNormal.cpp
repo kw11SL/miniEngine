@@ -29,6 +29,7 @@ EnemyNormal::~EnemyNormal()
 
 void EnemyNormal::InitSub()
 {
+	m_skinModelRender = NewGO<SkinModelRender>(0, ENEMY_NAME);
 	//ƒ‚ƒfƒ‹‚Ì‰Šú‰»
 	m_skinModelRender->Init(MODELPATH, enModelUpAxisZ, true, false);
 

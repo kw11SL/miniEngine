@@ -1,5 +1,9 @@
 #pragma once
-//#include"Explosion.h"
+#include "EnemyBase.h"
+#include "EnemyNormal.h"
+#include "EnemyShot.h"
+#include "EnemyBomb.h"
+
 class Player_new;
 class ExplosionManager;
 
@@ -36,25 +40,42 @@ public:
 	//ゲッター
 	/// @brief	座標を取得 
 	/// @return 座標
-	const Vector3& GetPosition() const { return m_position; }
+	const Vector3& GetPosition() const 
+	{
+		return m_position; 
+		//return m_enemyBase->GetPosition();
+	}
 
 	/// @brief 拡大率を取得
 	/// @return 拡大率
-	const Vector3& GetScale() const { return m_scale; }
+	const Vector3& GetScale() const 
+	{ 
+		return m_scale;
+		//return m_enemyBase->GetScale();
+	}
 
 	/// @brief 回転を取得
 	/// @return 回転
-	const Quaternion& GetRotation() const { return m_rot; }
+	const Quaternion& GetRotation() const 
+	{ 
+		return m_rot;
+		//return m_enemyBase->GetRotation();
+	}
 
 	/// @brief 回転角度を取得
 	/// @return 回転角度
-	const float GetAngle() const { return m_angle; }
+	const float GetAngle() const 
+	{ 
+		return m_angle;
+		//return m_enemyBase->GetAngle();
+	}
 
 	/// @brief スキンモデルレンダーを取得
 	/// @return スキンモデルレンダー
 	SkinModelRender* GetSkinModelRender()
 	{
 		return m_skinModelRender;
+		//return m_enemyBase->GetSkinModelRender();
 	}
 
 	/// @brief エネミーの種類を取得
@@ -66,9 +87,10 @@ public:
 
 	/// @brief エネミーの撃破スコアを取得
 	/// @return 
-	int GetScore()
+	const int GetScore()
 	{
 		return m_score;
+		//return m_enemyBase->GetScore();
 	}
 
 	/// @brief プレイヤーに対する当たり判定が有効かどうか
@@ -76,20 +98,23 @@ public:
 	const bool GetIsActive()
 	{
 		return m_isActive;
+		//return m_enemyBase->GetIsActive();
 	}
 
 	/// @brief 無敵状態かどうか？
 	/// @return 無敵フラグ
-	bool GetIsInvincible()
+	const bool GetIsInvincible()
 	{
 		return m_isInvincible;
+		//return m_enemyBase->GetIsInvincible();
 	}
 
 	/// @brief 存在しているかどうか？
 	/// @return 存在フラグ
-	bool GetIsExist()
+	const bool GetIsExist()
 	{
 		return m_isExist;
+		//return m_enemyBase->GetIsExist();
 	}
 
 	//セッター
@@ -177,7 +202,7 @@ private:
 	/// @brief 生成時に1度だけ呼ばれる処理
 	/// @return 初期化終了フラグ 
 	bool Start() override;
-
+//
 	/// @brief 更新処理
 	void Update() override;
 
@@ -205,6 +230,13 @@ private:
 	/// @brief 当たり判定が有効になるまでのカウンターを減らす
 	void DecToActivateTime();
 
+	/// @brief プレイヤー方向基準で一定時間おきに弾を均等な全方位に撃つ。
+	/// @param wayNum 同時発射数。奇数なら止まっていると当たり、偶数なら当たらない。1を指定すれば単発自機狙い弾。
+	void FireBulletEqually(const int wayNum,const EnBulletType& bulletType);
+
+	/// @brief 発射までのカウンターの増加
+	void AddShotCounter();
+
 private:
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
@@ -212,7 +244,6 @@ private:
 	EnEnemyType m_enEnemyType = enCommon;				//エネミーのタイプ
 
 	Player_new* m_player = nullptr;						//プレイヤーへのポインタ
-	Explosion* m_explosion = nullptr;
 
 	float m_life = 0.0f;								//耐久値
 	float m_lifeTime = 1.0f;							//時間寿命
@@ -240,6 +271,8 @@ private:
 	float m_invTime = 0.0f;								//無敵時間
 	float m_toActivateCounter = 0.0f;					//出現してから当たり判定が有効になるまでのカウンター
 
+	float m_shotCounter = 0.0f;
+
 	//撃破エフェクト
 	Effect m_destroyEffect;
 	//ヒットエフェクト
@@ -247,6 +280,12 @@ private:
 
 	//爆発マネージャへのポインタ
 	ExplosionManager* m_explosionManager = nullptr;
+	//弾の管理クラスへのポインタ
+	BulletManager* m_bulletManager = nullptr;
 
+	/*EnemyBase* m_enemyBase = nullptr;
+	EnemyNormal m_enemyNormal;
+	EnemyShot m_enemyShot;
+	EnemyBomb m_enemyBomb;*/
 };
 

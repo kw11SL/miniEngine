@@ -29,6 +29,9 @@ EnemyBomb::~EnemyBomb()
 
 void EnemyBomb::InitSub()
 {
+	m_bulletManager = BulletManager::GetInstance();
+	m_explosionManager = ExplosionManager::GetInstance();
+
 	//ÉÇÉfÉãÇÃèâä˙âª
 	m_skinModelRender->Init(MODELPATH, enModelUpAxisZ, true, false);
 
@@ -94,8 +97,14 @@ void EnemyBomb::RotationSub()
 void EnemyBomb::SelfDestroySub()
 {
 	//îöî≠Çî≠ê∂Ç≥ÇπÇÈ
-	m_explosion = NewGO<Explosion>(0, EXPLOSION_ENEMY_NAME);
-	m_explosion->Init(m_position, 10.0f, enEnemy_Explosion);
+	/*m_explosion = NewGO<Explosion>(0, EXPLOSION_ENEMY_NAME);
+	m_explosion->Init(m_position, 10.0f, enEnemy_Explosion);*/
+	
+	m_explosionManager->InitExplosion(
+		m_position,
+		10.0f,
+		enEnemy_Explosion
+	);
 }
 
 void EnemyBomb::UpdateSub()

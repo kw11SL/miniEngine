@@ -17,7 +17,7 @@ public:
 	/// @param initUp 上方向
 	void Init(const Vector3& initPoint, const Vector3& initUp);
 	/// @brief 初期化処理に付随する処理
-	virtual void InitSub() {};
+	virtual void InitSub();
 
 	/// @brief エフェクトの初期化処理
 	virtual void InitEffect() {}
@@ -29,17 +29,17 @@ public:
 	/// @brief 更新処理
 	void Update() override;
 	/// @brief 更新処理に付随する処理
-	virtual void UpdateSub() {}
+	virtual void UpdateSub();
 
 	/// @brief 移動処理
 	void Move();
 	/// @brief 移動処理に付随する処理
-	virtual void MoveSub() {}
+	virtual void MoveSub();
 
 	/// @brief 回転処理
 	void Rotation();
 	/// @brief 回転処理に付随する処理
-	virtual void RotationSub(){}
+	virtual void RotationSub();
 
 	/// @brief 当たり判定処理
 	void Hit();
@@ -59,7 +59,7 @@ public:
 	/// @brief 自滅処理
 	void SelfDestroy();
 	//自滅時に付随する処理
-	virtual void SelfDestroySub(){}
+	virtual void SelfDestroySub();
 
 	/// @brief タイムアップ時の自滅
 	void DestroyTimeUp();
@@ -154,12 +154,20 @@ public:
 	/// @brief モデルの初期化
 	void InitModelFromInitData() { m_skinModelRender->InitModel(); }
 
+	/// @brief プレイヤー方向基準で一定時間おきに弾を均等な全方位に撃つ。
+	/// @param wayNum 同時発射数。奇数なら止まっていると当たり、偶数なら当たらない。1を指定すれば単発自機狙い弾。
+	/// @param interval 発射間隔。
+	void FireBulletEqually(
+		const int wayNum,
+		const float interval);
+
 protected:
 	SkinModelRender* m_skinModelRender = nullptr;		//モデルレンダー
 	MyCharacterController m_myCharaCon;					//球面移動用キャラコン
 	SphericalMove m_sphericalMove;						//球面移動用クラス
 
 	Player_new* m_player = nullptr;						//プレイヤーへのポインタ
+	BulletManager* m_bulletManager = nullptr;
 
 	//パラメータ各種
 	float m_life = 0.0f;								//耐久値
@@ -174,6 +182,7 @@ protected:
 	float m_angle = 0.0f;								//角度
 	float m_invTime = 0.0f;								//無敵時間
 	float m_toActivateCounter = 0.0f;					//出現してから当たり判定が有効になるまでのカウンター
+	float m_shotCounter = 0.0f;							//敵が弾を撃つまでのカウンター
 
 	//座標など
 	Vector3 m_position = Vector3::Zero;					//座標

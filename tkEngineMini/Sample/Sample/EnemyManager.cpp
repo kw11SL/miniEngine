@@ -12,7 +12,7 @@ void EnemyManager::InitEnemies(
 )
 {
 	//配列内にエネミーを作成
-	m_enemies.push_back(NewGO<Enemy>(0, "enemy"));
+	m_enemies.push_back(NewGO<Enemy>(0, ENEMY_NAME));
 
 	//作成時に初期化
 	m_enemies[m_enemies.size() - 1]->Init(

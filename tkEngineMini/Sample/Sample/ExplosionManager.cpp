@@ -42,7 +42,7 @@ void ExplosionManager::ExecuteUpdate()
 		}
 	}
 
-	//弾を消すための条件を記述した関数オブジェクト
+	//爆発を消すための条件を記述した関数オブジェクト
 	auto func = [&](Explosion* explosion)->bool {
 		//存在フラグがfalseだったらtrueを返す(=削除対象にする)
 		if (explosion->GetIsExist() == false) {

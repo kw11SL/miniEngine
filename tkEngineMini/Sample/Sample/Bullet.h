@@ -205,6 +205,8 @@ private:
 	/// @brief 削除処理
 	void Destroy();
 
+	void Hit();
+
 	/// @brief エフェクトの初期化
 	/// @param bulletType 弾のタイプ
 	void InitEffect(const EnBulletType& bulletType);

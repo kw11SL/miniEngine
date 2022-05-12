@@ -91,7 +91,9 @@ void Enemy::Init(
 	const Vector3& initUp,
 	const EnEnemyType& enemyType)
 {
+	//各種マネージャーのポインタを取得
 	m_explosionManager = ExplosionManager::GetInstance();
+	m_bulletManager = BulletManager::GetInstance();
 
 	m_skinModelRender = NewGO<SkinModelRender>(0);
 
@@ -191,6 +193,28 @@ void Enemy::Init(
 	//エフェクトの初期化
 	m_destroyEffect.Init(DESTROY_EFFECT_FILEPATH);
 	m_hitEffect.Init(HIT_EFFECT_FILEPATH);
+
+	/*switch (enemyType) {
+	case enCommon:
+		m_enemyBase = &m_enemyNormal;
+		break;
+	case enShot:
+		m_enemyBase = &m_enemyShot;
+		break;
+	case enBomb:
+		m_enemyBase = &m_enemyBomb;
+		break;
+	default:
+		break;
+	}
+
+	m_position = initPoint;
+	m_up = initUp;
+
+	m_enemyBase->Init(
+		m_position,
+		m_up
+	);*/
 
 }
 
@@ -311,20 +335,20 @@ void Enemy::SelfDestroy()
 
 	//自爆型エネミーのときは爆発を発生させる
 	if (m_enEnemyType == enBomb && GameDirector::GetInstance()->GetTime() > 0.0f) {
-		/*m_explosion = NewGO<Explosion>(0, "enemyExplosion");
-		m_explosion->Init(
-			m_position,
-			10.0f,
-			enEnemy_Explosion
-		);*/
+		
 		m_explosionManager->InitExplosion(
 			m_position,
 			10.0f,
 			enEnemy_Explosion
 		);
-	}
 
-	DeleteGO(this);
+		//自爆時に弾をばらまく
+		FireBulletEqually(6,enEnemyNormal);
+
+	}
+	//存在フラグをオフ
+	m_isExist = false;
+
 }
 
 
@@ -349,8 +373,6 @@ void Enemy::Destroy()
 		ssDestroy->SetVolume(0.6f);
 		ssDestroy->Play(false);
 		
-		DeleteGO(this);
-
 		//点数を加点
 		GameDirector::GetInstance()->AddScore(m_score);
 		//プレイヤーの撃破総数に+1
@@ -401,12 +423,89 @@ void Enemy::DecLifeTime()
 	}
 }
 
+void Enemy::AddShotCounter()
+{
+	//発射カウンターの増加
+	if (m_enEnemyType == enShot || enChaser) {
+		m_shotCounter += g_gameTime->GetFrameDeltaTime();
+	}
+}
+
+void Enemy::FireBulletEqually(const int wayNum,const EnBulletType& bulletType)
+{
+	//数が0だったら実行しない
+	if (wayNum == 0) {
+		return;
+	}
+
+	//プレイヤー方向を格納するベクトルを作成
+	Vector3 toPlayer = Vector3::Zero;
+	//プレイヤー方向へのベクトルを計算、正規化
+	if (m_player != nullptr) {
+		toPlayer = m_player->GetPosition() - m_position;
+		toPlayer.Normalize();
+	}
+
+	Vector3 dir = toPlayer;
+	//角度を決めるための回転クォータニオンを作成
+	Quaternion rot;
+
+	//指定した分割数で弾と弾の間の角度を計算(ラジアン)
+	//π*2(=2π = 1周)を等分している
+	float angle = Math::PI * 2.0f / (float)wayNum;
+
+	//for文に足し込む用の角度
+	float angleTmp = 0.0f;
+	
+	//弾の角度決定,射撃
+	for (int i = 0; i < wayNum; i++) {
+		//奇数弾の1発目
+		if (i == 0 && wayNum % 2 == 1) {
+			//プレイヤー方向に1発目
+			rot.SetRotation(m_up, 0.0f);
+			rot.Apply(dir);
+		}
+		//偶数弾の1発目(プレイヤー方向には出さない)
+		else if (i == 0 && wayNum % 2 == 0) {
+			//プレイヤー方向準拠なので1発目が出る方向は、
+			//(分割した角度 / 2)ラジアン回転させた向きとなる
+			angleTmp += angle / 2.0f;
+			rot.SetRotation(m_up, angleTmp);
+			rot.Apply(dir);
+		}
+		//2発目以降は等分した角度分発射方向を回す
+		else {
+			angleTmp += angle;
+			rot.SetRotation(m_up, angleTmp);
+			rot.Apply(dir);
+		}
+
+		//弾を生成
+		m_bulletManager->InitBullets(
+			m_position,
+			m_up,
+			dir,
+			bulletType
+		);
+
+		//生成後、向きをプレイヤー方向に戻す(正面を基準に方向を決定しているため)
+		dir = toPlayer;
+		dir.Normalize();
+	}
+		
+	//発射カウンターを戻す
+	m_shotCounter = 0.0f;
+	
+}
+
 void Enemy::Update()
 {
 	//ゲーム中以外なら処理しない
 	if(GameDirector::GetInstance()->GetGameState() != enGame) {
 		return;
 	}
+
+	//m_enemyBase->Update();
 
 	Move();
 	Rotation();
@@ -415,6 +514,12 @@ void Enemy::Update()
 	DecToActivateTime();
 	Destroy();
 	DestroyTimeUp();
+	AddShotCounter();
+
+	//テスト：射撃カウンタ一定で全方位射撃
+	if (m_shotCounter > 2.0f) {
+		FireBulletEqually(1,enEnemyNormal);
+	}
 
 	//自爆型エネミーのとき、時間寿命をマイナス
 	if (m_enEnemyType == enBomb) {

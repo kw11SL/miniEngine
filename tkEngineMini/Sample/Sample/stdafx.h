@@ -47,7 +47,7 @@ namespace {
 	const char* STAGE_NAME = "stage";							//ステージ
 	const char* STAGE_BACK_GROUND_NAME = "stageBackGround";		//背景
 	const char* BULLET_PLAYER_NAME = "bullet";					//弾(プレイヤー)
-	const char* BULLET_ENEMY_NAME = "enemyBullet";				//弾(敵)
+	const char* BULLET_ENEMY_NAME = "enemyBullet";				//弾(エネミー)
 	const char* EXPLOSION_PLAYER_NAME = "explosion";			//爆発(プレイヤー)
 	const char* EXPLOSION_ENEMY_NAME = "enemyExplosion";		//爆発(エネミー)
 }

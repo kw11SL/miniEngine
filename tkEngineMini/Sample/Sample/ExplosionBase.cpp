@@ -46,17 +46,13 @@ void ExplosionBase::InitEffect(const char16_t* filePath)
 void ExplosionBase::DecLifeTime()
 {
 	m_lifeTime -= g_gameTime->GetFrameDeltaTime();
-
-	if (m_lifeTime <= 0.0f) {
-		m_lifeTime = 0.0f;
-		m_isExist = false;
-	}
 }
 
 void ExplosionBase::Destroy()
 {
-	if (m_isExist == false) {
-		DeleteGO(this);
+	if (m_lifeTime <= 0.0f) {
+		m_lifeTime = 0.0f;
+		m_isExist = false;
 	}
 }
 

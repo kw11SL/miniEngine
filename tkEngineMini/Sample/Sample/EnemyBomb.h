@@ -4,6 +4,7 @@
 
 class EnemyBomb : public EnemyBase
 {
+public:
 	~EnemyBomb();
 
 	/// @brief ‰Šú‰»ˆ—‚É•t‚·‚éˆ—
@@ -28,6 +29,7 @@ class EnemyBomb : public EnemyBase
 	void SelfDestroySub() override;
 
 private:
-	Explosion* m_explosion = nullptr;
+	BulletManager* m_bulletManager = nullptr;
+	ExplosionManager* m_explosionManager = nullptr;
 };
 

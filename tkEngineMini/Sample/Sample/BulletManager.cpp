@@ -12,7 +12,8 @@ void BulletManager::InitBullets(
 	const EnBulletType bulletType
 )
 {
-	m_bullets.push_back(NewGO<Bullet>(0, BULLET_PLAYER_NAME));
+	//弾のタイプで名前を振り分け
+	m_bullets.push_back(NewGO<Bullet>(0, Naming(bulletType)));
 
 	m_bullets[m_bullets.size() - 1]->Init(
 		*RenderingEngine::GetInstance(),
@@ -62,4 +63,16 @@ void BulletManager::ExecuteUpdate()
 		m_bullets.end()
 	);
 	
+}
+
+const char* BulletManager::Naming(const EnBulletType& type)
+{
+	//プレイヤーの弾
+	if (type == enPlayerNormal || type == enPlayerSpreadBomb) {
+		return BULLET_PLAYER_NAME;
+	}
+	//エネミーの弾
+	else if (type == enEnemyNormal) {
+		return BULLET_ENEMY_NAME;
+	}
 }

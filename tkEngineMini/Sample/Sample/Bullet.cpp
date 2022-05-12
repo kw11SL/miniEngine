@@ -19,7 +19,7 @@ namespace{
 	//弾ごとの弾速
 	const float MOVE_SPEED_PLAYER_NORMAL = 25.0f;
 	const float MOVE_SPEED_PLAYER_SPREAD_BOMB = 10.0f;
-	const float MOVE_SPEED_ENEMY_NORMAL = 3.0f;
+	const float MOVE_SPEED_ENEMY_NORMAL = 8.0f;
 
 	//スプレッドボムの速度減衰
 	const float SPREAD_BOMB_DEC_RATE = 0.15f;
@@ -27,7 +27,7 @@ namespace{
 	//弾の残存時間
 	const float LIFETIME_PLAYER_NORMAL = 1.5f;
 	const float LIFETIME_PLAYER_SPREAD_BOMB = 1.5f;
-	const float LIFETIME_ENEMY_NORMAL = 6.0f;
+	const float LIFETIME_ENEMY_NORMAL = 1.5f;
 
 	//弾の威力
 	const float POWER_PLAYER_NORMAL = 5.0f;
@@ -41,7 +41,7 @@ namespace{
 	const char16_t* EFFECT_FILEPATH_PLAYER_NORMAL = u"Assets/effect/shot_pl1.efk";
 	const char16_t* EFFECT_FILEPATH_PLAYER_SPREAD_BOMB = u"Assets/effect/shot_pl_spread.efk";
 	const char16_t* EFFECT_FILEPATH_PLAYER_SPREAD_BOMB_BURST = u"Assets/effect/shot_spread_burst.efk";
-	const char16_t* EFFECT_FILEPATH_ENEMY_NORMAL = u"Assets/effect/shot_pl1.efk";
+	const char16_t* EFFECT_FILEPATH_ENEMY_NORMAL = u"Assets/effect/shot_pl_spread.efk";
 	const char16_t* EFFECT_FILEPATH_PLAYER_NORMAL_BANISH = u"Assets/effect/bullet_banish_normal.efk";
 
 	//シェーダーのファイルパス
@@ -231,6 +231,62 @@ void Bullet::Rotation()
 	m_sphericalMove.Rotation(m_forward, m_right, m_up, m_rot);
 }
 
+void Bullet::Hit()
+{
+	//自身が敵弾のとき、プレイヤーの弾と爆発を検索
+	if (m_enBulletType == enEnemyNormal) {
+		
+		QueryGOs<Bullet>(BULLET_PLAYER_NAME, [&](Bullet* bullet) {
+			Vector3 diff = bullet->GetPosition() - m_position;
+			float length = diff.Length();
+
+			if (length < 60.0f) {
+				//相手側の耐久値を減少
+				bullet->DecLife(m_power);
+				//問い合わせ終了
+				return false;
+			}
+
+			//問い合わせ続行
+			return true;
+		});
+		QueryGOs<Explosion>(EXPLOSION_PLAYER_NAME, [&](Explosion* explosion) {
+			Vector3 diff = explosion->GetPosition() - m_position;
+			float length = diff.Length();
+
+			if (length < explosion->GetDamageArea()) {
+				//こちらの耐久値を減少
+				DecLife(explosion->GetPower());
+				//問い合わせ終了
+				return false;
+			}
+
+			//問い合わせ続行
+			return true;
+		});
+
+	}
+	//自身が自機弾のとき、敵弾を検索
+	else if (m_enBulletType == enPlayerNormal || enPlayerSpreadBomb) {
+
+		QueryGOs<Bullet>(BULLET_ENEMY_NAME, [&](Bullet* bullet) {
+			Vector3 diff = bullet->GetPosition() - m_position;
+			float length = diff.Length();
+
+			if (length < 60.0f) {
+				//相手側の耐久値を減少
+				bullet->DecLife(m_power);
+				//問い合わせ終了
+				return false;
+			}
+
+			//問い合わせ続行
+			return true;
+		});
+	}
+
+}
+
 void Bullet::DecLifeTime()
 {
 	//ライフを減少
@@ -307,6 +363,7 @@ void Bullet::Update()
 	Move();
 	Rotation();
 	DecLifeTime();
+	Hit();
 	Destroy();
 
 	m_shotEffect.SetPosition(m_position);

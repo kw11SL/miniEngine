@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "EnemyBase.h"
+#include "Player_new.h"
 
 namespace {
 	float UPPER_OFFSET = 50.0f;
@@ -17,7 +18,12 @@ EnemyBase::EnemyBase()
 void EnemyBase::Init(const Vector3& initPoint, const Vector3& initUp)
 {
 	//モデルをNewGO
-	m_skinModelRender = NewGO<SkinModelRender>(0);
+	//m_skinModelRender = NewGO<SkinModelRender>(0);
+	
+	InitSub();
+
+	//バレットマネージャのポインタを取得
+	m_bulletManager = BulletManager::GetInstance();
 
 	const char* modelPath = "hoge";
 
@@ -32,7 +38,6 @@ void EnemyBase::Init(const Vector3& initPoint, const Vector3& initUp)
 	if (m_directionLight != nullptr) { RecieveDirectionLight(m_directionLight); }
 	if (m_pointLight != nullptr) { RecievePointLight(m_pointLight); }
 	if (m_pointLight != nullptr) { RecieveSpotLight(m_spotLight); }
-
 
 	//上方向を設定
 	m_up = initUp;
@@ -59,10 +64,14 @@ void EnemyBase::Init(const Vector3& initPoint, const Vector3& initUp)
 	m_toActivateCounter = ACTIVATE_COUNT;
 
 	//継承先で決めた処理
-	InitSub();
+	//InitSub();
 	
 	//継承先で決めたエフェクト初期化処理
 	InitEffect();
+}
+
+void EnemyBase::InitSub()
+{
 }
 
 void EnemyBase::Move()
@@ -79,11 +88,19 @@ void EnemyBase::Move()
 	m_skinModelRender->SetPosition(m_position);
 }
 
+void EnemyBase::MoveSub()
+{
+}
+
 void EnemyBase::Rotation()
 {
 	m_sphericalMove.Rotation(m_forward, m_right, m_up, m_rot);
 	//継承先で決めた処理
 	RotationSub();
+}
+
+void EnemyBase::RotationSub()
+{
 }
 
 void EnemyBase::Hit()
@@ -206,7 +223,7 @@ void EnemyBase::Destroy()
 		ssDestroy->SetVolume(0.6f);
 		ssDestroy->Play(false);
 
-		DeleteGO(this);
+		//DeleteGO(this);
 
 		//点数を加点
 		GameDirector::GetInstance()->AddScore(m_score);
@@ -220,7 +237,12 @@ void EnemyBase::SelfDestroy()
 	//継承先で決めた処理
 	SelfDestroySub();
 
-	DeleteGO(this);
+	//DeleteGO(this);
+	m_isExist = false;
+}
+
+void EnemyBase::SelfDestroySub()
+{
 }
 
 void EnemyBase::DestroyTimeUp()
@@ -231,7 +253,89 @@ void EnemyBase::DestroyTimeUp()
 	}
 }
 
+void EnemyBase::FireBulletEqually(const int wayNum, const float interval)
+{
+	//数が0だったら実行しない
+	if (wayNum == 0) {
+		return;
+	}
 
+	//プレイヤー方向を格納するベクトルを作成
+	Vector3 toPlayer = Vector3::Zero;
+	
+	
+	if (m_player == nullptr) {
+		m_player = FindGO<Player_new>(PLAYER_NAME);
+	}
+	//プレイヤー方向へのベクトルを計算、正規化
+	if (m_player != nullptr) {
+		toPlayer = m_player->GetPosition() - m_position;
+		toPlayer.Normalize();
+	}
+
+	Vector3 dir = toPlayer;
+	//角度を決めるための回転クォータニオンを作成
+	Quaternion rot;
+
+	//指定した分割数で弾と弾の間の角度を計算(ラジアン)
+	//π*2(=2π = 1周)を等分している
+	float angle = Math::PI * 2.0f / (float)wayNum;
+
+	//for文に足し込む用の角度
+	float angleTmp = 0.0f;
+
+	////発射カウンターの増加
+	//if (m_enEnemyType == enShot || enChaser) {
+	//	m_shotCounter += g_gameTime->GetFrameDeltaTime();
+	//}
+	
+	m_shotCounter += g_gameTime->GetFrameDeltaTime();
+
+	//発射処理
+	//カウンターが規定値になったら
+	if (m_shotCounter >= interval) {
+
+		//弾の角度決定,射撃
+		for (int i = 0; i < wayNum; i++) {
+			//奇数弾の1発目
+			if (i == 0 && wayNum % 2 == 1) {
+				//プレイヤー方向に1発目
+				rot.SetRotation(m_up, 0.0f);
+				rot.Apply(dir);
+			}
+			//偶数弾の1発目(プレイヤー方向には出さない)
+			else if (i == 0 && wayNum % 2 == 0) {
+				//プレイヤー方向準拠なので1発目が出る方向は、
+				//(分割した角度 / 2)ラジアン回転させた向きとなる
+				angleTmp += angle / 2.0f;
+				rot.SetRotation(m_up, angleTmp);
+				rot.Apply(dir);
+			}
+			//2発目以降は等分した角度分発射方向を回す
+			else {
+				angleTmp += angle;
+				rot.SetRotation(m_up, angleTmp);
+				rot.Apply(dir);
+			}
+
+			//弾を生成
+			m_bulletManager->InitBullets(
+				m_position,
+				m_up,
+				dir,
+				enEnemyNormal
+			);
+
+			//生成後、向きをプレイヤー方向に戻す(正面を基準に方向を決定しているため)
+			dir = toPlayer;
+			dir.Normalize();
+		}
+
+		//発射カウンターを戻す
+		m_shotCounter = 0.0f;
+	}
+
+}
 
 void EnemyBase::Update()
 {
@@ -254,4 +358,8 @@ void EnemyBase::Update()
 	UpdateEffect();
 
 	m_skinModelRender->SetRotation(m_rot);
+}
+
+void EnemyBase::UpdateSub()
+{
 }

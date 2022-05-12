@@ -47,6 +47,11 @@ public:
 private:
 	BulletManager() {}
 
+	/// @brief 弾のタイプで命名を振り分け
+	/// @param type 弾のタイプ
+	/// @return 名前
+	const char* Naming(const EnBulletType& type);
+
 private:
 
 	static BulletManager* m_bulletManager;
