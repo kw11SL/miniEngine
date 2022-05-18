@@ -41,8 +41,15 @@ namespace{
 	const char16_t* EFFECT_FILEPATH_PLAYER_NORMAL = u"Assets/effect/shot_pl1.efk";
 	const char16_t* EFFECT_FILEPATH_PLAYER_SPREAD_BOMB = u"Assets/effect/shot_pl_spread.efk";
 	const char16_t* EFFECT_FILEPATH_PLAYER_SPREAD_BOMB_BURST = u"Assets/effect/shot_spread_burst.efk";
-	const char16_t* EFFECT_FILEPATH_ENEMY_NORMAL = u"Assets/effect/shot_pl_spread.efk";
+	const char16_t* EFFECT_FILEPATH_ENEMY_NORMAL = u"Assets/effect/enemy_bullet_1.efk";
 	const char16_t* EFFECT_FILEPATH_PLAYER_NORMAL_BANISH = u"Assets/effect/bullet_banish_normal.efk";
+	const char16_t* EFFECT_FILEPATH_ENEMY_NORMAL_BANISH = u"Assets/effect/bullet_banish_enemy.efk";
+
+	//エフェクトの拡大率
+	const Vector3 EFFECT_PLAYER_BULLET_NORMAL_SCALE = { 15.0f,15.0f,15.0f };
+	const Vector3 EFFECT_ENEMY_BULLET_NORMAL_SCALE = { 15.0f,15.0f,15.0f };
+	const Vector3 EFFECT_PLAYER_BULLET_NORMAL_BANISH_SCALE = { 4.0f,4.0f,4.0f };
+	const Vector3 EFFECT_ENEMY_BULLET_NORMAL_BANISH_SCALE = { 3.0f,3.0f,3.0f };
 
 	//シェーダーのファイルパス
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
@@ -171,7 +178,7 @@ void Bullet::Init(
 	m_direction.Normalize();*/
 
 	//エフェクトの初期化
-	InitEffect(bulletType);
+	InitEffect(m_enBulletType);
 	
 	//右ベクトルは発射方向と上方向の外積
 	m_right = Cross(m_up, m_direction);
@@ -308,13 +315,18 @@ void Bullet::Destroy()
 
 		if (m_enBulletType == enPlayerNormal) {
 			//消滅エフェクトを再生
-			m_normalBanishEffect.SetPosition(m_position);
-			m_normalBanishEffect.SetScale({ 4.0f,4.0f,4.0f });
-			m_normalBanishEffect.Play(false);
+			m_banishEffect.SetPosition(m_position);
+			m_banishEffect.SetScale(EFFECT_PLAYER_BULLET_NORMAL_BANISH_SCALE);
+			m_banishEffect.Play(false);
 		}
-
+		else if (m_enBulletType == enEnemyNormal) {
+			//消滅エフェクトを再生
+			m_banishEffect.SetPosition(m_position);
+			m_banishEffect.SetScale(EFFECT_ENEMY_BULLET_NORMAL_BANISH_SCALE);
+			m_banishEffect.Play(false);
+		}
 		//自身がスプレッドボムのとき
-		if (m_enBulletType == enPlayerSpreadBomb) {
+		else if (m_enBulletType == enPlayerSpreadBomb) {
 
 			//爆発のマネージャー内に生成
 			m_explosionManager->InitExplosion(
@@ -333,14 +345,20 @@ void Bullet::InitEffect(const EnBulletType& bulletType)
 	{
 	case enPlayerNormal:
 		m_shotEffect.Init(EFFECT_FILEPATH_PLAYER_NORMAL);
-		m_normalBanishEffect.Init(EFFECT_FILEPATH_PLAYER_NORMAL_BANISH);
+		m_shotEffect.SetScale(EFFECT_PLAYER_BULLET_NORMAL_SCALE);
+		m_banishEffect.Init(EFFECT_FILEPATH_PLAYER_NORMAL_BANISH);
+		m_banishEffect.SetScale(EFFECT_PLAYER_BULLET_NORMAL_BANISH_SCALE);
 		break;
 	case enPlayerSpreadBomb:
 		m_shotEffect.Init(EFFECT_FILEPATH_PLAYER_SPREAD_BOMB);
+		m_shotEffect.SetScale(EFFECT_PLAYER_BULLET_NORMAL_SCALE);
 		m_spreadBurstEffect.Init(EFFECT_FILEPATH_PLAYER_SPREAD_BOMB_BURST);
 		break;
 	case enEnemyNormal:
 		m_shotEffect.Init(EFFECT_FILEPATH_ENEMY_NORMAL);
+		m_shotEffect.SetScale(EFFECT_ENEMY_BULLET_NORMAL_SCALE);
+		m_banishEffect.Init(EFFECT_FILEPATH_ENEMY_NORMAL_BANISH);
+		m_banishEffect.SetScale(EFFECT_ENEMY_BULLET_NORMAL_BANISH_SCALE);
 		break;
 	default:
 		break;
@@ -349,8 +367,9 @@ void Bullet::InitEffect(const EnBulletType& bulletType)
 	//位置、回転、拡大率を設定
 	m_shotEffect.SetPosition(m_position);
 	m_shotEffect.SetRotation(m_rot);
-	m_shotEffect.SetScale({ 15.0f,15.0f,15.0f });
 
+	m_banishEffect.SetPosition(m_position);
+	m_banishEffect.SetRotation(m_rot);
 }
 
 void Bullet::Update()
@@ -368,7 +387,6 @@ void Bullet::Update()
 
 	m_shotEffect.SetPosition(m_position);
 	m_shotEffect.SetRotation(m_rot);
-	m_shotEffect.SetScale({ 15.0f,15.0f,15.0f });
 
 	if (m_shotEffect.IsPlay() != true) {
 		m_shotEffect.Play(false);
@@ -376,6 +394,6 @@ void Bullet::Update()
 
 	//エフェクトの更新
 	m_shotEffect.Update();
-	m_normalBanishEffect.Update();
+	m_banishEffect.Update();
 
 }

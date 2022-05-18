@@ -247,7 +247,7 @@ private:
 	//ショットエフェクト
 	Effect m_shotEffect;								//通常ショットのエフェクト
 	Effect m_spreadBurstEffect;							//スプレッドボムのエフェクト
-	Effect m_normalBanishEffect;						//通常ショットの消滅エフェクト
+	Effect m_banishEffect;						//通常ショットの消滅エフェクト
 
 	//スキンモデルレンダーの削除フラグ
 	bool m_isModelDeleted = false;
