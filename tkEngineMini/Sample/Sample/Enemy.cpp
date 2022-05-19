@@ -12,8 +12,16 @@ namespace {
 	const char* MODELPATH_BOMB = "Assets/modelData/enemy/enemy_bomb.tkm";
 
 	//エフェクトのファイルパス
-	const char16_t* DESTROY_EFFECT_FILEPATH = u"Assets/effect/destroy.efk";		//撃破エフェクトのファイルパス
-	const char16_t* HIT_EFFECT_FILEPATH = u"Assets/effect/hit.efk";				//ヒットエフェクトのファイルパス
+	const char16_t* DESTROY_EFFECT_FILEPATH = u"Assets/effect/destroy.efk";			//撃破エフェクトのファイルパス
+	const char16_t* HIT_EFFECT_FILEPATH = u"Assets/effect/hit.efk";					//ヒットエフェクトのファイルパス
+	const char16_t* LIFE_EFFECT_FILEPATH = u"Assets/effect/enemy_life_ring.efk";	//時間寿命エフェクトのファイルパス
+
+	//エフェクトの拡大率
+	const Vector3 EFFECT_DESTROY_SCALE = { 20.0f,20.0f,20.0f };
+	const Vector3 EFFECT_HIT_SCALE = { 10.0f,10.0f,10.0f };
+	const Vector3 EFFECT_LIFE_INIT_SCALE = { 6.0f,6.0f,6.0f };
+	const Vector3 EFFECT_LIFE_END_SCALE = { 1.0f,1.0f,1.0f };
+	const float EFFECT_BOMB_SCALE_RATE = 10.0f;
 
 	//地形から浮かせる量
 	const float UPPER_OFFSET = 50.0f;
@@ -78,6 +86,8 @@ Enemy::~Enemy()
 	//撃破されたらエネミー数に-1
 	GameDirector::GetInstance()->DecEnemyCount();
 	DeleteGO(m_skinModelRender);
+	
+	m_lifeRingEffect.Stop();
 
 }
 
@@ -157,6 +167,7 @@ void Enemy::Init(
 	if (m_pointLight != nullptr) { RecievePointLight(m_pointLight); }
 	if (m_pointLight != nullptr) { RecieveSpotLight(m_spotLight); }
 
+	//モデルレンダーの初期化
 	m_skinModelRender->Init(modelPath, enModelUpAxisZ, true, false);
 
 	////モデルを更新
@@ -193,6 +204,14 @@ void Enemy::Init(
 	//エフェクトの初期化
 	m_destroyEffect.Init(DESTROY_EFFECT_FILEPATH);
 	m_hitEffect.Init(HIT_EFFECT_FILEPATH);
+	m_lifeRingEffect.Init(LIFE_EFFECT_FILEPATH);
+
+	//爆発型エネミーだったら寿命表示エフェクトを再生開始
+	if (m_enEnemyType == enBomb) {
+		m_lifeRingEffect.SetPosition(m_position);
+		m_lifeRingEffect.SetScale(EFFECT_LIFE_INIT_SCALE);
+		m_lifeRingEffect.Play(false);
+	}
 
 	/*switch (enemyType) {
 	case enCommon:
@@ -280,7 +299,7 @@ void Enemy::Hit()
 				//ヒットエフェクトの再生
 				m_hitEffect.SetPosition(m_position + m_up * 50.0f);
 				m_hitEffect.SetRotation(m_rot);
-				m_hitEffect.SetScale({10.0f,10.0f,10.0f});
+				m_hitEffect.SetScale(EFFECT_HIT_SCALE);
 				m_hitEffect.Play(false);
 
 				//エネミーに無敵時間を設定
@@ -330,7 +349,7 @@ void Enemy::SelfDestroy()
 {
 	m_destroyEffect.SetPosition(m_position);
 	m_destroyEffect.SetRotation(m_rot);
-	m_destroyEffect.SetScale({ 20.0f,20.0f,20.0f });
+	m_destroyEffect.SetScale(EFFECT_DESTROY_SCALE);
 	m_destroyEffect.Play(false);
 
 	//自爆型エネミーのときは爆発を発生させる
@@ -338,7 +357,7 @@ void Enemy::SelfDestroy()
 		
 		m_explosionManager->InitExplosion(
 			m_position,
-			10.0f,
+			EFFECT_BOMB_SCALE_RATE,
 			enEnemy_Explosion
 		);
 
@@ -364,7 +383,7 @@ void Enemy::Destroy()
 	if (m_isExist == false) {
 		m_destroyEffect.SetPosition(m_position);
 		m_destroyEffect.SetRotation(m_rot);
-		m_destroyEffect.SetScale({ 20.0f,20.0f,20.0f });
+		m_destroyEffect.SetScale(EFFECT_DESTROY_SCALE);
 		m_destroyEffect.Play(false);
 		
 		//爆破seの再生
@@ -426,7 +445,7 @@ void Enemy::DecLifeTime()
 void Enemy::AddShotCounter()
 {
 	//発射カウンターの増加
-	if (m_enEnemyType == enShot || enChaser) {
+	if (m_enEnemyType == enShot) {
 		m_shotCounter += g_gameTime->GetFrameDeltaTime();
 	}
 }
@@ -498,6 +517,14 @@ void Enemy::FireBulletEqually(const int wayNum,const EnBulletType& bulletType)
 	
 }
 
+void Enemy::UpdateEffect()
+{
+	//エフェクトの更新
+	m_destroyEffect.Update();
+	m_hitEffect.Update();
+	m_lifeRingEffect.Update();
+}
+
 void Enemy::Update()
 {
 	//ゲーム中以外なら処理しない
@@ -526,9 +553,27 @@ void Enemy::Update()
 		DecLifeTime();
 	}
 
+	//テスト：寿命表示エフェクトのスケーリング
+	if (m_enEnemyType == enBomb) {
+		Vector3 scale;
+		//現在の時間寿命 / 時間寿命の初期値 で0.0～1.0の補間率を出す
+		float fraction = m_lifeTime / LIFE_TIME_BOMB;
+		//出した補間率でスケールを最大値から最小値まで補間
+		scale.Lerp(fraction, EFFECT_LIFE_END_SCALE, EFFECT_LIFE_INIT_SCALE);
+		
+		m_lifeRingEffect.SetPosition(m_position);
+		m_lifeRingEffect.SetRotation(m_rot);
+		m_lifeRingEffect.SetScale(scale);
+		
+		if (m_lifeRingEffect.IsPlay() != true) {
+			m_lifeRingEffect.Play();
+		}
+
+	}
+
+
 	//エフェクトの更新
-	m_destroyEffect.Update();
-	m_hitEffect.Update();
+	UpdateEffect();
 
 	m_skinModelRender->SetRotation(m_rot);
 

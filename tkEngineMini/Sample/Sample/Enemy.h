@@ -237,6 +237,9 @@ private:
 	/// @brief 発射までのカウンターの増加
 	void AddShotCounter();
 
+	/// @brief エフェクトの更新
+	void UpdateEffect();
+
 private:
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
@@ -273,10 +276,10 @@ private:
 
 	float m_shotCounter = 0.0f;
 
-	//撃破エフェクト
-	Effect m_destroyEffect;
-	//ヒットエフェクト
-	Effect m_hitEffect;
+	Effect m_destroyEffect;		//撃破エフェクト
+	Effect m_hitEffect;			//ヒットエフェクト
+	Effect m_lifeRingEffect;	//時間寿命エフェクト
+
 
 	//爆発マネージャへのポインタ
 	ExplosionManager* m_explosionManager = nullptr;

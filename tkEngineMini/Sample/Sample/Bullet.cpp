@@ -49,7 +49,7 @@ namespace{
 	const Vector3 EFFECT_PLAYER_BULLET_NORMAL_SCALE = { 15.0f,15.0f,15.0f };
 	const Vector3 EFFECT_ENEMY_BULLET_NORMAL_SCALE = { 15.0f,15.0f,15.0f };
 	const Vector3 EFFECT_PLAYER_BULLET_NORMAL_BANISH_SCALE = { 4.0f,4.0f,4.0f };
-	const Vector3 EFFECT_ENEMY_BULLET_NORMAL_BANISH_SCALE = { 3.0f,3.0f,3.0f };
+	const Vector3 EFFECT_ENEMY_BULLET_NORMAL_BANISH_SCALE = { 4.0f,4.0f,4.0f };
 
 	//シェーダーのファイルパス
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
