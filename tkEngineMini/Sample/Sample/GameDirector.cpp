@@ -17,7 +17,7 @@ void GameDirector::ResetGame()
 	m_waveNumber = 1;
 	m_waveNumberPrev = m_waveNumber;
 	m_isSwitchedWave = false;
-	m_time = 60.0f;
+	m_time = 45.0f;
 	m_startToGameCounter = 3.0f;
 	m_timeUpToResultCounter = 4.0f;
 	m_enGameState = enTitle;

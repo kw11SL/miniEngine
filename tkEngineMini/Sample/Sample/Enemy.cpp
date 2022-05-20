@@ -12,13 +12,16 @@ namespace {
 	const char* MODELPATH_BOMB = "Assets/modelData/enemy/enemy_bomb.tkm";
 
 	//エフェクトのファイルパス
-	const char16_t* DESTROY_EFFECT_FILEPATH = u"Assets/effect/destroy.efk";			//撃破エフェクトのファイルパス
-	const char16_t* HIT_EFFECT_FILEPATH = u"Assets/effect/hit.efk";					//ヒットエフェクトのファイルパス
-	const char16_t* LIFE_EFFECT_FILEPATH = u"Assets/effect/enemy_life_ring.efk";	//時間寿命エフェクトのファイルパス
+	const char16_t* DESTROY_EFFECT_FILEPATH = u"Assets/effect/destroy.efk";					//撃破エフェクトのファイルパス
+	const char16_t* HIT_EFFECT_FILEPATH = u"Assets/effect/hit.efk";							//ヒットエフェクトのファイルパス
+	const char16_t* SHOT_NOTICE_EFFECT_FILEPATH = u"Assets/effect/enemy_shot_notice.efk";	//弾を撃つ予告エフェクトのファイルパス
+	const char16_t* LIFE_EFFECT_FILEPATH = u"Assets/effect/enemy_life_ring.efk";			//時間寿命エフェクトのファイルパス
 
 	//エフェクトの拡大率
 	const Vector3 EFFECT_DESTROY_SCALE = { 20.0f,20.0f,20.0f };
 	const Vector3 EFFECT_HIT_SCALE = { 10.0f,10.0f,10.0f };
+	const Vector3 EFFECT_SHOT_NOTICE_INIT_SCALE = { 15.0f,15.0f,15.0f };
+	const Vector3 EFFECT_SHOT_NOTICE_END_SCALE = { 1.0f,1.0f,1.0f };
 	const Vector3 EFFECT_LIFE_INIT_SCALE = { 6.0f,6.0f,6.0f };
 	const Vector3 EFFECT_LIFE_END_SCALE = { 1.0f,1.0f,1.0f };
 	const float EFFECT_BOMB_SCALE_RATE = 10.0f;
@@ -60,8 +63,10 @@ namespace {
 	const int SCORE_SHOT = 300;
 	const int SCORE_BOMB = 1000;
 
-	const float LIFE_TIME_BOMB = 5.0f;		//自爆型の時間寿命
-	const float ACTIVATE_COUNT = 0.7f;		//当たり判定が有効になるまでのカウンター
+	const float LIFE_TIME_BOMB = 5.0f;						//自爆型の時間寿命
+	const float ACTIVATE_COUNT = 0.7f;						//当たり判定が有効になるまでのカウンター
+	const float SHOT_COUNTER = 2.0f;						//射撃までの時間
+	const float EFFECT_SHOT_NOTICE_ACTIVATE_TIME = 1.7f;	//射撃直前のエフェクトを発生させるタイミング
 
 	//シェーダーのファイルパス
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
@@ -87,8 +92,8 @@ Enemy::~Enemy()
 	GameDirector::GetInstance()->DecEnemyCount();
 	DeleteGO(m_skinModelRender);
 	
+	m_shotNoticeEffect.Stop();
 	m_lifeRingEffect.Stop();
-
 }
 
 bool Enemy::Start()
@@ -204,6 +209,7 @@ void Enemy::Init(
 	//エフェクトの初期化
 	m_destroyEffect.Init(DESTROY_EFFECT_FILEPATH);
 	m_hitEffect.Init(HIT_EFFECT_FILEPATH);
+	m_shotNoticeEffect.Init(SHOT_NOTICE_EFFECT_FILEPATH);
 	m_lifeRingEffect.Init(LIFE_EFFECT_FILEPATH);
 
 	//爆発型エネミーだったら寿命表示エフェクトを再生開始
@@ -522,7 +528,57 @@ void Enemy::UpdateEffect()
 	//エフェクトの更新
 	m_destroyEffect.Update();
 	m_hitEffect.Update();
+	m_shotNoticeEffect.Update();
 	m_lifeRingEffect.Update();
+}
+
+void Enemy::LifeRingScaling()
+{
+	if (m_enEnemyType == enBomb) {
+		Vector3 scale;
+		//現在の時間寿命 / 時間寿命の初期値 で0.0～1.0の補間率を出す
+		float fraction = m_lifeTime / LIFE_TIME_BOMB;
+		//出した補間率でスケールを最大値から最小値まで補間
+		scale.Lerp(fraction, EFFECT_LIFE_END_SCALE, EFFECT_LIFE_INIT_SCALE);
+
+		m_lifeRingEffect.SetPosition(m_position);
+		m_lifeRingEffect.SetRotation(m_rot);
+		m_lifeRingEffect.SetScale(scale);
+
+		if (m_lifeRingEffect.IsPlay() != true) {
+			m_lifeRingEffect.Play();
+		}
+	}
+}
+
+void Enemy::ShotNoticeScaling(const float activateTime)
+{
+	//テスト：発射予兆エフェクトのスケーリング
+	if (m_enEnemyType == enShot) {
+		Vector3 scale;
+		const float remain = activateTime;
+		//スケーリングに使う補間率を計算
+		float fraction = (m_shotCounter - remain) / (SHOT_COUNTER - remain);
+		if (m_shotCounter < remain) {
+			fraction = 0.0f;
+		}
+
+		//拡大率を線形補完、スケーリング
+		scale.Lerp(fraction, EFFECT_SHOT_NOTICE_INIT_SCALE, EFFECT_SHOT_NOTICE_END_SCALE);
+		m_shotNoticeEffect.SetPosition(m_position);
+		m_shotNoticeEffect.SetRotation(m_rot);
+		m_shotNoticeEffect.SetScale(scale);
+
+		if (m_shotCounter >= remain && m_shotCounter < SHOT_COUNTER) {
+			if (m_shotNoticeEffect.IsPlay() == false) {
+				m_shotNoticeEffect.Play();
+			}
+		}
+		//ショットカウンターが0になっていれば再生を停止
+		else if (m_shotCounter == 0.0f) {
+			m_shotNoticeEffect.Stop();
+		}
+	}
 }
 
 void Enemy::Update()
@@ -534,6 +590,8 @@ void Enemy::Update()
 
 	//m_enemyBase->Update();
 
+	
+
 	Move();
 	Rotation();
 	Hit();
@@ -544,7 +602,7 @@ void Enemy::Update()
 	AddShotCounter();
 
 	//テスト：射撃カウンタ一定で全方位射撃
-	if (m_shotCounter > 2.0f) {
+	if (m_shotCounter > SHOT_COUNTER) {
 		FireBulletEqually(1,enEnemyNormal);
 	}
 
@@ -553,28 +611,13 @@ void Enemy::Update()
 		DecLifeTime();
 	}
 
-	//テスト：寿命表示エフェクトのスケーリング
-	if (m_enEnemyType == enBomb) {
-		Vector3 scale;
-		//現在の時間寿命 / 時間寿命の初期値 で0.0～1.0の補間率を出す
-		float fraction = m_lifeTime / LIFE_TIME_BOMB;
-		//出した補間率でスケールを最大値から最小値まで補間
-		scale.Lerp(fraction, EFFECT_LIFE_END_SCALE, EFFECT_LIFE_INIT_SCALE);
-		
-		m_lifeRingEffect.SetPosition(m_position);
-		m_lifeRingEffect.SetRotation(m_rot);
-		m_lifeRingEffect.SetScale(scale);
-		
-		if (m_lifeRingEffect.IsPlay() != true) {
-			m_lifeRingEffect.Play();
-		}
-
-	}
-
-
+	LifeRingScaling();
+	ShotNoticeScaling(EFFECT_SHOT_NOTICE_ACTIVATE_TIME);
+	
 	//エフェクトの更新
 	UpdateEffect();
 
+	//モデルレンダーの更新
 	m_skinModelRender->SetRotation(m_rot);
 
 }

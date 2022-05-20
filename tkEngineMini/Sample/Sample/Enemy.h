@@ -240,6 +240,13 @@ private:
 	/// @brief エフェクトの更新
 	void UpdateEffect();
 
+	/// @brief 時間寿命エフェクトのスケーリング処理
+	void LifeRingScaling();
+	
+	/// @brief 発射直前に発生する予兆エフェクトのスケーリング処理
+	/// @param activateTime 発生させるタイミング
+	void ShotNoticeScaling(const float activateTime);
+
 private:
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
@@ -278,6 +285,7 @@ private:
 
 	Effect m_destroyEffect;		//撃破エフェクト
 	Effect m_hitEffect;			//ヒットエフェクト
+	Effect m_shotNoticeEffect;
 	Effect m_lifeRingEffect;	//時間寿命エフェクト
 
 
