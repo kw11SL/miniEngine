@@ -15,9 +15,11 @@ namespace{
 	const Vector3 INIT_POINT = {0.0f,700.0f,0.0f};			//初期位置
 	const float UPPER_OFFSET = 20.0f;						//地形から浮かせる距離
 
+	//プレイヤーのスペック
 	const float PL_MOVE_SPEED = -12.0f;			//移動速度
+	const float PL_HIT_RANGE = 60.0f;			//プレイヤーの被弾判定距離
 	const float FIRECOUNTER_NORMAL = 0.075f;	//通常弾の発射間隔
-	const float FIRECOUNTER_SPREAD = 0.8f;		//スプレッドボムの発射間隔
+	const float FIRECOUNTER_SPREAD = 0.25f;		//スプレッドボムの発射間隔
 	const int INIT_LIFE = 3;					//初期残機
 	const float INVINCIBLE_TIME_REVIVE = 7.0f;	//復活時に設定される無敵時間
 	const float REVIVE_TIME = 3.0f;				//被弾から復活までの時間
@@ -41,13 +43,23 @@ namespace{
 	const char16_t* EFFECT_FILEPATH_TRACK = u"Assets/effect/moveTrack.efk";			//軌跡エフェクトのファイルパス
 	const Vector3 EFFECT_SCALE_TRACK = { 10.0f,10.0f,10.0f };						//軌跡エフェクトの拡大率
 
-	const char16_t* EFFECT_FILEPATH_DIRECTION = u"Assets/effect/shotDirection.efk";			//方向エフェクトのファイルパス
-	const Vector3 EFFECT_SCALE_DIRECTION = { 10.0f,10.0f,10.0f };						//方向エフェクトの拡大率
+	const char16_t* EFFECT_FILEPATH_DIRECTION = u"Assets/effect/shotDirection.efk";	//方向エフェクトのファイルパス
+	const Vector3 EFFECT_SCALE_DIRECTION = { 10.0f,10.0f,10.0f };					//方向エフェクトの拡大率
 
 	const char16_t* EFFECT_FILEPATH_MARKER = u"Assets/effect/positionMarker.efk";	//当たり判定エフェクトのファイルパス
 	const Vector3 EFFECT_SCALE_MARKER = { 30.0f,30.0f,30.0f };						//当たり判定エフェクトの拡大率
 	const float MARKER_PLAY_INTERVAL = 0.02f;										//当たり判定エフェクトの発生間隔
 
+	//SEのファイルパス,音量
+	//ノーマルショットse
+	const wchar_t* SHOT_NORMAL_SE_FILEPATH = L"Assets/wav/normalShotSe_1.wav";
+	const float SHOT_NORMAL_SE_VOLUME = 0.4f;
+	//スプレッドボムse
+	const wchar_t* SHOT_SPREAD_SE_FILEPATH = L"Assets/wav/shot_spread.wav";
+	const float SHOT_SPREAD_SE_VOLUME = 0.4f;
+	//被弾se
+	const wchar_t* MISS_SE_FILEPATH = L"Assets/wav/missSe.wav";
+	const float MISS_SE_VOLUME = 1.0f;
 }
 
 Player_new::Player_new()
@@ -58,8 +70,6 @@ Player_new::Player_new()
 Player_new::~Player_new()
 {
 	DeleteGO(m_skinModelRender);
-	DeleteGO(m_missSe);
-	DeleteGO(m_normalShotSe);
 }
 
 void Player_new::Init()
@@ -68,13 +78,6 @@ void Player_new::Init()
 
 	//エフェクトを初期化
 	InitEffect();
-
-	//SEを初期化
-	m_missSe = NewGO<CSoundSource>(0);
-	m_missSe->Init(L"Assets/wav/missSe.wav");
-
-	m_normalShotSe = NewGO<CSoundSource>(0);
-	m_normalShotSe->Init(L"Assets/wav/normalShotSe_1.wav");
 
 	//ライトを検索,受け取り
 	m_directionLight = FindGO<DirectionLight>(DIRECTION_LIGHT_NAME);
@@ -334,27 +337,54 @@ void Player_new::FireBullet()
 		
 		//右スティック方向にショットを撃つ
 		//カウンターが0のときとカウンターが一定値を超えると発射
-		if (m_fireCounter > FIRECOUNTER_NORMAL || m_fireCounter == 0.0f) {
-			
-			//ショットSEの再生
-			if (m_enBulletType == enNormalShot) {
-				CSoundSource* ssNormalSe = NewGO<CSoundSource>(0);
-				ssNormalSe->Init(L"Assets/wav/normalShotSe_1.wav");
-				ssNormalSe->SetVolume(0.4f);
-				ssNormalSe->Play(false);
+		//通常ショット
+		if (m_enUseWeapon == enNormalShot) {
+			if (m_fireCounter > FIRECOUNTER_NORMAL || m_fireCounter == 0.0f) {
+
+				//ショットSEの再生
+				if (m_enBulletType == enNormalShot) {
+					CSoundSource* ssNormalSe = NewGO<CSoundSource>(0);
+					ssNormalSe->Init(SHOT_NORMAL_SE_FILEPATH);
+					ssNormalSe->SetVolume(SHOT_NORMAL_SE_VOLUME);
+					ssNormalSe->Play(false);
+				}
+
+
+				//弾管理クラスの関数を使用して出現させる
+				m_bulletManager->InitBullets(
+					m_position,
+					m_up,
+					m_shotDirection,
+					m_enBulletType
+				);
+
+				//発射後、カウンターを0にリセット
+				m_fireCounter = 0.0f;
+
 			}
+		}
+		//スプレッドボム
+		if (m_enBulletType == enSpreadBomb) {
+			if (m_fireCounter > FIRECOUNTER_SPREAD || m_fireCounter == 0.0f) {
+				//ショットSEの再生
+				if (m_enBulletType == enSpreadBomb) {
+					CSoundSource* ssSpreadSe = NewGO<CSoundSource>(0);
+					ssSpreadSe->Init(SHOT_SPREAD_SE_FILEPATH);
+					ssSpreadSe->SetVolume(SHOT_SPREAD_SE_VOLUME);
+					ssSpreadSe->Play(false);
+				}
 
-			//弾管理クラスの関数を使用して出現させる
-			m_bulletManager->InitBullets(
-				m_position,
-				m_up,
-				m_shotDirection,
-				m_enBulletType
-			);
+				//弾管理クラスの関数を使用して出現させる
+				m_bulletManager->InitBullets(
+					m_position,
+					m_up,
+					m_shotDirection,
+					m_enBulletType
+				);
 
-			//発射後、カウンターを0にリセット
-			m_fireCounter = 0.0f;
-
+				//発射後、カウンターを0にリセット
+				m_fireCounter = 0.0f;
+			}
 		}
 	}
 
@@ -401,7 +431,7 @@ void Player_new::Hit()
 		float length = diff.Length();
 
 		//エネミーに接触したとき
-		if (length < 60.0f) {
+		if (length < PL_HIT_RANGE) {
 			
 			//自身が無敵状態でなく、敵の当たり判定が有効であれば
 			if (m_isInvincible == false && enemy->GetIsActive() == true) {
@@ -424,8 +454,8 @@ void Player_new::Hit()
 
 				//ミス時のseを再生
 				CSoundSource* ssMissSe = NewGO<CSoundSource>(0);
-				ssMissSe->Init(L"Assets/wav/missSe.wav");
-				ssMissSe->SetVolume(1.0f);
+				ssMissSe->Init(MISS_SE_FILEPATH);
+				ssMissSe->SetVolume(MISS_SE_VOLUME);
 				ssMissSe->Play(false);
 
 				//被弾エフェクトを発生
@@ -448,7 +478,7 @@ void Player_new::Hit()
 		float length = diff.Length();
 
 		//エネミーに接触したとき
-		if (length < 60.0f) {
+		if (length < PL_HIT_RANGE) {
 
 			//自身が無敵状態でなければ
 			if (m_isInvincible == false) {
@@ -471,8 +501,8 @@ void Player_new::Hit()
 
 				//ミス時のseを再生
 				CSoundSource* ssMissSe = NewGO<CSoundSource>(0);
-				ssMissSe->Init(L"Assets/wav/missSe.wav");
-				ssMissSe->SetVolume(1.0f);
+				ssMissSe->Init(MISS_SE_FILEPATH);
+				ssMissSe->SetVolume(MISS_SE_VOLUME);
 				ssMissSe->Play(false);
 
 				//被弾エフェクトを発生
@@ -636,6 +666,25 @@ void Player_new::CalcCameraUpFractionAddRate()
 
 }
 
+void Player_new::EffectUpdate()
+{
+	m_startEffect.SetPosition(m_position + m_up * 50.0f);
+	//m_startEffect.SetRotation(m_rot);
+	m_startEffect.Update();
+	m_explosionEffect.Update();
+	m_reviveEffect.Update();
+	m_moveTrackEffect.Update();
+	m_markerEffect.Update();
+
+	m_shotDirectionEffect.SetPosition(m_position);
+	m_shotDirectionEffect.SetScale(EFFECT_SCALE_DIRECTION);
+	//m_shotDirectionEffect.SetRotation(m_rot);
+	if (m_shotDirectionEffect.IsPlay() != true) {
+		m_shotDirectionEffect.Play();
+	}
+	//m_shotDirectionEffect.Update();
+}
+
 void Player_new::Update()
 {
 	//ゲーム中、スタート時以外なら処理しない
@@ -667,26 +716,20 @@ void Player_new::Update()
 	////////////////////////////////////////////////////////////
 	//注視点目標からカメラ目標へのベクトルを作成
 	Vector3 toCamera = m_gameCamera.GetCameraPositionTarget() - m_gameCamera.GetTargetPositionTarget();
-
 	//ベクトルにクォータニオンを適用
 	m_rotUpToGroundNormal.Apply(toCamera);
-
 	//注視点目標を自身に設定
 	m_gameCamera.SetTargetPositionTarget(m_position);
-
 	//カメラ目標を設定
 	m_gameCamera.SetCameraPositionTarget(m_position + toCamera);
-
 	// カメラの上方向目標をプレイヤーの上方向に設定。
 	m_gameCamera.SetUpVectorTarget(m_up);
-
 	//カメラの上を少しずつ補間していく
 	m_gameCamera.LerpUpVector(m_cameraUpFraction, m_cameraUp);
 	//補間したカメラの上でカメラの上を更新
 	m_gameCamera.SetUp(m_cameraUp);
 	//カメラの更新
 	m_gameCamera.UpdateCamera();
-
 	////////////////////////////////////////////////////////////
 
 
@@ -702,22 +745,5 @@ void Player_new::Update()
 	////////////////////////////////////////////////////////////
 
 	//エフェクトの更新
-	////////////////////////////////////////////////////////////
-	m_startEffect.SetPosition(m_position + m_up * 50.0f);
-	//m_startEffect.SetRotation(m_rot);
-	m_startEffect.Update();
-	m_explosionEffect.Update();
-	m_reviveEffect.Update();
-	m_moveTrackEffect.Update();
-	m_markerEffect.Update();
-
-	m_shotDirectionEffect.SetPosition(m_position);
-	m_shotDirectionEffect.SetScale(EFFECT_SCALE_DIRECTION);
-	//m_shotDirectionEffect.SetRotation(m_rot);
-	if (m_shotDirectionEffect.IsPlay() != true) {
-		m_shotDirectionEffect.Play();
-	}
-	//m_shotDirectionEffect.Update();
-
-	////////////////////////////////////////////////////////////
+	EffectUpdate();
 }

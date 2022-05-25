@@ -76,6 +76,8 @@ namespace {
 	const char* VS_SKIN_ENTRYPOINT_NAME = "VSSkinMain";
 	//初期座標
 	const Vector3 INIT_POINT = { 0.0f,700.0f,0.0f };
+	//ショットSE
+	const char* SHOT_NORMAL_SE_FILEPATH = "Assets/wav/shot_6.wav";
 }
 
 Enemy::Enemy()

@@ -17,8 +17,8 @@ namespace{
 	const float LIFE_ENEMY_NORMAL = 1.0f;
 	
 	//弾ごとの弾速
-	const float MOVE_SPEED_PLAYER_NORMAL = 25.0f;
-	const float MOVE_SPEED_PLAYER_SPREAD_BOMB = 10.0f;
+	const float MOVE_SPEED_PLAYER_NORMAL = 40.0f;
+	const float MOVE_SPEED_PLAYER_SPREAD_BOMB = 15.0f;
 	const float MOVE_SPEED_ENEMY_NORMAL = 8.0f;
 
 	//スプレッドボムの速度減衰
@@ -50,6 +50,11 @@ namespace{
 	const Vector3 EFFECT_ENEMY_BULLET_NORMAL_SCALE = { 15.0f,15.0f,15.0f };
 	const Vector3 EFFECT_PLAYER_BULLET_NORMAL_BANISH_SCALE = { 4.0f,4.0f,4.0f };
 	const Vector3 EFFECT_ENEMY_BULLET_NORMAL_BANISH_SCALE = { 4.0f,4.0f,4.0f };
+
+	//SEのファイルパス、音量
+	//スプレッドボムの爆発se
+	const wchar_t* BULLET_SPREAD_BURST_SE_FILEPATH = L"Assets/wav/shot_spread_exp.wav";
+	float BULLET_SPREAD_BURST_SE_VOLUME = 0.4f;
 
 	//シェーダーのファイルパス
 	const char* MODEL_SHADER_PATH = "Assets/shader/model.fx";
@@ -312,21 +317,27 @@ void Bullet::Destroy()
 {
 	//存在フラグがオフになったとき
 	if (m_isExist == false) {
-
+		//通常ショット
 		if (m_enBulletType == enPlayerNormal) {
 			//消滅エフェクトを再生
 			m_banishEffect.SetPosition(m_position);
 			m_banishEffect.SetScale(EFFECT_PLAYER_BULLET_NORMAL_BANISH_SCALE);
 			m_banishEffect.Play(false);
 		}
+		//敵弾
 		else if (m_enBulletType == enEnemyNormal) {
 			//消滅エフェクトを再生
 			m_banishEffect.SetPosition(m_position);
 			m_banishEffect.SetScale(EFFECT_ENEMY_BULLET_NORMAL_BANISH_SCALE);
 			m_banishEffect.Play(false);
 		}
-		//自身がスプレッドボムのとき
+		//スプレッドボム
 		else if (m_enBulletType == enPlayerSpreadBomb) {
+			//爆発するseを再生
+			CSoundSource* ssBurst = NewGO<CSoundSource>(0);
+			ssBurst->Init(BULLET_SPREAD_BURST_SE_FILEPATH);
+			ssBurst->SetVolume(BULLET_SPREAD_BURST_SE_VOLUME);
+			ssBurst->Play(false);
 
 			//爆発のマネージャー内に生成
 			m_explosionManager->InitExplosion(

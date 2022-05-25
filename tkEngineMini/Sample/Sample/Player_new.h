@@ -240,6 +240,9 @@ private:
 	/// @brief エフェクトの初期化
 	void InitEffect();
 
+	/// @brief エフェクトの更新
+	void EffectUpdate();
+
 private:
 
 	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
@@ -312,7 +315,6 @@ private:
 	Effect m_startEffect;								//ゲーム開始時の登場エフェクト
 	Effect m_shotDirectionEffect;						//ショットの方向を示すマーカーエフェクト
 
-	CSoundSource* m_missSe = nullptr;					//miss時の効果音
-	CSoundSource* m_normalShotSe = nullptr;
+
 };
 

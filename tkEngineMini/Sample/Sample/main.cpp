@@ -200,7 +200,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	////////////////////////////////////////////////////
 
 	return 0;
-}
+} 
 
 //ルートシグネチャの初期化
 void InitRootSignature(RootSignature& rs)
