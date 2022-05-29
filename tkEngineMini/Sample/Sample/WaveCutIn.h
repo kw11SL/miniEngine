@@ -30,5 +30,7 @@ private:
 
 	bool m_isValidMove = true;					//移動可能かどうかフラグ
 	bool m_isFinishMoveToCenter = false;		//中央に移動したかどうかフラグ
+
+	bool m_isStart = false;						//ゲーム開始フラグ
 };
 

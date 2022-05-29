@@ -137,7 +137,7 @@ public:
 	/// @return エネミー上限数
 	const int GetMaxEnemyNum() const
 	{
-		return MAX_ENEMY_NUM;
+		return m_maxEnemy;
 	}
 
 	/// @brief ゲーム状態を設定
@@ -229,6 +229,9 @@ public:
 	/// @brief ゲームを初期状態に戻す処理
 	void ResetGame();
 
+	/// @brief エネミー最大数を変更する処理
+	void ChangeMaxEnemy();
+
 	/// @brief 更新処理
 	void ExecuteUpdate();
 
@@ -257,7 +260,7 @@ private:
 	float m_startToGameCounter = 3.0f;			//スタートからゲーム中に移行するための時間
 	float m_timeUpToResultCounter = 4.0f;		//タイムアップからリザルトに移行するための時間
 	bool m_isSwitchedWave = false;				//このフレームでwaveの切り替えが発生したかどうか
-
+	int m_maxEnemy = MAX_ENEMY_NUM;
 
 	EnGameState m_enGameState = enTitle;			//ゲーム状態
 	EnGameState m_enGameStatePrevFrame = enTitle;	//前フレームのゲーム状態
@@ -265,8 +268,8 @@ private:
 	//EnUseWeapon m_playerWeapon = enNormalShot;	//プレイヤーの使用している武器
 
 	//定数
-	const int MAX_ENEMY_NUM = 15;				//エネミーの最大数
-	const int MAX_ENEMY_NUM_NEAR_TIMEUP = 25;	//エネミーの最大数(タイムアップ前)
+	const int MAX_ENEMY_NUM = 25;				//エネミーの最大数
+	const int MAX_ENEMY_NUM_NEAR_TIMEUP = 40;	//エネミーの最大数(タイムアップ前)
 
 	
 

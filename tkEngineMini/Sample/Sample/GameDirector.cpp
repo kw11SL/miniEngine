@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "GameDirector.h"
 
+namespace{
+	//タイムアップ前のラッシュタイム
+	const float NEAR_TIMEUP = 10.0f;
+}
+
 //静的メンバの初期化
 GameDirector* GameDirector::m_gameDirector = nullptr;
 
@@ -22,6 +27,7 @@ void GameDirector::ResetGame()
 	m_timeUpToResultCounter = 4.0f;
 	m_enGameState = enTitle;
 	m_enGameStatePrevFrame = enTitle;
+	m_maxEnemy = MAX_ENEMY_NUM;
 }
 
 const int GameDirector::CalcDestructionBonus()
@@ -58,6 +64,14 @@ void GameDirector::RecordCurrentFrame()
 	m_enGameStatePrevFrame = m_enGameState;
 	//wave数を記録
 	m_waveNumberPrev = m_waveNumber;
+}
+
+void GameDirector::ChangeMaxEnemy()
+{
+	//制限時間が迫ると敵の最大数を増やす
+	if (m_time <= NEAR_TIMEUP) {
+		m_maxEnemy = MAX_ENEMY_NUM_NEAR_TIMEUP;
+	}
 }
 
 void GameDirector::ExecuteUpdate()
@@ -102,6 +116,9 @@ void GameDirector::ExecuteUpdate()
 	if (m_playerLife <= 0) {
 		SetGameState(enGameOver);
 	}
+
+	//タイムアップ間近でエネミー最大数を増やす
+	ChangeMaxEnemy();
 
 	//現フレームの状況を記録
 	RecordCurrentFrame();

@@ -27,6 +27,11 @@ namespace {
 
 	//ピボット
 	const Vector2 SPRITE_PIVOT = { 0.5f,0.5f };
+
+	//SE関連
+	//カットイン時のSE
+	const wchar_t* SE_CUTIN_FILEPATH = L"Assets/wav/wave_change_2.wav";
+	const float SE_CUTIN_VOLUME = 1.0f;
 }
 
 WaveCutIn::~WaveCutIn()
@@ -77,15 +82,6 @@ void WaveCutIn::SwitchingSprite()
 
 void WaveCutIn::SpriteMove()
 {
-	////テスト
-	//if (m_isValidMove == false) {
-	//	if (g_pad[0]->IsTrigger(enButtonA)) {
-	//		m_isValidMove = true;
-	//	}
-	//}
-
-	
-
 	//移動用の補間率を上昇
 	if (m_isValidMove == true) {
 		m_waveSpriteMoveFraction += 0.025f;
@@ -93,7 +89,7 @@ void WaveCutIn::SpriteMove()
 
 	//中間地点で停止
 	if (m_waveSpriteMoveFraction > 0.5f && m_isFinishMoveToCenter == false) {
-		m_waveSpriteMoveFraction = 0.5;
+		m_waveSpriteMoveFraction = 0.5f;
 
 		m_isFinishMoveToCenter = true;
 		m_isValidMove = false;
@@ -130,8 +126,6 @@ void WaveCutIn::SpriteMove()
 
 	//位置を更新
 	m_waveSprite->SetPosition(m_waveSpritePos);
-	
-
 }
 
 void WaveCutIn::SpriteFade()
@@ -142,8 +136,6 @@ void WaveCutIn::SpriteFade()
 	else if (m_waveSpriteWaitCounter <= 0.0f && m_isValidMove == true) {
 		m_waveSprite->FadeOut(0.06f);
 	}
-
-
 }
 
 void WaveCutIn::Update()
@@ -153,19 +145,36 @@ void WaveCutIn::Update()
 		return;
 	}
 
+	//ゲームが開始時、ゲーム開始フラグがオフなら
+	if (GameDirector::GetInstance()->GetGameState() == enGame &&
+		m_isStart == false) {
+		
+		//seを再生
+		CSoundSource* ssCutInSe = NewGO<CSoundSource>(0);
+		ssCutInSe->Init(SE_CUTIN_FILEPATH);
+		ssCutInSe->SetVolume(SE_CUTIN_VOLUME);
+		ssCutInSe->Play(false);
+
+		//開始フラグをオン
+		m_isStart = true;
+	}
+
 	//waveが切り替わっていたら
 	if (GameDirector::GetInstance()->GetIsSwitchedWave()) {
 		//スプライトを切り替える
 		SwitchingSprite();
 
+		//seを再生
+		CSoundSource* ssCutInSe = NewGO<CSoundSource>(0);
+		ssCutInSe->Init(SE_CUTIN_FILEPATH);
+		ssCutInSe->SetVolume(SE_CUTIN_VOLUME);
+		ssCutInSe->Play(false);
+
 		//移動可能フラグをオン
 		m_isValidMove = true;
 	}
 
-	SpriteMove();
-	
+	SpriteMove();	
 	SpriteFade();
-
-	//m_waveSprite->FadeIn(0.03f);
 
 }

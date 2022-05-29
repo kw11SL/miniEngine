@@ -47,16 +47,11 @@ WeaponIcon::~WeaponIcon()
 	DeleteGO(m_iconFrameSprite);
 	DeleteGO(m_weaponSpriteNormal);
 	DeleteGO(m_weaponSpriteSpread);
-	/*DeleteGO(m_normalShotSprite);
-	DeleteGO(m_spreadBombSprite);*/
+	
 }
 
 void WeaponIcon::Init()
 {
-	/*m_normalShotSprite = NewGO<SpriteRender>(0);
-	m_spreadBombSprite = NewGO<SpriteRender>(0);*/
-
-
 	///////////////////////////////////////////////////////////
 	//文字スプライトの初期化
 	//文字の影スプライトの初期化 
@@ -119,7 +114,12 @@ void WeaponIcon::Init()
 	m_weaponSpriteNormal->SetPivot(SPRITE_PIVOT);
 	m_weaponSpriteNormal->SetScale(SPRITE_SCALE * ICON_SPRITE_SCALE_RATE);
 	m_weaponSpriteNormal->SetPosition(SPRITE_INIT_POS);
-	m_weaponSpriteNormal->SetColor(ICON_INIT_COLOR);
+	if (m_weaponState == enNormal) {
+		m_weaponSpriteNormal->SetColor(ICON_INIT_COLOR);
+	}
+	else {
+		m_weaponSpriteNormal->SetColor(ICON_CLEAR_COLOR);
+	}
 
 	//スプレッド
 	m_weaponSpriteSpread = NewGO<SpriteRender>(0);
@@ -133,13 +133,23 @@ void WeaponIcon::Init()
 	m_weaponSpriteSpread->SetPivot(SPRITE_PIVOT);
 	m_weaponSpriteSpread->SetScale(SPRITE_SCALE * ICON_SPRITE_SCALE_RATE);
 	m_weaponSpriteSpread->SetPosition(SPRITE_INIT_POS);
-	m_weaponSpriteSpread->SetColor(ICON_INIT_COLOR);
+	if (m_weaponState == enSpread) {
+		m_weaponSpriteSpread->SetColor(ICON_INIT_COLOR);
+	}
+	else {
+		m_weaponSpriteSpread->SetColor(ICON_CLEAR_COLOR);
+	}
 
 	///////////////////////////////////////////////////////////
 }
 
 void WeaponIcon::Update()
 {
+	//ゲーム中以外なら処理しない
+	if (GameDirector::GetInstance()->GetGameState() != enGame) {
+		return;
+	}
+
 	//状態の切り替え
 	if (g_pad[0]->IsTrigger(enButtonLB1)) {
 		if (m_weaponState == enNormal) {
@@ -150,7 +160,7 @@ void WeaponIcon::Update()
 		}
 	}
 
-	//状態に応じてカラーを変更
+	//状態に応じて透明度を変更
 	if (m_weaponState == enNormal) {
 		m_weaponSpriteNormal->SetColor(ICON_INIT_COLOR);
 		m_weaponSpriteSpread->SetColor(ICON_CLEAR_COLOR);
@@ -158,7 +168,7 @@ void WeaponIcon::Update()
 	}
 	else if (m_weaponState == enSpread) {
 		m_weaponSpriteSpread->SetColor(ICON_INIT_COLOR);
-		m_weaponSpriteNormal->SetColor({ 0.0f,0.0f,0.0f,0.0f });
+		m_weaponSpriteNormal->SetColor(ICON_CLEAR_COLOR);
 	}
 
 }

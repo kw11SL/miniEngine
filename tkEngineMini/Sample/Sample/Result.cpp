@@ -42,6 +42,10 @@ namespace {
 	const wchar_t* REMAIN_PLAYER_BONUS_TEXT = L"REMAIN BONUS + ";
 	const wchar_t* DESTRUCTION_BONUS_TEXT = L"DESTRUCTION BONUS + ";
 
+	//撃破率の文字の後につける%の文字
+	const wchar_t* TEXT_PERCENT = L" %";
+	const wchar_t* TEXT_PTS = L" pts.";
+
 	//テキストの相対位置(上下)
 	const Vector2 RELATIVE_DISTANCE_TEXT = { 0.0f,-50.0f };
 
@@ -60,6 +64,7 @@ Result::Result()
 
 Result::~Result()
 {
+	//スプライト(オレンジ色の文字)
 	DeleteGO(m_screenSprite);
 	DeleteGO(m_resultSprite);
 	DeleteGO(m_pressButtonSprite);
@@ -347,6 +352,8 @@ void Result::FadeInText()
 	//残機ボーナス値の表示
 	int remainBonus = GameDirector::GetInstance()->CalcRemainBonus();
 	m_remainPlayerBonusNumWs = std::to_wstring(remainBonus);
+	//数字の後にpts.をつける
+	m_remainPlayerBonusNumWs += TEXT_PTS;
 	const wchar_t* remainBonusWc = m_remainPlayerBonusNumWs.c_str();
 	m_remainPlayerBonusNum->SetText(remainBonusWc);
 
@@ -371,6 +378,8 @@ void Result::FadeInText()
 	dRwss << destructionRate;
 
 	m_destructionRateWs = dRwss.str();
+	//数字の後に%をつける
+	m_destructionRateWs += TEXT_PERCENT;
 	const wchar_t* destructionRateWc = m_destructionRateWs.c_str();
 	m_destructionRateNum->SetText(destructionRateWc);
 
@@ -407,6 +416,8 @@ void Result::FadeInText()
 	//撃破率ボーナスの値の表示
 	int destructionBonus = GameDirector::GetInstance()->CalcDestructionBonus();
 	m_destructionBonusWs = std::to_wstring(destructionBonus);
+	//数字の後にpts.をつける
+	m_destructionBonusWs += TEXT_PTS;
 	const wchar_t* destructionBonusWc = m_destructionBonusWs.c_str();
 	m_destructionBonusNum->SetText(destructionBonusWc);
 
@@ -427,6 +438,8 @@ void Result::FadeInText()
 	//最終スコアの値の表示
 	int finalScore = GameDirector::GetInstance()->CalcFinalScore();
 	m_finalScoreNumWs = std::to_wstring(finalScore);
+	//数字の後にpts.をつける
+	m_finalScoreNumWs += TEXT_PTS;
 	const wchar_t* finalScoreWc = m_finalScoreNumWs.c_str();
 	m_finalScoreNum->SetText(finalScoreWc);
 
