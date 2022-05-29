@@ -50,6 +50,12 @@ namespace{
 	const Vector3 EFFECT_SCALE_MARKER = { 30.0f,30.0f,30.0f };						//当たり判定エフェクトの拡大率
 	const float MARKER_PLAY_INTERVAL = 0.02f;										//当たり判定エフェクトの発生間隔
 
+	const char16_t* EFFECT_FILEPATH_CHANGE_NORMAL = u"Assets/effect/change_weapon_normal.efk";	//ショット変更エフェクト(ノーマル)のファイルパス
+	const Vector3 EFFECT_SCALE_CHANGE_NORMAL = { 15.0f,15.0f,15.0f };							//ショット変更エフェクト(ノーマル)の拡大率
+
+	const char16_t* EFFECT_FILEPATH_CHANGE_SPREAD = u"Assets/effect/change_weapon_spread.efk";	//ショット変更エフェクト(スプレッド)のファイルパス
+	const Vector3 EFFECT_SCALE_CHANGE_SPREAD = { 15.0f,15.0f,15.0f };							//ショット変更エフェクト(スプレッド)の拡大率
+
 	//SEのファイルパス,音量
 	//ノーマルショットse
 	const wchar_t* SHOT_NORMAL_SE_FILEPATH = L"Assets/wav/normalShotSe_1.wav";
@@ -166,6 +172,8 @@ void Player_new::InitEffect()
 	m_moveTrackEffect.Init(EFFECT_FILEPATH_TRACK);
 	m_markerEffect.Init(EFFECT_FILEPATH_MARKER);
 	m_shotDirectionEffect.Init(EFFECT_FILEPATH_DIRECTION);
+	m_changeEffectNormal.Init(EFFECT_FILEPATH_CHANGE_NORMAL);
+	m_changeEffectSpread.Init(EFFECT_FILEPATH_CHANGE_SPREAD);
 }
 
 bool Player_new::Start()
@@ -410,10 +418,25 @@ void Player_new::ChangeWeapon()
 		case enNormalShot:
 			m_enUseWeapon = enSpreadBomb;
 			m_enBulletType = enPlayerSpreadBomb;
+			
+			//スプレッドボムに変更するエフェクトを再生
+			m_changeEffectSpread.SetPosition(m_position);
+			m_changeEffectSpread.SetRotation(m_rot);
+			m_changeEffectSpread.SetScale(EFFECT_SCALE_CHANGE_SPREAD);
+			m_changeEffectSpread.Play(false);
+
 			break;
 		case enSpreadBomb:
 			m_enUseWeapon = enNormalShot;
 			m_enBulletType = enPlayerNormal;
+			
+			//ノーマルショットに変更するエフェクトを再生
+			m_changeEffectNormal.SetPosition(m_position);
+			m_changeEffectNormal.SetRotation(m_rot);
+			m_changeEffectNormal.SetScale(EFFECT_SCALE_CHANGE_NORMAL);
+			m_changeEffectNormal.Play(false);
+
+			break;
 		default:
 			break;
 		}
@@ -683,6 +706,17 @@ void Player_new::EffectUpdate()
 	m_shotDirectionEffect.SetPosition(m_position);
 	m_shotDirectionEffect.SetScale(EFFECT_SCALE_DIRECTION);
 	//m_shotDirectionEffect.SetRotation(m_rot);
+
+	m_changeEffectNormal.SetPosition(m_position);
+	//m_changeEffectNormal.SetRotation(m_rot);
+	m_changeEffectNormal.SetScale(EFFECT_SCALE_CHANGE_NORMAL);
+	m_changeEffectNormal.Update();
+
+	m_changeEffectSpread.SetPosition(m_position);
+	//m_changeEffectSpread.SetRotation(m_rot);
+	m_changeEffectSpread.SetScale(EFFECT_SCALE_CHANGE_SPREAD);
+	m_changeEffectSpread.Update();
+
 	if (m_shotDirectionEffect.IsPlay() != true) {
 		m_shotDirectionEffect.Play();
 	}

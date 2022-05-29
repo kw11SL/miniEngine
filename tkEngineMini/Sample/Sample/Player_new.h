@@ -314,6 +314,8 @@ private:
 	Effect m_markerEffect;								//自機位置の表示エフェクト
 	Effect m_startEffect;								//ゲーム開始時の登場エフェクト
 	Effect m_shotDirectionEffect;						//ショットの方向を示すマーカーエフェクト
+	Effect m_changeEffectNormal;						//ショット変更時のエフェクト(ノーマル)
+	Effect m_changeEffectSpread;						//ショット変更時のエフェクト(スプレッド)
 
 	CSoundSource* m_ssNormalShotSe = nullptr;
 };
