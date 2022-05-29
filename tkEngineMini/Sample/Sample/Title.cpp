@@ -2,8 +2,17 @@
 #include "Title.h"
 
 namespace {
+	//bgm関連
+	//ゲーム開始時のSE
 	const wchar_t* PRESS_START_SE_FILEPATH = L"Assets/wav/decide_2.wav";
 	const float PRESS_START_SE_VOLUME = 0.5f;
+
+	//タイトル画面の曲
+	const wchar_t* TITLE_BGM_FILEPATH = L"Assets/wav/title_bgm.wav";
+	const float TITLE_BGM_INIT_VOLUME = 0.3f;
+
+	const float TITLE_BGM_FADEOUT_RATE = 0.02f;
+
 }
 
 Title::Title()
@@ -13,7 +22,10 @@ Title::Title()
 
 Title::~Title()
 {
-
+	//nullptrでなければ
+	if (m_ssTitleBgm != nullptr) {
+		DeleteGO(m_ssTitleBgm);
+	}
 }
 
 bool Title::Start()
@@ -24,11 +36,22 @@ bool Title::Start()
 		GameDirector::GetInstance()->ResetGame();
 		//ゲームの状態をタイトル画面にする
 		GameDirector::GetInstance()->SetGameState(enTitle);
-		//バレットマネージャ内から弾を削除
+		//マネージャ内から要素を削除
 		BulletManager::GetInstance()->DeleteBullets();
+		EnemyManager::GetInstance()->DeleteEnemies();
+		ExplosionManager::GetInstance()->DeleteExplosions();
 	}
 
+	//bgm再生
+	m_ssTitleBgm = NewGO<CSoundSource>(0);
+	m_ssTitleBgm->Init(TITLE_BGM_FILEPATH);
+	m_ssTitleBgmVolume = TITLE_BGM_INIT_VOLUME;
+	m_ssTitleBgm->SetVolume(m_ssTitleBgmVolume);
+	m_ssTitleBgm->Play(true);
+	
+
 	Init();
+
 	return true;
 }
 
@@ -38,8 +61,28 @@ void Title::Init()
 	m_pressStart.Init();
 }
 
+void Title::BGMFadeOut(const float fadeOutRate)
+{
+	//ボリュームを下げる
+	m_ssTitleBgmVolume -= fadeOutRate;
+	
+	//ボリュームが0以下になったら
+	if (m_ssTitleBgmVolume <= 0.0f) {
+		//削除
+		DeleteGO(m_ssTitleBgm);
+		//nullにしておく
+		m_ssTitleBgm = nullptr;
+	}
+	
+	//再生音量を設定。nullだったら設定しない
+	if (m_ssTitleBgm != nullptr) {
+		m_ssTitleBgm->SetVolume(m_ssTitleBgmVolume);
+	}
+}
+
 void Title::Update()
 {
+	//スプライトの更新処理
 	m_titleSprite.Update();
 
 	//タイトルスプライトのフェードインが完了したらpressstartのUpdateを処理し始める
@@ -60,9 +103,12 @@ void Title::Update()
 		ss->Play(false);
 	}
 
-	//ゲーム開始フラグがオンならタイトルのフェードアウト開始
+	//ゲーム開始フラグがオンなら
 	if (m_gameReady == true) {
+		//タイトルスプライトのフェードアウト開始
 		m_titleSprite.FadeOutSprite();
+		//bgmのフェードアウトも開始
+		BGMFadeOut(TITLE_BGM_FADEOUT_RATE);
 	}
 	if (m_titleSprite.GetIsFinishFadeOut() == true) {
 		//タイトルのフェードアウト完了でゲームをNewGO

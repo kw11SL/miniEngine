@@ -14,6 +14,7 @@ class EnemyGenerator;
 class Bullet;
 class StageBackGround;
 class SkyCube;
+class CSoundSource;
 
 class Game : public IGameObject
 {
@@ -34,6 +35,10 @@ public:
 	/// @brief 生成器の削除
 	void DeleteGenerators();
 
+	/// @brief BGMのフェードアウトと削除処理
+	/// @param fadeOutRate フェードアウト量
+	void BGMFadeOut(const float fadeOutRate);
+
 private:	
 	Player_new* m_player = nullptr;					//プレイヤー
 	BG* m_bg = nullptr;								//ステージ
@@ -48,9 +53,13 @@ private:
 	
 	//スカイキューブ
 	SkyCube* m_skyCube = nullptr;
-	
+	//レベル
 	Level_New m_level;
 
-	float m_counter = 10.0f;
+	//BGM
+	CSoundSource* m_ssBgm = nullptr;
+	float m_ssBgmVolume = 0.0f;
+
+	bool m_gameEndFlag = false;
 };
 

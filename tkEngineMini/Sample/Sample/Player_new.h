@@ -315,6 +315,6 @@ private:
 	Effect m_startEffect;								//ゲーム開始時の登場エフェクト
 	Effect m_shotDirectionEffect;						//ショットの方向を示すマーカーエフェクト
 
-
+	CSoundSource* m_ssNormalShotSe = nullptr;
 };
 

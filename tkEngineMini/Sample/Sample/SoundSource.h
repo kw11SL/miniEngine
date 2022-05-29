@@ -203,6 +203,7 @@ public:
 	{
 		return &m_dspSettings;
 	}
+
 private:
 	void InitCommon();
 	//ストリーミング再生中の更新処理。

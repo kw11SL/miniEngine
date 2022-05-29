@@ -193,6 +193,18 @@ void BuildTangentAndBiNormalImp(TkmFile::SMesh& mesh, const IndexBuffer& indexBu
 	for (auto& vert : mesh.vertexBuffer) {
 		vert.tangent.Normalize();
 		vert.binormal.Normalize();
+
+		if (vert.tangent.Length() < 0.001f) {
+			if (vert.normal.y > 0.998f) {
+				// –@ü‚ª‚Ù‚ÚY²‚ğŒü‚¢‚Ä‚¢‚éB
+				vert.tangent = g_vec3AxisX;
+			}
+			else {
+				vert.tangent = g_vec3AxisY;
+			}
+			vert.binormal.Cross(vert.normal, vert.tangent);
+			vert.binormal.Normalize();
+		}
 	}
 		
 }

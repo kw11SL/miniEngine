@@ -152,7 +152,7 @@ void Player_new::Init()
 
 	//初期化時に開始演出用エフェクトを発生させる
 	m_startEffect.SetScale(EFFECT_SCALE_START);
-	m_startEffect.SetPosition(m_position/* + m_up * 50.0f*/);
+	m_startEffect.SetPosition(m_position);
 	m_startEffect.SetRotation(m_rot);
 	m_startEffect.Play();
 	
@@ -231,6 +231,7 @@ void Player_new::Move()
 	//	m_forward.Cross(m_right, m_up);
 	//}
 	//※上記まとめ
+	
 	Vector3 oldUp = m_up;
 	//前方、上、右を更新
 	m_sphericalMove.UpdateVectorFromUp(m_downVector, m_forward, m_up, m_right);
@@ -272,7 +273,6 @@ void Player_new::Rotation()
 
 	//モデルに回転を適用する
 	m_skinModelRender->SetRotation(m_rot);
-
 }
 
 void Player_new::RotateShotDirection()
@@ -343,10 +343,14 @@ void Player_new::FireBullet()
 
 				//ショットSEの再生
 				if (m_enBulletType == enNormalShot) {
-					CSoundSource* ssNormalSe = NewGO<CSoundSource>(0);
+					/*CSoundSource* ssNormalSe = NewGO<CSoundSource>(0);
 					ssNormalSe->Init(SHOT_NORMAL_SE_FILEPATH);
 					ssNormalSe->SetVolume(SHOT_NORMAL_SE_VOLUME);
-					ssNormalSe->Play(false);
+					ssNormalSe->Play(false);*/
+					m_ssNormalShotSe = NewGO<CSoundSource>(0);
+					m_ssNormalShotSe->Init(SHOT_NORMAL_SE_FILEPATH);
+					m_ssNormalShotSe->SetVolume(SHOT_NORMAL_SE_VOLUME);
+					m_ssNormalShotSe->Play(false);
 				}
 
 
@@ -718,20 +722,22 @@ void Player_new::Update()
 	Vector3 toCamera = m_gameCamera.GetCameraPositionTarget() - m_gameCamera.GetTargetPositionTarget();
 	//ベクトルにクォータニオンを適用
 	m_rotUpToGroundNormal.Apply(toCamera);
+	
 	//注視点目標を自身に設定
 	m_gameCamera.SetTargetPositionTarget(m_position);
 	//カメラ目標を設定
 	m_gameCamera.SetCameraPositionTarget(m_position + toCamera);
+	
 	// カメラの上方向目標をプレイヤーの上方向に設定。
 	m_gameCamera.SetUpVectorTarget(m_up);
 	//カメラの上を少しずつ補間していく
 	m_gameCamera.LerpUpVector(m_cameraUpFraction, m_cameraUp);
 	//補間したカメラの上でカメラの上を更新
 	m_gameCamera.SetUp(m_cameraUp);
+	
 	//カメラの更新
 	m_gameCamera.UpdateCamera();
 	////////////////////////////////////////////////////////////
-
 
 	//各種フラグの記録
 	////////////////////////////////////////////////////////////

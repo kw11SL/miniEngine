@@ -43,10 +43,15 @@ from.Normalize();
 	to.Normalize();
 	auto t = ::Dot(from, to);
 	Vector3 rotAxis;
-	if (t > 0.998f) {
-		//ほぼ同じ向きなので単位クォータニオンにする。
-		*this = Quaternion::Identity;
-		return;
+	//if (t > 0.998f) {
+	//	//ほぼ同じ向きなので単位クォータニオンにする。
+	//	*this = Quaternion::Identity;
+	//	return;
+	//}
+	if (t >= 1.0f) {
+			//同じ向きなので単位クォータニオンにする。
+			*this = Quaternion::Identity;
+			return;
 	}
 	else if (t < -0.998f) {
 		//ほぼ逆向きなので、

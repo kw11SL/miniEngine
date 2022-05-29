@@ -15,7 +15,13 @@
 
 
 namespace {
-	const char* CAPSULE_LEVEL_FILEPATH = "Assets/level3D/level00_a.tkl";	//レベルのファイルパス
+	//レベル関連
+	const char* CAPSULE_LEVEL_FILEPATH = "Assets/level3D/level02.tkl";	//レベルのファイルパス
+
+	//bgm関連
+	const wchar_t* GAME_SCENE_BGM_FILEPATH = L"Assets/wav/gamescene_bgm1.wav";
+	const float GAME_SCENE_BGM_INIT_VOLUME = 0.3f;
+	const float GAME_SCENE_BGM_FADEOUT_RATE = 0.005f;
 }
 
 Game::Game()
@@ -72,60 +78,60 @@ bool Game::Start()
 
 			m_player->SetPostion(objData.position);
 			m_player->SetRotation(objData.rotation);
-			////プレイヤーの前方、右、上ベクトルにレベルの回転を適用
-			//m_player->SetVectorFromQuaternion(objData.rotation);
+			//プレイヤーの前方、右、上ベクトルにレベルの回転を適用
+			m_player->SetVectorFromQuaternion(objData.rotation);
 			m_player->InitCharaCon();
 
 			return true;
 		}
 
-		//エネミー1の生成器
-		if (objData.EqualObjectName(L"enemy_01") == true) {
-			m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator01"));
-			m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
-				objData.position,
-				objData.rotation,
-				true,
-				enCommon
-			);
+		////エネミー1の生成器
+		//if (objData.EqualObjectName(L"enemy_01") == true) {
+		//	m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator01"));
+		//	m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
+		//		objData.position,
+		//		objData.rotation,
+		//		true,
+		//		enCommon
+		//	);
 
-			//敵生成器の前方、右、上ベクトルにレベルの回転を適用
-			m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
+		//	//敵生成器の前方、右、上ベクトルにレベルの回転を適用
+		//	m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
 
-			return true;
-		}
+		//	return true;
+		//}
 
-		//エネミー2の生成器
-		if (objData.EqualObjectName(L"enemy_02") == true) {
-			m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator02"));
-			m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
-				objData.position,
-				objData.rotation,
-				false,
-				enShot
-			);
+		////エネミー2の生成器
+		//if (objData.EqualObjectName(L"enemy_02") == true) {
+		//	m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator02"));
+		//	m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
+		//		objData.position,
+		//		objData.rotation,
+		//		false,
+		//		enShot
+		//	);
 
-			//敵生成器の前方、右、上ベクトルにレベルの回転を適用
-			m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
+		//	//敵生成器の前方、右、上ベクトルにレベルの回転を適用
+		//	m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
 
-			return true;
-		}
+		//	return true;
+		//}
 
-		//エネミー3の生成器
-		if (objData.EqualObjectName(L"enemy_03") == true) {
-			m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator03"));
-			m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
-				objData.position,
-				objData.rotation,
-				false,
-				enBomb
-			);
+		////エネミー3の生成器
+		//if (objData.EqualObjectName(L"enemy_03") == true) {
+		//	m_enemyGenerators.push_back(NewGO<EnemyGenerator>(0, "enemyGenerator03"));
+		//	m_enemyGenerators[m_enemyGenerators.size() - 1]->Init(
+		//		objData.position,
+		//		objData.rotation,
+		//		false,
+		//		enBomb
+		//	);
 
-			//敵生成器の前方、右、上ベクトルにレベルの回転を適用
-			m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
+		//	//敵生成器の前方、右、上ベクトルにレベルの回転を適用
+		//	m_enemyGenerators[m_enemyGenerators.size() - 1]->SetVectorFromQuaternion(objData.rotation);
 
-			return true;
-		}
+		//	return true;
+		//}
 
 		//ステージ
 		if (objData.EqualObjectName(L"stageBg") == true) {
@@ -156,6 +162,13 @@ bool Game::Start()
 		return true;
 	});
 
+	//BGMの再生
+	m_ssBgm = NewGO<CSoundSource>(0);
+	m_ssBgm->Init(GAME_SCENE_BGM_FILEPATH);
+	m_ssBgmVolume = GAME_SCENE_BGM_INIT_VOLUME;
+	m_ssBgm->SetVolume(m_ssBgmVolume);
+	m_ssBgm->Play(true);
+
 	return true;
 }
 
@@ -170,16 +183,41 @@ void Game::DeleteGenerators()
 	}
 }
 
+void Game::BGMFadeOut(const float fadeOutRate)
+{
+	m_ssBgmVolume -= fadeOutRate;
+	if (m_ssBgmVolume <= 0.0f) {
+		DeleteGO(m_ssBgm);
+		m_ssBgm = nullptr;
+	}
+
+	if (m_ssBgm != nullptr) {
+		m_ssBgm->SetVolume(m_ssBgmVolume);
+	}
+}
+
 void Game::Update()
 {
 	//ポイントライトの位置をプレイヤー位置に設定
 	m_pointLight->SetPosition(m_player->GetPosition() + m_player->GetUp()*100.0f);
 	
-	/*m_spotLight->SetPosition(m_player->GetPosition() + m_player->GetUp() * 200.0f);
-	m_spotLight->SetDirection(m_player->GetPosition() - m_spotLight->GetPosition());*/
 
-	/*m_spotLight->SetPosition(m_player->GetPosition() + m_player->GetUp() * 20.0f);
-	m_spotLight->SetDirection(m_player->GetPosition() - m_spotLight->GetPosition());*/
+	//ゲームがリザルト画面かゲームオーバー画面のとき
+	if (GameDirector::GetInstance()->GetGameState() == enResult ||
+		GameDirector::GetInstance()->GetGameState() == enGameOver) {
+		//ゲーム終了フラグがオンでなければ
+		if (m_gameEndFlag == false) {
+			//ゲーム終了フラグをオン
+			m_gameEndFlag = true;
+		}
+	}
+
+	//ゲーム終了フラグがオンのとき
+	if (m_gameEndFlag == true) {
+		//フェードアウトを実行
+		BGMFadeOut(GAME_SCENE_BGM_FADEOUT_RATE);
+	}
+
 
 
 }
