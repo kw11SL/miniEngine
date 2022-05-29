@@ -66,6 +66,10 @@ namespace{
 	//îÌíese
 	const wchar_t* MISS_SE_FILEPATH = L"Assets/wav/missSe.wav";
 	const float MISS_SE_VOLUME = 1.0f;
+	//ïêäÌêÿÇËë÷Ç¶se
+	const wchar_t* CHANGE_SE_FILEPATH = L"Assets/wav/weapon_change.wav";
+	const float CHANGE_SE_VOLUME = 0.5f;
+
 }
 
 Player_new::Player_new()
@@ -412,7 +416,17 @@ void Player_new::FireBullet()
 
 void Player_new::ChangeWeapon()
 {
+	if (GameDirector::GetInstance()->GetGameState() != enGame) {
+		return;
+	}
+
 	if (g_pad[0]->IsTrigger(enButtonLB1)) {
+		//ïêäÌêÿÇËë÷Ç¶éûÇÃSEÇçƒê∂
+		CSoundSource* ssChangeSe = NewGO<CSoundSource>(0);
+		ssChangeSe->Init(CHANGE_SE_FILEPATH);
+		ssChangeSe->SetVolume(CHANGE_SE_VOLUME);
+		ssChangeSe->Play(false);
+
 		switch (m_enUseWeapon)
 		{
 		case enNormalShot:
@@ -424,8 +438,8 @@ void Player_new::ChangeWeapon()
 			m_changeEffectSpread.SetRotation(m_rot);
 			m_changeEffectSpread.SetScale(EFFECT_SCALE_CHANGE_SPREAD);
 			m_changeEffectSpread.Play(false);
-
 			break;
+
 		case enSpreadBomb:
 			m_enUseWeapon = enNormalShot;
 			m_enBulletType = enPlayerNormal;
@@ -435,8 +449,8 @@ void Player_new::ChangeWeapon()
 			m_changeEffectNormal.SetRotation(m_rot);
 			m_changeEffectNormal.SetScale(EFFECT_SCALE_CHANGE_NORMAL);
 			m_changeEffectNormal.Play(false);
-
 			break;
+
 		default:
 			break;
 		}
