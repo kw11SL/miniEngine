@@ -27,6 +27,5 @@ public:
 	/// @brief ©–Å‚É•t‚·‚éˆ—
 	void SelfDestroySub() override;
 
-
 };
 

@@ -28,8 +28,12 @@ public:
 	/// @brief 自滅時に付随する処理
 	void SelfDestroySub() override;
 
+//内部で行う処理
 private:
-	BulletManager* m_bulletManager = nullptr;
-	ExplosionManager* m_explosionManager = nullptr;
+	/// @brief 時間寿命に比例してエフェクトを縮小させる処理
+	void LifeRingScaling();
+
+private:
+	Effect m_lifeRingEffect;			//時間寿命エフェクト
 };
 

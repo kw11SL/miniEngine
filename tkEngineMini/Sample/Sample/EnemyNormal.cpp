@@ -11,6 +11,10 @@ namespace {
 	const char16_t* DESTROY_EFFECT_FILEPATH = u"Assets/effect/destroy.efk";		//撃破エフェクトのファイルパス
 	const char16_t* HIT_EFFECT_FILEPATH = u"Assets/effect/hit.efk";				//ヒットエフェクトのファイルパス
 
+	//エフェクトのスケール
+	const Vector3 EFFECT_DESTROY_SCALE = { 20.0f,20.0f,20.0f };					//撃破エフェクトのスケール
+	const Vector3 EFFECT_HIT_SCALE = { 10.0f,10.0f,10.0f };						//ヒットエフェクトのスケール				
+
 	//パラメータ各種
 	const float MOVE_SPEED = 5.0f;		//移動速度
 	const float LIFE = 1.0f;			//耐久度
@@ -24,15 +28,19 @@ namespace {
 
 EnemyNormal::~EnemyNormal()
 {
+	//モデルの削除
 	DeleteGO(m_skinModelRender);
 }
 
 void EnemyNormal::InitSub()
 {
-	m_skinModelRender = NewGO<SkinModelRender>(0, ENEMY_NAME);
+	//モデルをNewGO
+	//m_skinModelRender = NewGO<SkinModelRender>(0);
+	
 	//モデルの初期化
-	m_skinModelRender->Init(MODELPATH, enModelUpAxisZ, true, false);
-
+	if (m_skinModelRender != nullptr) {
+		m_skinModelRender->Init(MODELPATH, enModelUpAxisZ, true, false);
+	}
 	//各種パラメータを設定
 	m_life = LIFE;
 	m_speed = MOVE_SPEED;
@@ -42,11 +50,13 @@ void EnemyNormal::InitSub()
 
 void EnemyNormal::InitEffect()
 {
+	//撃破エフェクトの初期化
 	m_destroyEffect.Init(DESTROY_EFFECT_FILEPATH);
-	m_destroyEffect.SetScale({ 20.0f,20.0f,20.0f });
+	m_destroyEffect.SetScale(EFFECT_DESTROY_SCALE);
 
+	//ヒットエフェクトの初期化
 	m_hitEffect.Init(HIT_EFFECT_FILEPATH);
-	m_hitEffect.SetScale({ 10.0f,10.0f,10.0f });
+	m_hitEffect.SetScale(EFFECT_HIT_SCALE);
 }
 
 void EnemyNormal::UpdateEffect()

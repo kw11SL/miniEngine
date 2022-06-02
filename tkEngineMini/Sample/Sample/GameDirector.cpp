@@ -9,7 +9,6 @@ namespace{
 //静的メンバの初期化
 GameDirector* GameDirector::m_gameDirector = nullptr;
 
-
 void GameDirector::ResetGame()
 {
 	m_score = 0;
@@ -98,7 +97,6 @@ void GameDirector::ExecuteUpdate()
 	}
 
 	//状態の遷移
-	
 	//ゲーム開始時に一定時間たつとゲームに移行する
 	if (m_enGameState == enStart) {
 		m_startToGameCounter -= g_gameTime->GetFrameDeltaTime();

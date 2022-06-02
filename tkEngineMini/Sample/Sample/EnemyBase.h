@@ -159,7 +159,7 @@ public:
 	/// @param interval 発射間隔。
 	void FireBulletEqually(
 		const int wayNum,
-		const float interval);
+		const EnBulletType bulletType);
 
 protected:
 	SkinModelRender* m_skinModelRender = nullptr;		//モデルレンダー

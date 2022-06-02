@@ -9,23 +9,17 @@ namespace {
 
 EnemyBase::EnemyBase()
 {
-	//発生したらエネミー数に+1
-	GameDirector::GetInstance()->AddEnemyCount();
-	//エネミー総数に+1
-	GameDirector::GetInstance()->AddEnemyTotalCount();
 }
 
 void EnemyBase::Init(const Vector3& initPoint, const Vector3& initUp)
-{
+{	
+	///////////////////////////////////////////////////////////////////
+	// 共通処理
 	//モデルをNewGO
-	//m_skinModelRender = NewGO<SkinModelRender>(0);
-	
-	InitSub();
+	m_skinModelRender = NewGO<SkinModelRender>(0);
 
 	//バレットマネージャのポインタを取得
 	m_bulletManager = BulletManager::GetInstance();
-
-	const char* modelPath = "hoge";
 
 	m_position = initPoint;
 	m_skinModelRender->SetPosition(m_position);
@@ -63,11 +57,12 @@ void EnemyBase::Init(const Vector3& initPoint, const Vector3& initUp)
 	//出現から当たり判定が有効になるまでの時間をセット
 	m_toActivateCounter = ACTIVATE_COUNT;
 
-	//継承先で決めた処理
-	//InitSub();
-	
+	///////////////////////////////////////////////////////////////////
 	//継承先で決めたエフェクト初期化処理
 	InitEffect();
+	//継承先で決めた初期化処理(モデルの初期化や固有パラメータ設定など)
+	InitSub();
+	
 }
 
 void EnemyBase::InitSub()
@@ -76,6 +71,11 @@ void EnemyBase::InitSub()
 
 void EnemyBase::Move()
 {
+	//プレイヤーを検索
+	if (m_player == nullptr) {
+		m_player = FindGO<Player_new>(PLAYER_NAME);
+	}
+
 	//継承先で決めた処理
 	MoveSub();
 
@@ -138,7 +138,7 @@ void EnemyBase::Hit()
 
 		//問い合わせ続行
 		return true;
-		});
+	});
 
 	//爆発を検索
 	QueryGOs<Explosion>("explosion", [&](Explosion* explosion) {
@@ -253,7 +253,7 @@ void EnemyBase::DestroyTimeUp()
 	}
 }
 
-void EnemyBase::FireBulletEqually(const int wayNum, const float interval)
+void EnemyBase::FireBulletEqually(const int wayNum, const EnBulletType bulletType)
 {
 	//数が0だったら実行しない
 	if (wayNum == 0) {
@@ -284,57 +284,45 @@ void EnemyBase::FireBulletEqually(const int wayNum, const float interval)
 	//for文に足し込む用の角度
 	float angleTmp = 0.0f;
 
-	////発射カウンターの増加
-	//if (m_enEnemyType == enShot || enChaser) {
-	//	m_shotCounter += g_gameTime->GetFrameDeltaTime();
-	//}
-	
-	m_shotCounter += g_gameTime->GetFrameDeltaTime();
-
 	//発射処理
-	//カウンターが規定値になったら
-	if (m_shotCounter >= interval) {
-
-		//弾の角度決定,射撃
-		for (int i = 0; i < wayNum; i++) {
-			//奇数弾の1発目
-			if (i == 0 && wayNum % 2 == 1) {
-				//プレイヤー方向に1発目
-				rot.SetRotation(m_up, 0.0f);
-				rot.Apply(dir);
-			}
-			//偶数弾の1発目(プレイヤー方向には出さない)
-			else if (i == 0 && wayNum % 2 == 0) {
-				//プレイヤー方向準拠なので1発目が出る方向は、
-				//(分割した角度 / 2)ラジアン回転させた向きとなる
-				angleTmp += angle / 2.0f;
-				rot.SetRotation(m_up, angleTmp);
-				rot.Apply(dir);
-			}
-			//2発目以降は等分した角度分発射方向を回す
-			else {
-				angleTmp += angle;
-				rot.SetRotation(m_up, angleTmp);
-				rot.Apply(dir);
-			}
-
-			//弾を生成
-			m_bulletManager->InitBullets(
-				m_position,
-				m_up,
-				dir,
-				enEnemyNormal
-			);
-
-			//生成後、向きをプレイヤー方向に戻す(正面を基準に方向を決定しているため)
-			dir = toPlayer;
-			dir.Normalize();
+	//弾の角度決定,射撃
+	for (int i = 0; i < wayNum; i++) {
+		//奇数弾の1発目
+		if (i == 0 && wayNum % 2 == 1) {
+			//プレイヤー方向に1発目
+			rot.SetRotation(m_up, 0.0f);
+			rot.Apply(dir);
+		}
+		//偶数弾の1発目(プレイヤー方向には出さない)
+		else if (i == 0 && wayNum % 2 == 0) {
+			//プレイヤー方向準拠なので1発目が出る方向は、
+			//(分割した角度 / 2)ラジアン回転させた向きとなる
+			angleTmp += angle / 2.0f;
+			rot.SetRotation(m_up, angleTmp);
+			rot.Apply(dir);
+		}
+		//2発目以降は等分した角度分発射方向を回す
+		else {
+			angleTmp += angle;
+			rot.SetRotation(m_up, angleTmp);
+			rot.Apply(dir);
 		}
 
-		//発射カウンターを戻す
-		m_shotCounter = 0.0f;
+		//弾を生成
+		m_bulletManager->InitBullets(
+			m_position,
+			m_up,
+			dir,
+			bulletType
+		);
+
+		//生成後、向きをプレイヤー方向に戻す(正面を基準に方向を決定しているため)
+		dir = toPlayer;
+		dir.Normalize();
 	}
 
+	//発射カウンターを戻す
+	m_shotCounter = 0.0f;
 }
 
 void EnemyBase::Update()
@@ -343,7 +331,9 @@ void EnemyBase::Update()
 	if (GameDirector::GetInstance()->GetGameState() != enGame) {
 		return;
 	}
-
+	
+	//共通処理
+	///////////////////////////////////////////////////
 	Move();
 	Rotation();
 	Hit();
@@ -351,15 +341,18 @@ void EnemyBase::Update()
 	DecToActivateTime();
 	Destroy();
 	DestroyTimeUp();
+	///////////////////////////////////////////////////
 
 	//継承先で決めた処理
 	UpdateSub();
 	//継承先で決めたエフェクトの更新処理
 	UpdateEffect();
 
+	//モデルの回転を更新
 	m_skinModelRender->SetRotation(m_rot);
 }
 
 void EnemyBase::UpdateSub()
 {
+
 }
