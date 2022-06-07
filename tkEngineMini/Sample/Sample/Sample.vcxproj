@@ -297,7 +297,10 @@
     <ClCompile Include="Bloom.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletBase.cpp" />
+    <ClCompile Include="BulletEnemyNormal.cpp" />
     <ClCompile Include="BulletManager.cpp" />
+    <ClCompile Include="BulletPlayerNormal.cpp" />
+    <ClCompile Include="BulletPlayerSpread.cpp" />
     <ClCompile Include="DirectionLight.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
@@ -433,7 +436,10 @@
     <ClInclude Include="Bloom.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletBase.h" />
+    <ClInclude Include="BulletEnemyNormal.h" />
     <ClInclude Include="BulletManager.h" />
+    <ClInclude Include="BulletPlayerNormal.h" />
+    <ClInclude Include="BulletPlayerSpread.h" />
     <ClInclude Include="DirectionLight.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyBase.h" />

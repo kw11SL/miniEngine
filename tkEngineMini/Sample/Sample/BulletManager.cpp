@@ -16,7 +16,6 @@ void BulletManager::InitBullets(
 	m_bullets.push_back(NewGO<Bullet>(0, Naming(bulletType)));
 
 	m_bullets[m_bullets.size() - 1]->Init(
-		*RenderingEngine::GetInstance(),
 		initPoint,
 		initUp,
 		direction,
@@ -40,7 +39,6 @@ void BulletManager::ExecuteUpdate()
 	//存在フラグを調べて、オフだったら破棄
 	for (auto& bullet : m_bullets) {
 		if (bullet->GetIsExist() == false) {
-			//bullet->DeleteSkinModel();
 			DeleteGO(bullet);
 		}
 	}

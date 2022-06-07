@@ -202,7 +202,5 @@ protected:
 	//エフェクト各種
 	Effect m_destroyEffect;		//撃破エフェクト
 	Effect m_hitEffect;			//ヒットエフェクト
-
-
 };
 

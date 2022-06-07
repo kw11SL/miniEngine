@@ -1,4 +1,6 @@
 #pragma once
+
+/// @brief 弾クラスの基本になるクラス
 class BulletBase : public IGameObject
 {
 public:
@@ -6,12 +8,10 @@ public:
 	virtual ~BulletBase();
 
 	/// @brief 初期化処理
-	/// @param renderingEngine レンダリングエンジン
 	/// @param initPoint 初期位置
 	/// @param initUp 初期位置の上ベクトル
 	/// @param direction 方向
 	void Init(
-		RenderingEngine& renderingEngine,
 		const Vector3& initPoint,
 		const Vector3& initUp,
 		const Vector3& direction
@@ -40,20 +40,12 @@ public:
 	/// @return 回転角度
 	float GetAngle() { return m_angle; }
 
-	/// @brief スキンモデルレンダーを取得
-	/// @return スキンモデルレンダー
-	SkinModelRender* GetSkinModelRender()
-	{
-		return m_skinModelRender;
-	}
-
 	//セッター
 	/// @brief	座標を設定 
 	/// @param pos 座標
 	void SetPostion(const Vector3& pos)
 	{
 		m_position = pos;
-		m_skinModelRender->SetPosition(m_position);
 	}
 
 	/// @brief 拡大率を設定
@@ -61,7 +53,6 @@ public:
 	void SetScale(const Vector3& scale)
 	{
 		m_scale = scale;
-		m_skinModelRender->SetScale(m_scale);
 	}
 
 	/// @brief 回転を設定
@@ -69,7 +60,6 @@ public:
 	void SetRotation(const Quaternion rot)
 	{
 		m_rot = rot;
-		m_skinModelRender->SetRotation(m_rot);
 	}
 
 	/// @brief 角度を設定
@@ -77,34 +67,6 @@ public:
 	void SetAngle(const float& angle)
 	{
 		m_angle = angle;
-	}
-
-	//ライトを渡すための関数
-	/// @brief ディレクションライトを受けとる
-	/// @param dirLight ディレクションライト
-	void RecieveDirectionLight(DirectionLight* dirLight)
-	{
-		m_skinModelRender->InitDirectionLight(dirLight);
-	}
-
-	/// @brief ポイントライトを受け取る
-	/// @param ptLight ポイントライト
-	void RecievePointLight(PointLight* ptLight)
-	{
-		m_skinModelRender->InitPointLight(ptLight);
-	}
-
-	/// @brief スポットライトを受け取る
-	/// @param spLight スポットライト
-	void RecieveSpotLight(SpotLight* spLight)
-	{
-		m_skinModelRender->InitSpotLight(spLight);
-	}
-
-	/// @brief モデルの初期化
-	void InitModelFromInitData()
-	{
-		m_skinModelRender->InitModel();
 	}
 
 	/// @brief 存在フラグをオン
@@ -118,13 +80,6 @@ public:
 	bool GetIsExist()
 	{
 		return m_isExist;
-	}
-
-	/// @brief モデルが削除されたかどうか
-	/// @return 
-	bool GetIsModelDeleted()
-	{
-		return m_isModelDeleted;
 	}
 
 	/// @brief 弾のダメージを取得
@@ -148,13 +103,6 @@ public:
 		return m_damageInterval;
 	}
 
-	/// @brief スキンモデルを削除
-	void DeleteSkinModel()
-	{
-		DeleteGO(m_skinModelRender);
-		m_isModelDeleted = true;
-	}
-
 	/// @brief 耐久値を減少
 	/// @param decVal 減少させる値
 	void DecLife(float decVal)
@@ -173,22 +121,36 @@ public:
 
 	/// @brief 移動処理
 	void Move();
+	/// @brief 移動に付随する処理
+	virtual void MoveSub();
 
 	/// @brief 回転処理
 	void Rotation();
+	/// @brief 回転に付随する処理
+	virtual void RotationSub();
 
 	/// @brief 生存時間を減少し、0以下で破棄
 	void DecLifeTime();
 
-	/// @brief 削除処理
-	void Destroy();
+	/// @brief 当たり判定処理
+	void Hit();
 
-	/// @brief 弾エフェクトの初期化処理
-	/// @param filePath ファイルパス
-	void InitEffect(const char16_t* filePath);
+	/// @brief 破棄処理
+	void Destroy();
+	/// @brief 破棄処理に付随する処理
+	virtual void DestroySub();
+
+	/// @brief エフェクトの初期化処理
+	void InitEffect();
+	/// @brief エフェクトの初期化に付随する処理
+	virtual void InitEffectSub();
+
+	/// @brief エフェクトの更新処理
+	void EffectUpdate();
+	/// @brief エフェクトの更新処理に付随する処理
+	virtual void EffectUpdateSub();
 
 protected:
-	SkinModelRender* m_skinModelRender = nullptr;		//スキンモデルレンダー
 	MyCharacterController m_myCharaCon;					//自作のキャラクターコントローラ
 	SphericalMove m_sphericalMove;						//球面移動用クラス
 
@@ -210,7 +172,7 @@ protected:
 	Quaternion m_rot = Quaternion::Identity;			//回転
 	float m_angle = 0.0f;								//角度
 
-	//ライト保持用のメンバ
+	//ライトのポインタ
 	DirectionLight* m_directionLight = nullptr;
 	PointLight* m_pointLight = nullptr;
 	SpotLight* m_spotLight = nullptr;
@@ -218,9 +180,8 @@ protected:
 	Vector3 m_direction = Vector3::Zero;				//最初の発射方向
 	bool m_isDecideDirection = false;					//発射方向を前方ベクトルにしたかどうか
 
-	Effect m_shotEffect;								//弾に付随するエフェクト
-
-	//スキンモデルレンダーの削除フラグ
-	bool m_isModelDeleted = false;
+	Effect m_shotEffect;								//弾のエフェクト
+	Effect m_banishEffect;								//弾消滅時のエフェクト
+		
 };
 

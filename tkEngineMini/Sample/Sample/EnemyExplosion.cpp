@@ -3,7 +3,7 @@
 
 namespace {
 	//エフェクトのファイルパス
-	const char16_t* EFFECT_FILEPATH = u"Assets/effect/enemy_explosion.efk";
+	const char16_t* EFFECT_BULLET_FILEPATH = u"Assets/effect/enemy_explosion.efk";
 	//生存時間
 	const float LIFETIME = 1.2f;
 	//ダメージ半径
@@ -18,7 +18,7 @@ EnemyExplosion::~EnemyExplosion()
 
 void EnemyExplosion::InitSub()
 {
-	m_effectFilePath = EFFECT_FILEPATH;
+	m_effectFilePath = EFFECT_BULLET_FILEPATH;
 	m_lifeTime = LIFETIME;
 	m_damageArea = DAMAGE_RADIUS;
 }

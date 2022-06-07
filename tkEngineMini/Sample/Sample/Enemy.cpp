@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "Enemy.h"
-#include "Player_new.h"
-#include "ExplosionManager.h"
 
 Enemy::Enemy()
 {
@@ -27,9 +25,12 @@ void Enemy::Init(
 	const Vector3& initUp,
 	const EnEnemyType& enemyType)
 {
+	//エネミーのタイプを設定
+	m_enEnemyType = enemyType;
+
 	//エネミーのタイプごとに基底クラスのオブジェクトに渡す
-	//派生クラスのオブジェクトを振り分ける(ポリモーフィズム)
-	switch (enemyType) {
+	//派生クラスのオブジェクトを振り分ける
+	switch (m_enEnemyType) {
 	//通常エネミー
 	case enCommon:
 		m_enemyBase = &m_enemyNormal;

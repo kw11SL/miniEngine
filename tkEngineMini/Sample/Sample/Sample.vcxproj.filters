@@ -536,6 +536,15 @@
     <ClCompile Include="TklFile.cpp">
       <Filter>ソース ファイル\File</Filter>
     </ClCompile>
+    <ClCompile Include="BulletEnemyNormal.cpp">
+      <Filter>ソース ファイル\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletPlayerNormal.cpp">
+      <Filter>ソース ファイル\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletPlayerSpread.cpp">
+      <Filter>ソース ファイル\Bullet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system\system.h">
@@ -915,6 +924,15 @@
     </ClInclude>
     <ClInclude Include="TklFile.h">
       <Filter>ヘッダー ファイル\File</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletEnemyNormal.h">
+      <Filter>ヘッダー ファイル\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletPlayerNormal.h">
+      <Filter>ヘッダー ファイル\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletPlayerSpread.h">
+      <Filter>ヘッダー ファイル\Bullet</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

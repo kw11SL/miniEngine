@@ -3,7 +3,7 @@
 #include "Player_new.h"
 
 namespace {
-	float UPPER_OFFSET = 50.0f;
+	float UPPER_OFFSET = 50.0f;				//浮かす高さ
 	const float ACTIVATE_COUNT = 0.7f;		//当たり判定が有効になるまでのカウンター
 }
 

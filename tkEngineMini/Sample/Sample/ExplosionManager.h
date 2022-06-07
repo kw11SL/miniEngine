@@ -1,5 +1,6 @@
 #pragma once
 class Explosion;
+enum EnExplosionType;
 
 class ExplosionManager
 {
