@@ -4,15 +4,13 @@
 namespace {
 	//bgm関連
 	//ゲーム開始時のSE
-	const wchar_t* PRESS_START_SE_FILEPATH = L"Assets/wav/decide_2.wav";
-	const float PRESS_START_SE_VOLUME = 0.5f;
+	const wchar_t* PRESS_START_SE_FILEPATH = L"Assets/wav/decide_2.wav";	//ファイルパス
+	const float PRESS_START_SE_VOLUME = 0.5f;								//音量
 
 	//タイトル画面の曲
-	const wchar_t* TITLE_BGM_FILEPATH = L"Assets/wav/title_bgm.wav";
-	const float TITLE_BGM_INIT_VOLUME = 0.3f;
-
-	const float TITLE_BGM_FADEOUT_RATE = 0.02f;
-
+	const wchar_t* TITLE_BGM_FILEPATH = L"Assets/wav/title_bgm.wav";		//ファイルパス
+	const float TITLE_BGM_INIT_VOLUME = 0.2f;								//音量
+	const float TITLE_BGM_FADEOUT_RATE = 0.02f;								//フェードアウト割合
 }
 
 Title::Title()

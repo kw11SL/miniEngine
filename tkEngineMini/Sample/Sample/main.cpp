@@ -5,11 +5,7 @@
 
 namespace
 {
-	const int WINDOW_WIDTH = 1280;	//幅
-	const int WINDOW_HEIGHT = 720;	//高さ
 
-	const char* POSTEFFECT_FILEPATH = "Assets/shader/PostEffect.fx";
-	const char* GAUSSIAN_BLUR_EFFECT_FILEPATH = "Assets/shader/GaussianBlur.fx";
 }
 
 //重みテーブルの設定
@@ -28,7 +24,7 @@ void InitRootSignature(RootSignature& rs);
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
 	//ゲームの初期化。
-	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("Game"));
+	InitGame(hInstance, hPrevInstance, lpCmdLine, nCmdShow, TEXT("SurfaceSweeper"));
 
 	//////////////////////////////////////
 	// ここから初期化を行うコードを記述する。
@@ -44,7 +40,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	GameObjectManager::CreateInstance();
 	//物理ワールドのインスタンスを作成
 	PhysicsWorld::CreateInstance();
-	//サウンドエンジンを作成
+	//サウンドエンジンを作成,初期化
 	CSoundEngine::CreateInstance();
 	CSoundEngine::GetInstance()->Init();
 	//ゲームディレクターを作成
@@ -62,19 +58,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	RenderingEngine::CreateInstance();
 	//レンダリングエンジンの初期化
 	RenderingEngine::GetInstance()->Init();
-
-	//テクスチャを貼りつけるためのスプライトを初期化
-	SpriteInitData spriteInitData;
-	//テクスチャはメインレンダリングターゲットのカラーバッファ
-	spriteInitData.m_textures[0] = &RenderingEngine::GetInstance()->GetRenderTarget().GetRenderTargetTexture();
-	spriteInitData.m_width = WINDOW_WIDTH;
-	spriteInitData.m_height = WINDOW_HEIGHT;
-	//通常のシェーダを指定
-	spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
-
-	//貼り付けるスプライトの初期化
-	Sprite frameBufferSprite;
-	frameBufferSprite.Init(spriteInitData);
 
 	//タイトルの作成
 	NewGO<Title>(0, TITLE_NAME);
@@ -129,12 +112,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		}
 #endif // DEBUG_ON
 
-
 		//レンダリング開始。
 		g_engine->BeginFrame();
 
-		///////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////////
 		//各種更新処理
+		
 		//登録されているゲームオブジェクトの更新関数を呼び出す。
 		GameObjectManager::GetInstance()->ExecuteUpdate();
 		//ゲームディレクターの更新処理
@@ -149,35 +132,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		PhysicsWorld::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
 		//step-5 エフェクトエンジンの更新。
 		EffectEngine::GetInstance()->Update(g_gameTime->GetFrameDeltaTime());
-		///////////////////////////////////////////////////////////////
-
-		//レンダリングターゲットをメインレンダリングターゲットに変更(=オフスクリーンレンダリングにする)
-		//レンダリングターゲットとして利用できるまで待つ
-		renderContext.WaitUntilToPossibleSetRenderTarget(RenderingEngine::GetInstance()->GetRenderTarget());
-		//レンダリングターゲットを設定
-		renderContext.SetRenderTargetAndViewport(RenderingEngine::GetInstance()->GetRenderTarget());
-		//レンダリングターゲットのクリア
-		renderContext.ClearRenderTargetView(RenderingEngine::GetInstance()->GetRenderTarget());
+		/////////////////////////////////////////////////////////////////////////////////
 		
-		////////モデルのドロー////////
-		//登録されているゲームオブジェクトの描画関数を呼び出す。
-		//GameObjectManager::GetInstance()->ExecuteRender(renderContext);
-		//////////////////////////////
-
-		//テスト：レンダリングエンジンの処理
+		//レンダリングエンジンの処理
 		RenderingEngine::GetInstance()->Execute(renderContext);
-
-		//エフェクトのドロー。
-		//EffectEngine::GetInstance()->Draw();
-
-		//メインレンダリングターゲットに描画したものをフレームバッファにコピー
-		//レンダリングターゲットをオンスクリーンに戻す
-		renderContext.SetRenderTarget(
-			g_graphicsEngine->GetCurrentFrameBuffuerRTV(),
-			g_graphicsEngine->GetCurrentFrameBuffuerDSV()		
-		);
-		frameBufferSprite.Draw(renderContext);
-
+		
+		//フレーム終了
 		g_engine->EndFrame();
 	}
 

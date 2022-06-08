@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "RenderingEngine.h"
 
+namespace {
+	const int WINDOW_WIDTH = 1280;	//幅
+	const int WINDOW_HEIGHT = 720;	//高さ
+}
+
 RenderingEngine* RenderingEngine::m_renderingEngine = nullptr;
 
 void RenderingEngine::Init()
@@ -9,14 +14,31 @@ void RenderingEngine::Init()
 	InitLightCamera();
 	//メインレンダリングターゲットの初期化
 	InitMainRenderTarget();
+	//フレームバッファに貼り付けるスプライトの初期化
+	InitFrameBufferSprite();
 	//シャドウマップの初期化
 	InitShadowMap();
+	//ポストエフェクトの初期化
+	InitPostEffect();
+}
+
+void RenderingEngine::InitPostEffect()
+{
 	//ブルームの初期化
 	InitBloom(m_mainRenderTarget);
 }
 
 void RenderingEngine::Execute(RenderContext& rc)
 {
+	///////////////////////////////////////////////////////////////
+	//レンダリングターゲットとして利用できるまで待つ
+	rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
+	//レンダリングターゲットを設定
+	rc.SetRenderTargetAndViewport(m_mainRenderTarget);
+	//レンダリングターゲットのクリア
+	rc.ClearRenderTargetView(m_mainRenderTarget);
+	///////////////////////////////////////////////////////////////
+
 	//ライトカメラの更新
 	UpdateLightCamera();
 
@@ -37,6 +59,17 @@ void RenderingEngine::Execute(RenderContext& rc)
 
 	//フォントを描画
 	FontRendering(rc);
+
+	///////////////////////////////////////////////////////////////
+	//メインレンダリングターゲットに描画したものをフレームバッファにコピー
+	//レンダリングターゲットをオンスクリーンに戻す
+	rc.SetRenderTarget(
+		g_graphicsEngine->GetCurrentFrameBuffuerRTV(),
+		g_graphicsEngine->GetCurrentFrameBuffuerDSV()
+	);
+	//フレームバッファ用スプライトを描画
+	m_frameBufferSprite.Draw(rc);
+	///////////////////////////////////////////////////////////////
 }
 
 void RenderingEngine::CommonRendering(RenderContext& rc)
@@ -151,6 +184,21 @@ void RenderingEngine::InitMainRenderTarget()
 		DXGI_FORMAT_R32G32B32A32_FLOAT,
 		DXGI_FORMAT_D32_FLOAT
 	);
+}
+
+void RenderingEngine::InitFrameBufferSprite()
+{
+	//初期化データを作成
+	SpriteInitData spriteInitData;
+	//テクスチャはメインレンダリングターゲット
+	spriteInitData.m_textures[0] = &m_mainRenderTarget.GetRenderTargetTexture();
+	spriteInitData.m_width = WINDOW_WIDTH;
+	spriteInitData.m_height = WINDOW_HEIGHT;
+	//シェーダーを指定
+	spriteInitData.m_fxFilePath = "Assets/shader/sprite.fx";
+
+	//貼り付けるスプライトの初期化
+	m_frameBufferSprite.Init(spriteInitData);
 }
 
 void RenderingEngine::InitShadowMap()

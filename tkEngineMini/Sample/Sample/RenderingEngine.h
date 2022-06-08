@@ -165,6 +165,12 @@ private:
 
 	/// @brief シャドウマップの初期化
 	void InitShadowMap();
+
+	/// @brief ポストエフェクトの初期化
+	void InitPostEffect();
+
+	/// @brief フレームバッファのテクスチャを初期化
+	void InitFrameBufferSprite();
 	
 	/// @brief ブルームの初期化
 	/// @param mainRT レンダリングターゲット
@@ -181,6 +187,7 @@ private:
 	std::vector<SFontData*> m_fontDataVector;	//フォントデータの配列
 
 	RenderTarget m_mainRenderTarget;			//メインレンダリングターゲット
+	Sprite m_frameBufferSprite;					//フレームバッファ用スプライト
 	Bloom m_bloom;								//ブルーム
 
 	Camera m_lightCamera;						//ライトカメラ

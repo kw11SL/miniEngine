@@ -270,7 +270,7 @@ void BulletBase::Update()
 	DecLifeTime();
 	//当たり判定処理
 	Hit();
-	//破棄処理
+	//破棄時の処理と消滅エフェクト再生
 	Destroy();
 	//継承先で決めた処理
 	UpdateSub();

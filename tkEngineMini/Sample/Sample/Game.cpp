@@ -20,7 +20,7 @@ namespace {
 
 	//bgmŠÖ˜A
 	const wchar_t* GAME_SCENE_BGM_FILEPATH = L"Assets/wav/gamescene_bgm1.wav";
-	const float GAME_SCENE_BGM_INIT_VOLUME = 0.3f;
+	const float GAME_SCENE_BGM_INIT_VOLUME = 0.1f;
 	const float GAME_SCENE_BGM_FADEOUT_RATE = 0.005f;
 }
 

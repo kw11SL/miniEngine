@@ -65,12 +65,17 @@ void BulletManager::ExecuteUpdate()
 
 const char* BulletManager::Naming(const EnBulletType& type)
 {
-	//プレイヤーの弾
-	if (type == enPlayerNormal || type == enPlayerSpreadBomb) {
+	//プレイヤーの弾を指定していれば
+	if (type == enPlayerNormal || 
+		type == enPlayerSpreadBomb) {
+		
+		//プレイヤーの弾という名前を返す
 		return BULLET_PLAYER_NAME;
 	}
-	//エネミーの弾
+	//エネミーの弾を指定していれば
 	else if (type == enEnemyNormal) {
+		
+		//エネミーの弾という名前を返す
 		return BULLET_ENEMY_NAME;
 	}
 }
