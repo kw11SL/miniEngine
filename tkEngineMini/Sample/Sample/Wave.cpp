@@ -38,10 +38,18 @@ namespace {
 	const Vector4 NUM_SPRITE_INIT_SHADOW_COLOR = { 0.0f*0.3f,1.0f*0.3f,0.85f*0.3f,0.0f };
 	
 	//スプライトの幅と高さ
+	//文字スプライト
 	const int TEXT_SPRITE_WIDTH = 256;
 	const int TEXT_SPRITE_HEIGHT = 128;
+	//数字スプライト
 	const int NUM_SPRITE_WIDTH = 256;
 	const int NUM_SPRITE_HEIGHT = 256;
+
+	//フェードイン、スケーリング関連
+	const float FADEIN_RATE = 0.025f;	//フェードインする割合
+	const float SCALING_RATE = 0.03f;	//縮小する割合
+	const float SCALE_MIN = 0.25f;		//縮小の下限
+
 }
 
 Wave::~Wave()
@@ -169,14 +177,14 @@ void Wave::FadeinWithScalingWaveSprite(SNumSprite* sNumSprite)
 
 	//透明度が1未満ならフェードイン
 	if (sNumSprite->numSprite->GetColor().w < 1.0f) {
-		sNumSprite->numSprite->FadeIn(0.025f);
-		sNumSprite->numShadowSprite->FadeIn(0.025f);
+		sNumSprite->numSprite->FadeIn(FADEIN_RATE);
+		sNumSprite->numShadowSprite->FadeIn(FADEIN_RATE);
 	}
 
 	//スプライトの拡大率係数を下げていき、一定値でストップ
-	sNumSprite->spriteScaleRate -= 0.03f;
-	if (sNumSprite->spriteScaleRate <= 0.25) {
-		sNumSprite->spriteScaleRate = 0.25;
+	sNumSprite->spriteScaleRate -= SCALING_RATE;
+	if (sNumSprite->spriteScaleRate <= SCALE_MIN) {
+		sNumSprite->spriteScaleRate = SCALE_MIN;
 	}
 
 	//縮小

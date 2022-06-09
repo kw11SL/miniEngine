@@ -2,35 +2,38 @@
 class WaveCutIn
 {
 public:
+	/// @brief カットインするスプライトの構造体
+	struct SCutinSprite {
+		SpriteRender* cutinSprite = nullptr;	//カットインするスプライト
+		Vector3 pos = Vector3::Zero;			//位置
+		float alpha = 0.0f;						//透明度係数
+		float moveFraction = 0.0f;				//移動の補間率
+		float waitCounter = 0.0f;				//移動カウンタ
+		bool isValidMove = true;				//移動可能フラグ
+		bool isMoveFinishToCenter = false;		//中央に移動したかどうかのフラグ
+	};
+
+
 	WaveCutIn(){}
 	~WaveCutIn();
 
 	/// @brief 初期化処理
 	void Init();
 
-	/// @brief wave数に応じたスプライトの切り替え
-	void SwitchingSprite();
-
 	/// @brief スプライトの移動処理
-	void SpriteMove();
+	/// @param sCutinSprite カットインスプライトの構造体
+	void SpriteMove(SCutinSprite* sCutinSprite);
 
-	//スプライトのフェードインとフェードアウト処理
-	void SpriteFade();
+	/// @brief スプライトのフェードイン、アウト処理
+	/// @param sCutinSprite カットインスプライトの構造体
+	void SpriteFade(SCutinSprite* sCutinSprite);
 
 	/// @brief 更新処理
 	void Update();
 private:
-	SpriteRender* m_waveSprite = nullptr;		//カットインしてくるスプライト
 
-	Vector3 m_waveSpritePos = Vector3::Zero;	//スプライトの初期位置
-	float m_waveSpriteAlpha = 0.0f;				//スプライトの不等明度
-	
-	float m_waveSpriteMoveFraction = 0.0f;		//スプライトの移動用補間率
-	float m_waveSpriteWaitCounter = 0.0f;		//スプライトが中央で停止する時間
-
-	bool m_isValidMove = true;					//移動可能かどうかフラグ
-	bool m_isFinishMoveToCenter = false;		//中央に移動したかどうかフラグ
-
+	std::vector<SCutinSprite*> m_cutinSprites;	//カットインスプライトの可変長配列
+	int m_waveNumPrevFrame = 1;					//前フレームのwave数
 	bool m_isStart = false;						//ゲーム開始フラグ
 };
 
