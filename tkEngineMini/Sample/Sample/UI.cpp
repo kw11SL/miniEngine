@@ -60,5 +60,4 @@ void UI::Update()
 	m_gameOver.Update();
 	//リザルト画面を更新
 	m_result.Update();
-	
 }

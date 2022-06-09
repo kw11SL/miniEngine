@@ -3,11 +3,6 @@
 #include "Bloom.h"
 #include "RenderingEngine.h"
 
-namespace
-{
-
-}
-
 //重みテーブルの設定
 const int NUM_WEIGHTS = 8;
 struct SBlurParam
