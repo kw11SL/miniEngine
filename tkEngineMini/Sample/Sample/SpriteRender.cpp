@@ -18,7 +18,7 @@ bool SpriteRender::Start()
 	return true;
 }
 
-void SpriteRender::Init(const char* spriteFilePath, const UINT& width, const UINT& height, AlphaBlendMode alphaBrendMode)
+void SpriteRender::Init(const char* spriteFilePath, const UINT& width, const UINT& height, AlphaBlendMode alphaBrendMode,bool isDraw3D)
 {
 	//レンダリングエンジンを取得
 	m_renderingEngine = RenderingEngine::GetInstance();
@@ -31,7 +31,7 @@ void SpriteRender::Init(const char* spriteFilePath, const UINT& width, const UIN
 	m_spriteInitData.m_height = height;
 	m_spriteInitData.m_alphaBlendMode = alphaBrendMode;
 
-	m_sprite.Init(m_spriteInitData);
+	m_sprite.Init(m_spriteInitData,isDraw3D);
 
 	//レンダリングエンジンにスプライトを登録
 	m_renderingEngine->AddSpriteToSprites(&m_sprite);

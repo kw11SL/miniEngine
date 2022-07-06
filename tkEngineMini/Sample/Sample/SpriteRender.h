@@ -18,8 +18,13 @@ public:
 
 	//描画処理
 	void Render(RenderContext& rc) override;
-
-	void Init(const char* spriteFilePath,const UINT& width,const UINT& height,AlphaBlendMode alphaBrendMode);
+	/// @brief 初期化処理
+	/// @param spriteFilePath	使用するddsのファイルパス 
+	/// @param width 幅
+	/// @param height 高さ
+	/// @param alphaBrendMode 半透明ブレンドモード
+	/// @param isDraw3D 3D空間に描画するかどうか
+	void Init(const char* spriteFilePath,const UINT& width,const UINT& height,AlphaBlendMode alphaBrendMode,bool isDraw3D = false);
 	void InitShader(const char* fxFilePath, const char* vsEntryPoint,const char* psEntryPoint);
 
 	//セッター

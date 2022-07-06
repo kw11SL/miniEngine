@@ -67,9 +67,9 @@ public:
 	D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress();
 	
 private:
-	ID3D12Resource* m_constantBuffer[2] = {nullptr};//定数バッファ。
-	void* m_constBufferCPU[2] = { nullptr };		//CPU側からアクセスできるする定数バッファのアドレス。
-	int m_size = 0;									//定数バッファのサイズ。
+	ID3D12Resource* m_constantBuffer[2] = {nullptr};		//定数バッファ。
+	void* m_constBufferCPU[2] = { nullptr };				//CPU側からアクセスできるする定数バッファのアドレス。
+	int m_size = 0;											//定数バッファのサイズ。
 	int m_allocSize = 0;
-	bool m_isValid = false;							//利用可能？
+	bool m_isValid = false;									//利用可能？
 };

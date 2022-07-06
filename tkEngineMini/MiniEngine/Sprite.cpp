@@ -176,8 +176,13 @@
 			);
 		}
 	}
-	void Sprite::Init(const SpriteInitData& initData)
+	void Sprite::Init(const SpriteInitData& initData,bool isDraw3D)
 	{
+		//3D描画フラグが設定されていたら3D描画フラグを立てる
+		if (isDraw3D == true) {
+			m_isDraw3D = isDraw3D;
+		}
+
 		m_size.x = static_cast<float>(initData.m_width);
 		m_size.y = static_cast<float>(initData.m_height);
 
@@ -253,16 +258,23 @@
 		//現在のビューポートから平行投影行列を計算する。
 		D3D12_VIEWPORT viewport = renderContext.GetViewport();
 		//todo カメラ行列は定数に使用。どうせ変えないし・・・。
-		Matrix viewMatrix = g_camera2D->GetViewMatrix();
+		//Matrix viewMatrix = g_camera2D->GetViewMatrix();
+		Matrix viewMatrix;
+		//3D描画フラグが立っていたら
+		if (m_isDraw3D == true) {
+			//3Dカメラのビュー行列を渡す
+			viewMatrix = g_camera3D->GetViewMatrix();
+		}
+		else {
+			//2Dカメラのビュー行列を渡す
+			viewMatrix = g_camera2D->GetViewMatrix();
+		}
+		
 		Matrix projMatrix;
 		projMatrix.MakeOrthoProjectionMatrix(viewport.Width, viewport.Height, 0.1f, 1.0f);
 
 
 		m_constantBufferCPU.mvp = m_world * viewMatrix * projMatrix;
-		/*m_constantBufferCPU.mulColor.x = 1.0f;
-		m_constantBufferCPU.mulColor.y = 1.0f;
-		m_constantBufferCPU.mulColor.z = 1.0f;
-		m_constantBufferCPU.mulColor.w = 1.0f;*/
 		m_constantBufferCPU.mulColor.x = m_color.x;
 		m_constantBufferCPU.mulColor.y = m_color.y;
 		m_constantBufferCPU.mulColor.z = m_color.z;

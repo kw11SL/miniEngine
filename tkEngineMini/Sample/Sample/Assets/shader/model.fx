@@ -427,7 +427,7 @@ float CalcDiffuseFromFresnel(float3 N, float3 L, float3 V)
 	float FL = (1 + (Fd90 - 1) * pow(1 - dotNL, 5));
 
 	//法線と視点に向かうベクトルwを利用して拡散反射率を求める
-	float dotNV = saturate(dot(N, L));
+	float dotNV = saturate(dot(N, V));
 	float FV = (1 + (Fd90 - 1) * pow(1 - dotNV, 5));
 
 	//法線と光源への方向に依存する拡散反射率と、法線と視点ベクトルに依存する拡散反射率を

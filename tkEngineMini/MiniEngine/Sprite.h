@@ -61,7 +61,8 @@ public:
 	/// 初期化。
 	/// </summary>
 	/// <param name="initData">初期化データ</param>
-	void Init(const SpriteInitData& initData);
+	/// <param name="isDraw3D">3D空間に描画するか</param>
+	void Init(const SpriteInitData& initData,bool isDraw3D = false);
 	/// <summary>
 	/// 更新。
 	/// </summary>
@@ -150,6 +151,7 @@ private:
 	Shader				m_vs;					//頂点シェーダー。
 	Shader				m_ps;					//ピクセルシェーダー。
 	bool				m_isInited = false;		//初期化済み？
+	bool				m_isDraw3D = false;			//3D空間に描画するか？
 
 	Vector4				m_color = { 1.0f,1.0f,1.0f,1.0f };	//カラー変更用ベクトル
 

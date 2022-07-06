@@ -317,6 +317,6 @@ private:
 	Effect m_changeEffectNormal;						//ショット変更時のエフェクト(ノーマル)
 	Effect m_changeEffectSpread;						//ショット変更時のエフェクト(スプレッド)
 
-	CSoundSource* m_ssNormalShotSe = nullptr;
+	CSoundSource* m_ssNormalShotSe = nullptr;	
 };
 
