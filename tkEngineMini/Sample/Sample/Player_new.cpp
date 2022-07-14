@@ -21,8 +21,9 @@ namespace{
 	const float FIRECOUNTER_NORMAL = 0.075f;	//通常弾の発射間隔
 	const float FIRECOUNTER_SPREAD = 0.25f;		//スプレッドボムの発射間隔
 	const int INIT_LIFE = 3;					//初期残機
-	const float INVINCIBLE_TIME_REVIVE = 7.0f;	//復活時に設定される無敵時間
-	const float REVIVE_TIME = 3.0f;				//被弾から復活までの時間
+	const float REVIVE_TIME = 2.0f;								//被弾から復活(モデル表示、行動可能)までの時間。復活エフェクトの再生と無敵時間付与の基準となる。
+	const float INVINCEBLE_TIME_EXTEND = REVIVE_TIME + 1.5f;	//復活後、移動可能になってからもしばらく付与される無敵時間。REVIVE_TIME + 固定値
+	const float REVIVE_EFFECT_START_TIME = REVIVE_TIME - 1.0f;	//被弾から復活エフェクトが再生開始されるまでの時間。REVIVE_TIME - 固定値
 
 	
 	const float CAMERA_ROTATE_FRACTION_ADD_RATE = 0.005f;			//カメラの回転に使う補間係数に加算する定数
@@ -32,7 +33,7 @@ namespace{
 
 	//エフェクト関連
 	const char16_t* EFFECT_FILEPATH_START = u"Assets/effect/player_born.efk";		//開始エフェクトファイルパス
-	const Vector3 EFFECT_SCALE_START = { 50.0f,50.0f,50.0f };
+	const Vector3 EFFECT_SCALE_START = { 50.0f,50.0f,50.0f };						//開始エフェクトの拡大率
 
 	const char16_t* EFFECT_FILEPATH_EXPLOSION = u"Assets/effect/justguard.efk";		//被弾エフェクトファイルパス
 	const Vector3 EFFECT_SCALE_EXPLOSION = { 30.0f,30.0f,30.0f };					//被弾エフェクトの拡大率
@@ -45,6 +46,7 @@ namespace{
 
 	const char16_t* EFFECT_FILEPATH_DIRECTION = u"Assets/effect/shotDirection.efk";	//方向エフェクトのファイルパス
 	const Vector3 EFFECT_SCALE_DIRECTION = { 10.0f,10.0f,10.0f };					//方向エフェクトの拡大率
+	const float EFFECT_SCALE_RATIO_DIRECTION = 2.0f;								//スティック入力量に対して掛ける拡大率の固定値
 
 	const char16_t* EFFECT_FILEPATH_MARKER = u"Assets/effect/positionMarker.efk";	//当たり判定エフェクトのファイルパス
 	const Vector3 EFFECT_SCALE_MARKER = { 30.0f,30.0f,30.0f };						//当たり判定エフェクトの拡大率
@@ -304,10 +306,19 @@ void Player_new::RotateShotDirection()
 	float xL = g_pad[0]->GetLStickXF();
 	float yL = g_pad[0]->GetLStickYF();
 
-	//入力値から角度を求める
+	//右スティックの入力値から角度を求める
 	float angle = atan2f(x, y);
-	//軸周りの回転を求める
+	//回転軸周りの回転を求める
 	rot.SetRotation(axis, angle);
+
+	//射撃方向表示エフェクトの回転を決めるクォータニオンを作成
+	Quaternion effRot = Quaternion::Identity;
+	//右スティックの入力方向から角度を取得
+	float effAngle = angle;
+	//エフェクトの拡大率を0にしておく(右スティックの入力があったときだけ拡大率を上げる)
+	float effScaleRate = 0.0f;
+	//右スティックの入力量を変換
+	float length = sqrt(x*x + y*y);
 
 	//ショットの射出方向の決定
 	//移動中
@@ -315,6 +326,8 @@ void Player_new::RotateShotDirection()
 		//かつ、右スティックの入力があるとき、右スティックの方へ射撃
 		if (fabsf(x) > 0.001f || fabsf(y) > 0.001f) {
 			rot.Apply(m_shotDirection);
+			//射撃方向表示エフェクトの拡大率を設定
+			effScaleRate = EFFECT_SCALE_RATIO_DIRECTION * length;
 		}
 		//右スティックの入力がないとき、自機の向いている方向へ射撃
 		else {
@@ -326,12 +339,48 @@ void Player_new::RotateShotDirection()
 		//かつ右スティックの入力があるとき、右スティックの方へ射撃
 		if (fabsf(x) > 0.001f || fabsf(y) > 0.001f) {
 			rot.Apply(m_shotDirection);
+			//射撃方向表示エフェクトの拡大率を設定
+			effScaleRate = EFFECT_SCALE_RATIO_DIRECTION * length;
 		}
 		//右スティックの入力がないとき、自機の向いている方向へ射撃
 		else {
 			m_shotDirection = m_forward * -1.0f;
 		}
 	}
+
+	//射撃方向エフェクトの向きを決めるため基準となるクォータニオンを作成
+	//まず自機のクォータニオンで初期化する
+	Quaternion baseRot = m_rot;
+	
+	//次に乗算するための行列を作成
+	//基底軸を決定していく。
+	Matrix baseMat;
+	//exは右方向
+	baseMat.m[0][0] = m_right.x;
+	baseMat.m[0][1] = m_right.y;
+	baseMat.m[0][2] = m_right.z;
+	//eyは上方向
+	baseMat.m[1][0] = m_up.x;
+	baseMat.m[1][1] = m_up.y;
+	baseMat.m[1][2] = m_up.z;
+	//射撃方向の基準に用いた固定の上方向を指定することで、
+	//エフェクトの向きが自機の向きに依存しなくなる。
+	baseMat.m[2][0] = m_fixedForward.x;
+	baseMat.m[2][1] = m_fixedForward.y;
+	baseMat.m[2][2] = m_fixedForward.z;
+	//行列を乗算
+	baseRot.SetRotation(baseMat);
+
+	//右スティックの入力で方向を決定する
+	//上方向周りに回転させる
+	effRot.SetRotation(axis,angle);
+	//その結果を基準となるクォータニオンと乗算する
+	effRot.Multiply(baseRot,effRot);
+
+	//射撃方向エフェクトに値を設定
+	m_shotDirectionEffect.SetPosition(m_position);
+	m_shotDirectionEffect.SetRotation(effRot);
+	m_shotDirectionEffect.SetScale(EFFECT_SCALE_DIRECTION * effScaleRate);
 
 }
 
@@ -355,10 +404,6 @@ void Player_new::FireBullet()
 
 				//ショットSEの再生
 				if (m_enBulletType == enNormalShot) {
-					/*CSoundSource* ssNormalSe = NewGO<CSoundSource>(0);
-					ssNormalSe->Init(SHOT_NORMAL_SE_FILEPATH);
-					ssNormalSe->SetVolume(SHOT_NORMAL_SE_VOLUME);
-					ssNormalSe->Play(false);*/
 					m_ssNormalShotSe = NewGO<CSoundSource>(0);
 					m_ssNormalShotSe->Init(SHOT_NORMAL_SE_FILEPATH);
 					m_ssNormalShotSe->SetVolume(SHOT_NORMAL_SE_VOLUME);
@@ -490,7 +535,7 @@ void Player_new::Hit()
 				SetIsExist(false);
 
 				//無敵状態にする
-				SetInvincibleTime(INVINCIBLE_TIME_REVIVE);
+				SetInvincibleTime(INVINCEBLE_TIME_EXTEND);
 				SetIsInvFlag(true);
 
 				//ミス時のseを再生
@@ -537,7 +582,7 @@ void Player_new::Hit()
 				SetIsExist(false);
 
 				//無敵状態にする
-				SetInvincibleTime(INVINCIBLE_TIME_REVIVE);
+				SetInvincibleTime(INVINCEBLE_TIME_EXTEND);
 				SetIsInvFlag(true);
 
 				//ミス時のseを再生
@@ -584,7 +629,7 @@ void Player_new::Hit()
 				SetIsExist(false);
 
 				//無敵状態にする
-				SetInvincibleTime(INVINCIBLE_TIME_REVIVE);
+				SetInvincibleTime(INVINCEBLE_TIME_EXTEND);
 				SetIsInvFlag(true);
 
 				//被弾エフェクトを発生
@@ -619,6 +664,7 @@ void Player_new::AddReviveCouter()
 		m_reviveCounter += g_gameTime->GetFrameDeltaTime();
 	}
 	
+	//復活カウンタが復活時間に達していたら
 	if (m_reviveCounter >= REVIVE_TIME) {
 		//存在フラグをオン
 		m_isExist = true;
@@ -626,6 +672,32 @@ void Player_new::AddReviveCouter()
 		m_reviveCounter = 0.0f;
 	}
 
+}
+
+void Player_new::ReviveReady()
+{
+	//ゲームディレクター側のライフが0なら処理しない
+	if (GameDirector::GetInstance()->GetPlayerLife() <= 0) {
+		return;
+	}
+
+	//復活カウンタがエフェクト再生開始時間に達していて、存在フラグがオフなら
+	if (m_reviveCounter >= REVIVE_EFFECT_START_TIME
+		&& m_isExist == false) {
+		//復活準備フラグをオン
+		m_isReviveReady = true;
+	}
+
+	//現フレームで復活準備フラグがオンなら
+	if (m_isReviveReadyPrev == false
+		&& m_isReviveReady == true) {
+
+		//復活エフェクトを再生
+		m_reviveEffect.SetPosition(m_position);
+		m_reviveEffect.SetRotation(m_rot);
+		m_reviveEffect.SetScale(EFFECT_SCALE_REVIVE);
+		m_reviveEffect.Play();
+	}
 }
 
 void Player_new::Revive()
@@ -649,30 +721,7 @@ void Player_new::Revive()
 	}
 }
 
-void Player_new::ReviveReady()
-{
-	//ゲームディレクター側のライフが0なら処理しない
-	if (GameDirector::GetInstance()->GetPlayerLife() <= 0) {
-		return;
-	}
 
-	if (m_invincebleTime < 5.0f
-		&& m_isExist == false) {
-		//復活準備フラグをオン
-		m_isReviveReady = true;
-	}
-
-	//現フレームで復活準備フラグがオンなら
-	if (m_isReviveReadyPrev == false
-		&& m_isReviveReady == true) {
-		
-		//復活エフェクトを再生
-		m_reviveEffect.SetPosition(m_position);
-		m_reviveEffect.SetRotation(m_rot);
-		m_reviveEffect.SetScale(EFFECT_SCALE_REVIVE);
-		m_reviveEffect.Play();
-	}
-}
 
 void Player_new::CalcCameraUpFractionAddRate()
 {
@@ -709,32 +758,31 @@ void Player_new::CalcCameraUpFractionAddRate()
 
 void Player_new::EffectUpdate()
 {
+	//開始時のエフェクトの位置と更新
 	m_startEffect.SetPosition(m_position + m_up * 50.0f);
-	//m_startEffect.SetRotation(m_rot);
 	m_startEffect.Update();
+	
+	//武器切り替え時のエフェクト(通常)を更新
+	m_changeEffectNormal.SetPosition(m_position);
+	m_changeEffectNormal.SetScale(EFFECT_SCALE_CHANGE_NORMAL);
+	m_changeEffectNormal.Update();
+	//武器切り替え時のエフェクト(スプレッド)を更新
+	m_changeEffectSpread.SetPosition(m_position);
+	m_changeEffectSpread.SetScale(EFFECT_SCALE_CHANGE_SPREAD);
+	m_changeEffectSpread.Update();
+
+	//射撃方向表示エフェクトの更新
+	//再生停止していたら再度再生する
+	if (m_shotDirectionEffect.IsPlay() != true) {
+		m_shotDirectionEffect.Play();
+	}
+	m_shotDirectionEffect.Update();
+
+	//その他諸々更新
 	m_explosionEffect.Update();
 	m_reviveEffect.Update();
 	m_moveTrackEffect.Update();
 	m_markerEffect.Update();
-
-	m_shotDirectionEffect.SetPosition(m_position);
-	m_shotDirectionEffect.SetScale(EFFECT_SCALE_DIRECTION);
-	//m_shotDirectionEffect.SetRotation(m_rot);
-
-	m_changeEffectNormal.SetPosition(m_position);
-	//m_changeEffectNormal.SetRotation(m_rot);
-	m_changeEffectNormal.SetScale(EFFECT_SCALE_CHANGE_NORMAL);
-	m_changeEffectNormal.Update();
-
-	m_changeEffectSpread.SetPosition(m_position);
-	//m_changeEffectSpread.SetRotation(m_rot);
-	m_changeEffectSpread.SetScale(EFFECT_SCALE_CHANGE_SPREAD);
-	m_changeEffectSpread.Update();
-
-	if (m_shotDirectionEffect.IsPlay() != true) {
-		m_shotDirectionEffect.Play();
-	}
-	//m_shotDirectionEffect.Update();
 }
 
 void Player_new::Update()

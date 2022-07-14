@@ -74,7 +74,7 @@ void GameOver::Update()
 	}
 
 	//タイトル画面への遷移
-	if (m_fadeOutSprite->GetColor().w >= 1.0f && g_pad[0]->IsTrigger(enButtonA)){
+	if (m_fadeOutSprite->GetColor().w >= 1.0f && g_pad[0]->IsTrigger(enButtonStart)){
 		//ゲームを削除し、タイトルをNewGOさせる
 		QueryGOs<Game>("game", [&](Game* gameScene) {
 
